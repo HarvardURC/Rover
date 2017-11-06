@@ -39,8 +39,8 @@ if (mcp2515_check_message())
 	{
     if (mcp2515_get_message(&message)) 
 	{
-        if(message.data[0] != 64 && message.id != 0x587)  //uncomment when you want to filter
-             {
+//        if(message.data[0] != 64 && message.id != 0x587)  //uncomment when you want to filter
+//             {
                
                Serial.print("ID: ");
                Serial.print(message.id,HEX);
@@ -53,7 +53,7 @@ if (mcp2515_check_message())
                   Serial.print(" ");
                 }
                Serial.println("");
-             }
+//             }
            }}
 
 }

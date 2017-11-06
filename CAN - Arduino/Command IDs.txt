@@ -1,0 +1,42 @@
+
+ID is Hex; Data is DEC
+
+Stop Node 7
+ID: 607, Data: 34 64 96 0 15 1 0 0 
+
+Comit Velocity for Node 7
+ID: 607, Data: 34 64 96 0 15 0 0 0
+
+Node 7 Velocity 1000
+ID: 607, Data: 34 255 96 0 232 3 0 0 
+
+Node 7 Velocity 2000
+ID: 607, Data: 34 255 96 0 208 7 0 0 
+
+Node 7 Velocity 3000
+ID: 607, Data: 34 255 96 0 184 11 0 0
+
+Node 7 Position inc 1000
+ID: 607, Data: 34 122 96 0 232 3 0 0
+
+Node 7 Offline: Just USB power
+ID: 607, Data: 128 65 96 0 0 0 4 5 
+ID: 607, Data: 128 0 34 2 0 0 4 5 
+
+Plug in to USB Node 2
+ID: 702, Data: 0
+
+Power connected node 2
+ID: 82, Data: 128 82 1 0 0 0 0 0
+
+Power connected - probably means node reset 7
+ID: 707, Data: 0
+
+Reset Node 2
+ID: 702, Data: 0
+
+Turn on CAN Bus
+ID: 607, Data: 128 0 34 2 0 0 4 5
+
+ID: 607, Data: 128 8 16 0 0 0 1 6 
+ID: 607, Data: 96 0 0 0 0 0 0 0
