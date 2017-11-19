@@ -14,8 +14,7 @@
     <model name="box">
 
     <link name='chassis'>
-        <gravity>0</gravity>
-          <pose>0 0 .2 0 0 0</pose>
+          <pose>0 0 .1 0 0 0</pose>
           <inertial>
             <inertia>
               <ixx>1</ixx>
@@ -45,7 +44,7 @@
       </link>
 
       <link name="front_indicator">
-        <pose>.5 0 0.3 0 0 0</pose>
+        <pose>.5 0 0.18 0 0 0</pose>
           <geometry>
               <sphere>
               <radius>.03</radius>
@@ -62,10 +61,8 @@
       </link>
 
 
-
-
       <link name="left_front_wheel">
-        <pose>.5 .27 .1 0 0 1.5707</pose>
+        <pose>.5 .27 .1 1.5707 0 0</pose>
         <inertial>
           <inertia>
             <ixx>1</ixx>
@@ -80,16 +77,16 @@
         <collision name="collision">
           <geometry>
             <cylinder>
-              <radius>.02</radius>
-              <length>.2</length>
+              <radius>.2</radius>
+              <length>.1</length>
             </cylinder>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <cylinder>
-              <radius>.02</radius>
-              <length>.2</length>
+              <radius>.2</radius>
+              <length>.1</length>
             </cylinder>
           </geometry>
         </visual>
@@ -97,7 +94,7 @@
 
 
       <link name="right_front_wheel">
-        <pose>.5 -.27 .1 0 0 1.5707</pose>
+        <pose>.5 -.27 .1 1.5707 0 0</pose>
         <inertial>
           <inertia>
             <ixx>1</ixx>
@@ -112,88 +109,25 @@
         <collision name="collision">
           <geometry>
             <cylinder>
-              <radius>.02</radius>
-              <length>.2</length>
+              <radius>.2</radius>
+              <length>.1</length>
             </cylinder>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <cylinder>
-              <radius>.02</radius>
-              <length>.2</length>
+              <radius>.2</radius>
+              <length>.1</length>
             </cylinder>
           </geometry>
         </visual>
       </link>
 
-
-      <link name="left_middle_wheel">
-        <pose>0 .27 .1 0 0 1.5707</pose>
-        <inertial>
-          <inertia>
-            <ixx>1</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>1</iyy>
-            <iyz>0</iyz>
-            <izz>1</izz>
-          </inertia>
-          <mass>1.0</mass>
-        </inertial>
-        <collision name="collision">
-          <geometry>
-            <cylinder>
-              <radius>.02</radius>
-              <length>.2</length>
-            </cylinder>
-          </geometry>
-        </collision>
-        <visual name="visual">
-          <geometry>
-            <cylinder>
-              <radius>.02</radius>
-              <length>.2</length>
-            </cylinder>
-          </geometry>
-        </visual>
-      </link>
-
-
-      <link name="right_middle_wheel">
-        <pose>0 -.27 .1 0 0 1.5707</pose>
-        <inertial>
-          <inertia>
-            <ixx>1</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>1</iyy>
-            <iyz>0</iyz>
-            <izz>1</izz>
-          </inertia>
-          <mass>1.0</mass>
-        </inertial>
-        <collision name="collision">
-          <geometry>
-            <cylinder>
-              <radius>.02</radius>
-              <length>.2</length>
-            </cylinder>
-          </geometry>
-        </collision>
-        <visual name="visual">
-          <geometry>
-            <cylinder>
-              <radius>.02</radius>
-              <length>.2</length>
-            </cylinder>
-          </geometry>
-        </visual>
-      </link>
 
 
       <link name="left_back_wheel">
-        <pose>-.5 .27 .1 0 0 1.5707</pose>
+        <pose>-.5 .27 .1 1.5707 0 0</pose>
         <inertial>
           <inertia>
             <ixx>1</ixx>
@@ -208,16 +142,16 @@
         <collision name="collision">
           <geometry>
             <cylinder>
-              <radius>.02</radius>
-              <length>.2</length>
+              <radius>.2</radius>
+              <length>.1</length>
             </cylinder>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <cylinder>
-              <radius>.02</radius>
-              <length>.2</length>
+              <radius>.2</radius>
+              <length>.1</length>
             </cylinder>
           </geometry>
         </visual>
@@ -225,7 +159,7 @@
 
 
       <link name="right_back_wheel">
-        <pose>-.5 -.27 .1 0 0 1.5707</pose>
+        <pose>-.5 -.27 .1 1.5707 0 0</pose>
         <inertial>
           <inertia>
             <ixx>1</ixx>
@@ -240,16 +174,16 @@
         <collision name="collision">
           <geometry>
             <cylinder>
-              <radius>.02</radius>
-              <length>.2</length>
+              <radius>.2</radius>
+              <length>.1</length>
             </cylinder>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <cylinder>
-              <radius>.02</radius>
-              <length>.2</length>
+              <radius>.2</radius>
+              <length>.1</length>
             </cylinder>
           </geometry>
         </visual>
@@ -257,7 +191,7 @@
 
 
       <joint type="revolute" name="left_front_wheel_hinge">
-        <pose>0 0 .1 0 0 0</pose>
+        <pose>0 0 0 0 0 0</pose>
         <child>left_front_wheel</child>
         <parent>chassis</parent>
         <axis>
@@ -267,7 +201,7 @@
 
 
       <joint type="revolute" name="right_back_wheel_hinge">
-        <pose>0 0 .1 0 0 0</pose>
+        <pose>0 0 0 0 0 0</pose>
         <child>right_back_wheel</child>
         <parent>chassis</parent>
         <axis>
@@ -276,28 +210,9 @@
       </joint>
 
 
-      <joint type="revolute" name="left_middle_wheel_hinge">
-        <pose>0 0 .1 0 0 0</pose>
-        <child>left_middle_wheel</child>
-        <parent>chassis</parent>
-        <axis>
-          <xyz>0 1 0</xyz>
-        </axis>
-      </joint>
-
-
-      <joint type="revolute" name="right_middle_wheel_hinge">
-        <pose>0 0 .1 0 0 0</pose>
-        <child>right_middle_wheel</child>
-        <parent>chassis</parent>
-        <axis>
-          <xyz>0 1 0</xyz>
-        </axis>
-      </joint>
-
 
       <joint type="revolute" name="left_back_wheel_hinge">
-        <pose>0 0 .1 0 0 0</pose>
+        <pose>0 0 0 0 0 0</pose>
         <child>left_back_wheel</child>
         <parent>chassis</parent>
         <axis>
@@ -307,9 +222,8 @@
 
       
 
-
       <joint type="revolute" name="right_front_wheel_hinge">
-        <pose>0 0 .1 0 0 0</pose>
+        <pose>0 0 0 0 0 0</pose>
         <child>right_front_wheel</child>
         <parent>chassis</parent>
         <axis>
@@ -323,7 +237,7 @@
         <parent>chassis</parent>
       </joint>
 
-      <plugin name="legged" filename="liblegged.so"/>
+      <plugin name="wheeledRobot" filename="libwheeledRobot.so"/>
     </model>
 </world>
 </sdf>

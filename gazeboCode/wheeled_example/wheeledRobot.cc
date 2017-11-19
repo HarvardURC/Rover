@@ -15,10 +15,8 @@ namespace gazebo
       // Store the pointer to the model
       this->model = _parent;
       this->leftFront = this->model->GetJoint("left_front_wheel_hinge");
-      this->leftMiddle = this->model->GetJoint("left_middle_wheel_hinge");
       this->leftBack = this->model->GetJoint("left_back_wheel_hinge");
       this->rightFront = this->model->GetJoint("right_front_wheel_hinge");
-      this->rightMiddle = this->model->GetJoint("right_middle_wheel_hinge");
       this->rightBack = this->model->GetJoint("right_back_wheel_hinge");
 
       // Setup a P-controller, with these parameters
@@ -43,16 +41,29 @@ namespace gazebo
           boost::bind(&ModelPush::OnUpdate, this, _1));
     }
 
-    public: void moveLeftSide(double targetAngle){
-      //this->model->GetJointController()-> SetPositionTarget (leftFront->GetScopedName(), targetAngle);
-      //this->model->GetJointController()-> SetPositionTarget (leftBack->GetScopedName(), targetAngle);
-      //this->model->GetJointController()-> SetPositionTarget (rightMiddle->GetScopedName(), targetAngle);
+    public: void moveLeftSide(double targetForce){
+      this->leftFront->SetForce(0, targetForce);
+      this->leftBack->SetForce(0, targetForce);
     }
-    public: void moveRightSide(double targetAngle){
-      //this->model->GetJointController()-> SetPositionTarget (rightMiddle->GetScopedName(), targetAngle);
-      this->model->GetJointController()-> SetPositionTarget (rightBack->GetScopedName(), targetAngle);
-      //this->model->GetJointController()-> SetPositionTarget (leftMiddle->GetScopedName(), targetAngle);
+    public: void moveRightSide(double targetForce){
+      this->rightFront->SetForce(0, targetForce);
+      this->rightBack->SetForce(0, targetForce);
     }
+
+    // this doesn't really rotate like you expect, because it skids on the floor
+    public: void turnClockwise(double targetForce){
+      this->rightFront->SetForce(0, -targetForce);
+      this->rightBack->SetForce(0, -targetForce);
+      this->leftFront->SetForce(0, targetForce);
+      this->leftBack->SetForce(0, targetForce);
+    }
+    public: void turnCounterClockwise(double targetForce){
+      this->rightFront->SetForce(0, targetForce);
+      this->rightBack->SetForce(0, targetForce);
+      this->leftFront->SetForce(0, -targetForce);
+      this->leftBack->SetForce(0, -targetForce);
+    }
+
 
     // Called by the world update start event
     public: void OnUpdate(const common::UpdateInfo & /*_info*/)
@@ -66,28 +77,33 @@ namespace gazebo
 
       // get angles
       //std::cout << "rightFront " << rightBack->GetAngle(0) << "\n";
+      /*
+      this->leftFront->SetForce(0, targetForce);
+      this->leftBack->SetForce(0, targetForce);
+      */
+
 
       if (fmod(timeNow, 10.0) > 5.0){
         if (mode == 1){
-          double curAngle = (leftFront->GetAngle(0).Degree())/57.32;
-          //moveLeftSide(2*3.14);
+
+          //double curAngle = (leftFront->GetAngle(0).Degree())/57.32;
+          
           //std::cout << "leftFront " << leftFront->GetAngle(0) << "\n";
           mode = 0;
 
         }
+        turnClockwise(3.0);
         
       } else{
         if (mode == 0){
-          count = count + 1;
-          double curAngle = (rightFront->GetAngle(0).Degree())/57.32;
-          moveRightSide(2*3.14);
+          
           //std::cout << "rightFront " << rightFront->GetAngle(0) << "\n";
           mode = 1;
         }
+        turnCounterClockwise(6.0);
       }
 
       
-
 
 
       //step left
@@ -119,10 +135,8 @@ namespace gazebo
 
     // Will- Point to joint
     private: physics::JointPtr leftFront;
-    private: physics::JointPtr leftMiddle;
     private: physics::JointPtr leftBack;
     private: physics::JointPtr rightFront;
-    private: physics::JointPtr rightMiddle;
     private: physics::JointPtr rightBack;
 
     // Pointer to the update event connection
