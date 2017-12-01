@@ -1,0 +1,3 @@
+/Users/mabasta/HURC/Rover/gazeboCode/build/CMakeFiles/rebuild_cache.dir
+/Users/mabasta/HURC/Rover/gazeboCode/build/CMakeFiles/edit_cache.dir
+/Users/mabasta/HURC/Rover/gazeboCode/build/CMakeFiles/hello_world.dir

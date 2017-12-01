@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/Users/williambryk/Desktop/Rover/gazeboCode/wheeled_example/wheeledRobot.cc
+/Users/mabasta/HURC/Rover/gazeboCode/wheeled_example/wheeledRobot.cc
 boost/bind.hpp
 -
 gazebo/gazebo.hh
@@ -16,6 +16,10 @@ gazebo/physics/physics.hh
 gazebo/common/common.hh
 -
 stdio.h
+-
+gazebo/transport/transport.hh
+-
+gazebo/msgs/msgs.hh
 -
 ncurses.h
 -
@@ -38818,5 +38822,7 @@ iterator
 chrono
 -
 tuple
+-
+functional
 -
 

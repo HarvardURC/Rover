@@ -48,10 +48,10 @@ RM = /usr/local/Cellar/cmake/3.9.4_1/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/williambryk/Desktop/Rover/gazeboCode/wheeled_example
+CMAKE_SOURCE_DIR = /Users/mabasta/HURC/Rover/gazeboCode/wheeled_example
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/williambryk/Desktop/Rover/gazeboCode/wheeled_example/build
+CMAKE_BINARY_DIR = /Users/mabasta/HURC/Rover/gazeboCode/wheeled_example/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/williambryk/Desktop/Rover/gazeboCode/wheeled_example/build/CMakeFiles /Users/williambryk/Desktop/Rover/gazeboCode/wheeled_example/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/mabasta/HURC/Rover/gazeboCode/wheeled_example/build/CMakeFiles /Users/mabasta/HURC/Rover/gazeboCode/wheeled_example/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/williambryk/Desktop/Rover/gazeboCode/wheeled_example/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/mabasta/HURC/Rover/gazeboCode/wheeled_example/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,6 +111,32 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named velodyne_plugin
+
+# Build rule for target.
+velodyne_plugin: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 velodyne_plugin
+.PHONY : velodyne_plugin
+
+# fast build rule for target.
+velodyne_plugin/fast:
+	$(MAKE) -f CMakeFiles/velodyne_plugin.dir/build.make CMakeFiles/velodyne_plugin.dir/build
+.PHONY : velodyne_plugin/fast
+
+#=============================================================================
+# Target rules for targets named vel
+
+# Build rule for target.
+vel: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 vel
+.PHONY : vel
+
+# fast build rule for target.
+vel/fast:
+	$(MAKE) -f CMakeFiles/vel.dir/build.make CMakeFiles/vel.dir/build
+.PHONY : vel/fast
+
+#=============================================================================
 # Target rules for targets named wheeledRobot
 
 # Build rule for target.
@@ -122,6 +148,60 @@ wheeledRobot: cmake_check_build_system
 wheeledRobot/fast:
 	$(MAKE) -f CMakeFiles/wheeledRobot.dir/build.make CMakeFiles/wheeledRobot.dir/build
 .PHONY : wheeledRobot/fast
+
+vel.o: vel.cc.o
+
+.PHONY : vel.o
+
+# target to build an object file
+vel.cc.o:
+	$(MAKE) -f CMakeFiles/vel.dir/build.make CMakeFiles/vel.dir/vel.cc.o
+.PHONY : vel.cc.o
+
+vel.i: vel.cc.i
+
+.PHONY : vel.i
+
+# target to preprocess a source file
+vel.cc.i:
+	$(MAKE) -f CMakeFiles/vel.dir/build.make CMakeFiles/vel.dir/vel.cc.i
+.PHONY : vel.cc.i
+
+vel.s: vel.cc.s
+
+.PHONY : vel.s
+
+# target to generate assembly for a file
+vel.cc.s:
+	$(MAKE) -f CMakeFiles/vel.dir/build.make CMakeFiles/vel.dir/vel.cc.s
+.PHONY : vel.cc.s
+
+velodyne_plugin.o: velodyne_plugin.cc.o
+
+.PHONY : velodyne_plugin.o
+
+# target to build an object file
+velodyne_plugin.cc.o:
+	$(MAKE) -f CMakeFiles/velodyne_plugin.dir/build.make CMakeFiles/velodyne_plugin.dir/velodyne_plugin.cc.o
+.PHONY : velodyne_plugin.cc.o
+
+velodyne_plugin.i: velodyne_plugin.cc.i
+
+.PHONY : velodyne_plugin.i
+
+# target to preprocess a source file
+velodyne_plugin.cc.i:
+	$(MAKE) -f CMakeFiles/velodyne_plugin.dir/build.make CMakeFiles/velodyne_plugin.dir/velodyne_plugin.cc.i
+.PHONY : velodyne_plugin.cc.i
+
+velodyne_plugin.s: velodyne_plugin.cc.s
+
+.PHONY : velodyne_plugin.s
+
+# target to generate assembly for a file
+velodyne_plugin.cc.s:
+	$(MAKE) -f CMakeFiles/velodyne_plugin.dir/build.make CMakeFiles/velodyne_plugin.dir/velodyne_plugin.cc.s
+.PHONY : velodyne_plugin.cc.s
 
 wheeledRobot.o: wheeledRobot.cc.o
 
@@ -158,7 +238,15 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... velodyne_plugin"
+	@echo "... vel"
 	@echo "... wheeledRobot"
+	@echo "... vel.o"
+	@echo "... vel.i"
+	@echo "... vel.s"
+	@echo "... velodyne_plugin.o"
+	@echo "... velodyne_plugin.i"
+	@echo "... velodyne_plugin.s"
 	@echo "... wheeledRobot.o"
 	@echo "... wheeledRobot.i"
 	@echo "... wheeledRobot.s"
