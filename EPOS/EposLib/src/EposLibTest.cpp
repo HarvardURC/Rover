@@ -14,7 +14,7 @@ using namespace std;
 unsigned int errorCode;
 
 //node to test
-int node1ID = 6;
+//int node1Id 1;
 
 //time to wait in ms
 long sleepTime = 3000;
@@ -29,22 +29,31 @@ int main () {
 	//Initialize drive train object
 	driveTrain.init();
 
+	for (int i = 1; i<6; i++) {
+
+	//clear errors and enable a node
+	driveTrain.clearFault(i);
+	driveTrain.enableNode(i);
+
 	//Clear all errors
-	driveTrain.clearAllFaults();
+	//driveTrain.clearAllFaults();
 
 	//Enable everything
-	driveTrain.enableAll();
+	//driveTrain.enableAll();
 
 	//Try setting a node to velocity mode
-	driveTrain.setMode(node1ID, OMD_PROFILE_VELOCITY_MODE);
+	driveTrain.setMode(i, OMD_PROFILE_VELOCITY_MODE);
 
 	//Try moving a motor
-	driveTrain.setVelocity(node1ID, 1000);
+	driveTrain.setVelocity(i, 1000);
+	}
 
-	usleep(sleepTime * 1000);
+	usleep(sleepTime * 5000);
 
+	for (int i = 1; i < 6; i++) {
 	//Stop the motor
-	driveTrain.setVelocity(node1ID, 0);
+	driveTrain.setVelocity(i, 0);
+	}
 
 	//Stop everything
 	//driveTrain.stopAllMotors();
