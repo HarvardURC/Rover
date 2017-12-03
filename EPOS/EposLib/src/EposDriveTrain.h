@@ -56,12 +56,20 @@ public:
 	//Stop everything
 	bool stopAllMotors();
 
+	//Enable one node
+	bool enableNode(int);
+
+	//Clear faults from one node
+	bool clearFault(int);
 
 	//Enable all motors
 	bool enableAll();
 
 	//Clear errors
 	bool clearAllFaults();
+
+	//Get position of a given motor
+	int getPosition(int);
 
 
 private:
