@@ -4,8 +4,7 @@ import struct
 def map_to_array(d, size):
 	a = [[0 for x in range(size)] for y in range(size)] 
 	for key in d.keys():
-		x, y = key[0] + 64, 64 - key[1]
-		print x, y
+		x, y = 64 - key[0], 64 + key[1]
 		a[y][x] = d[key]
 	return a
 
