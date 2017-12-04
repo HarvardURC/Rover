@@ -27,7 +27,7 @@ with open("landscape.png","wb") as f:
 x_scale = 50
 y_scale = 50
 z_scale = 20
-goal_state = (-64, 64)
+goal_state = (-64, -64)
 
 delta = {'N': (0, 1),
 	'S': (0, -1),
