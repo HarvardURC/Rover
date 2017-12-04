@@ -4,7 +4,7 @@ import copy
 import math
 
 # load ieghtmap file as list of [x, y, height]
-inputfile = open('coordinates.txt')
+inputfile = open('heightmap.txt')
 lines = inputfile.read()[2:-2].split('), (')
 
 height_map = dict()
