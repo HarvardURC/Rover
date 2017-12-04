@@ -4,9 +4,6 @@
 #include <gazebo/common/common.hh>
 #include <stdio.h>
 
-#include <gazebo/transport/transport.hh>
-#include <gazebo/msgs/msgs.hh>
-
 #include <ncurses.h>
 
 namespace gazebo
@@ -21,7 +18,6 @@ namespace gazebo
       this->leftBack = this->model->GetJoint("left_back_wheel_hinge");
       this->rightFront = this->model->GetJoint("right_front_wheel_hinge");
       this->rightBack = this->model->GetJoint("right_back_wheel_hinge");
-      this->lidar = this->model->GetJoint("lidar");
 
       // Setup a P-controller, with these parameters
       this->pid = common::PID(.1, 0, 0);
@@ -32,16 +28,9 @@ namespace gazebo
       this->model->GetJointController()->SetPositionPID(
           leftFront->GetScopedName(), this->pid);
 
-      this->model->GetJointController()->SetVelocityPID(
-          this->lidar->GetScopedName(), this->pid);
-
       // SetJointPosition will set the joint to the value instantly, which is not realistic. Use for setting up
       // the robot's intitial configuration
       //this->model->GetJointController()-> SetJointPosition (leftFront->GetScopedName(), 0.0);
-
-
-      this->model->GetJointController()->SetVelocityTarget(
-        this->lidar->GetScopedName(), 10.0);
 
       mode = 0;
       count = 0;
@@ -50,7 +39,6 @@ namespace gazebo
       // simulation iteration.
       this->updateConnection = event::Events::ConnectWorldUpdateBegin(
           boost::bind(&ModelPush::OnUpdate, this, _1));
-
     }
 
     public: void moveLeftSide(double targetForce){
@@ -76,12 +64,6 @@ namespace gazebo
       this->leftBack->SetForce(0, -targetForce);
     }
 
-    public: void SetVelocity(const double vel)
-    {
-      // Set the joint's target velocity.
-      this->model->GetJointController()->SetVelocityTarget(
-          this->lidar->GetScopedName(), vel);
-    }
 
     // Called by the world update start event
     public: void OnUpdate(const common::UpdateInfo & /*_info*/)
@@ -121,9 +103,10 @@ namespace gazebo
         turnCounterClockwise(6.0);
       }
 
-      SetVelocity(5);
+      //std::cout << "rightFront " << rightBack->GetAngle(0) << "\n";
 
-
+      moveLeftSide(2);
+      moveRightSide(2);
 
       
 
@@ -160,7 +143,6 @@ namespace gazebo
     private: physics::JointPtr leftBack;
     private: physics::JointPtr rightFront;
     private: physics::JointPtr rightBack;
-    private: physics::JointPtr lidar;
 
     // Pointer to the update event connection
     private: event::ConnectionPtr updateConnection;
