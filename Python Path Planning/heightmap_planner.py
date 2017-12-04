@@ -184,17 +184,22 @@ def aStarSearch():
 data_uc = data
 data_astar = data
 cur_state = getStartState()
-actions = uniformCostSearch()
-# actions = aStarSearch()
+# actions = uniformCostSearch()
+actions = aStarSearch()
+coordinates = [cur_state]
 while actions:
-	x, y = cur_state[0] + 64, 64 - cur_state[1]
-	data_astar[y][x] = 255
-	x, y = cur_state
-	dx, dy = delta[actions.pop(0)]
-	cur_state = (x + dx, y + dy)
+    x, y = cur_state[0] + 64, 64 - cur_state[1]
+    data_astar[y][x] = 255
+    x, y = cur_state
+    dx, dy = delta[actions.pop(0)]
+    cur_state = (x + dx, y + dy)
+    coordinates.append(cur_state)
 
-with open("landscape_uc.png","wb") as f:
-	f.write(vis.makeGrayPNG(data_uc))
-# with open("landscape_astar.png","wb") as f:
-# 	f.write(vis.makeGrayPNG(data_astar))
-
+# with open("landscape_uc.png","wb") as f:
+#     f.write(vis.makeGrayPNG(data_uc))
+# with open("coordinates_uc.txt","wb") as f:
+#     f.write(str(coordinates))
+with open("landscape_astar.png","wb") as f:
+    f.write(vis.makeGrayPNG(data_astar))
+with open("coordinates_astar.txt","wb") as f:
+    f.write(str(coordinates))
