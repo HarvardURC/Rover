@@ -18,15 +18,15 @@ for line in lines:
 
 # visualization of landscape
 size = int(math.sqrt(len(lines)))
-data = vis.map_to_array(height_map, size)
+def data(): return vis.map_to_array(height_map, size)
 with open("landscape.png","wb") as f:
-	f.write(vis.makeGrayPNG(data))
+	f.write(vis.makeGrayPNG(data()))
 
 # scaling factor for distance in x, y, z
 x_scale = 50
 y_scale = 50
 z_scale = 20
-goal_state = (64, -64)
+goal_state = (-64, 64)
 
 delta = {'N': (0, 1),
 	'S': (0, -1),
@@ -148,7 +148,7 @@ def uniformCostSearch():
 
 # print uniformCostSearch()
 
-def aStarSearch():
+def aStarSearch(obstacles = [], start_state = getStartState()):
     """Search the node that has the lowest combined cost and heuristic first."""
     # give the forward and back cost as the heuristic
     def priority(node):
@@ -158,11 +158,11 @@ def aStarSearch():
         return h + g
 
     # similar to above
-    state = getStartState()
+    state = start_state
     nodes = util.PriorityQueueWithFunction(priority)
     path = util.Stack()
     nodes.push((state, path))
-    states_visited = set()
+    states_visited = set(obstacles)
 
     while True:
         if nodes.isEmpty():
@@ -181,8 +181,8 @@ def aStarSearch():
 
 # visualize path on landscape
 # data = vis.map_to_array(height_map, size)
-data_uc = data
-data_astar = data
+data_uc = data()
+data_astar = data()
 cur_state = getStartState()
 # actions = uniformCostSearch()
 actions = aStarSearch()
@@ -190,6 +190,7 @@ coordinates = [cur_state]
 while actions:
     x, y = cur_state[0] + 64, 64 - cur_state[1]
     data_astar[y][x] = 255
+    # data_uc[y][x] = 255
     x, y = cur_state
     dx, dy = delta[actions.pop(0)]
     cur_state = (x + dx, y + dy)
