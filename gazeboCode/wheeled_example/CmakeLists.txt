@@ -7,3 +7,4 @@ list(APPEND CMAKE_CXX_FLAGS "${GAZEBO_CXX_FLAGS}")
 
 add_library(wheeledRobot SHARED wheeledRobot.cc)
 target_link_libraries(wheeledRobot ${GAZEBO_LIBRARIES} ${Boost_LIBRARIES})
+
