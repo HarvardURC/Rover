@@ -36,6 +36,7 @@ namespace gazebo
       // SetJointPosition will set the joint to the value instantly, which is not realistic. Use for setting up
       // the robot's intitial configuration
       //this->model->GetJointController()-> SetJointPosition (leftFront->GetScopedName(), 0.0);
+
       mode = 0;
       count = 0;
       saveTime = 0.0;
@@ -86,6 +87,19 @@ namespace gazebo
       this->leftFront->SetVelocity(0, targetLeft);
       this->leftBack->SetVelocity(0, targetLeft);
     }
+     public: void moveLeftForward(double targetForce){
+      this->rightFront->SetForce(0, targetForce);
+      this->rightBack->SetForce(0, targetForce);
+      this->leftFront->SetForce(0, 1.5*targetForce);
+      this->leftBack->SetForce(0, 1.5*targetForce);
+    }
+    public: void diffMove(double targetLeft,double targetRight){
+      this->rightFront->SetVelocity(0, targetRight);
+      this->rightBack->SetVelocity(0, targetRight);
+      this->leftFront->SetVelocity(0, targetLeft);
+      this->leftBack->SetVelocity(0, targetLeft);
+    }
+
 
 
     // Called by the world update start event
@@ -104,6 +118,7 @@ namespace gazebo
       this->leftFront->SetForce(0, targetForce);
       this->leftBack->SetForce(0, targetForce);
       */
+
       this->model_coor = this->model->GetWorldPose();
 
 
@@ -190,6 +205,11 @@ namespace gazebo
       // if (fmod(timeNow, 10.0) > 5.0){
       //   if (mode == 1){
 
+      
+       //   } 
+      // if (fmod(timeNow, 10.0) > 5.0){
+      //   if (mode == 1){
+
       //     //double curAngle = (leftFront->GetAngle(0).Degree())/57.32;
           
       //     //std::cout << "leftFront " << leftFront->GetAngle(0) << "\n";
@@ -209,7 +229,6 @@ namespace gazebo
 
       //std::cout << "rightFront " << rightBack->GetAngle(0) << "\n";
 
-      //moveLeftForward(4);
 
 
       
@@ -253,6 +272,7 @@ namespace gazebo
     private: math::Vector3 goalVector;
 
     private: double saveTime;
+
     // Pointer to the update event connection
     private: event::ConnectionPtr updateConnection;
   };
