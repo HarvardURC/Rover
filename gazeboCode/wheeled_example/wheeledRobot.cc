@@ -4,10 +4,11 @@
 #include <gazebo/common/common.hh>
 #include <stdio.h>
 
-#include <gazebo/transport/transport.hh>
-#include <gazebo/msgs/msgs.hh>
-
+#include <math.h>
 #include <ncurses.h>
+#include <cmath>
+#include <iostream>
+
 
 namespace gazebo
 {
@@ -21,7 +22,8 @@ namespace gazebo
       this->leftBack = this->model->GetJoint("left_back_wheel_hinge");
       this->rightFront = this->model->GetJoint("right_front_wheel_hinge");
       this->rightBack = this->model->GetJoint("right_back_wheel_hinge");
-      this->lidar = this->model->GetJoint("lidar");
+      this->goal_coor = math::Pose(10, -10, 5, 0, 0 ,0);
+      this->model_coor = this->model->GetWorldPose();
 
       // Setup a P-controller, with these parameters
       this->pid = common::PID(.1, 0, 0);
@@ -32,16 +34,9 @@ namespace gazebo
       this->model->GetJointController()->SetPositionPID(
           leftFront->GetScopedName(), this->pid);
 
-      this->model->GetJointController()->SetVelocityPID(
-          this->lidar->GetScopedName(), this->pid);
-
       // SetJointPosition will set the joint to the value instantly, which is not realistic. Use for setting up
       // the robot's intitial configuration
       //this->model->GetJointController()-> SetJointPosition (leftFront->GetScopedName(), 0.0);
-
-
-      this->model->GetJointController()->SetVelocityTarget(
-        this->lidar->GetScopedName(), 10.0);
 
       mode = 0;
       count = 0;
@@ -50,7 +45,6 @@ namespace gazebo
       // simulation iteration.
       this->updateConnection = event::Events::ConnectWorldUpdateBegin(
           boost::bind(&ModelPush::OnUpdate, this, _1));
-
     }
 
     public: void moveLeftSide(double targetForce){
@@ -75,13 +69,25 @@ namespace gazebo
       this->leftFront->SetForce(0, -targetForce);
       this->leftBack->SetForce(0, -targetForce);
     }
-
-    public: void SetVelocity(const double vel)
-    {
-      // Set the joint's target velocity.
-      this->model->GetJointController()->SetVelocityTarget(
-          this->lidar->GetScopedName(), vel);
+     public: void moveRightForward(double targetForce){
+      this->rightFront->SetForce(0, 1.5*targetForce);
+      this->rightBack->SetForce(0, 1.5*targetForce);
+      this->leftFront->SetForce(0, targetForce);
+      this->leftBack->SetForce(0, targetForce);
     }
+     public: void moveLeftForward(double targetForce){
+      this->rightFront->SetForce(0, targetForce);
+      this->rightBack->SetForce(0, targetForce);
+      this->leftFront->SetForce(0, 1.5*targetForce);
+      this->leftBack->SetForce(0, 1.5*targetForce);
+    }
+    public: void diffMove(double targetLeft,double targetRight){
+      this->rightFront->SetVelocity(0, targetRight);
+      this->rightBack->SetVelocity(0, targetRight);
+      this->leftFront->SetVelocity(0, targetLeft);
+      this->leftBack->SetVelocity(0, targetLeft);
+    }
+
 
     // Called by the world update start event
     public: void OnUpdate(const common::UpdateInfo & /*_info*/)
@@ -99,30 +105,32 @@ namespace gazebo
       this->leftFront->SetForce(0, targetForce);
       this->leftBack->SetForce(0, targetForce);
       */
+      
+       //   } 
+      // if (fmod(timeNow, 10.0) > 5.0){
+      //   if (mode == 1){
 
-
-      if (fmod(timeNow, 10.0) > 5.0){
-        if (mode == 1){
-
-          //double curAngle = (leftFront->GetAngle(0).Degree())/57.32;
+      //     //double curAngle = (leftFront->GetAngle(0).Degree())/57.32;
           
-          //std::cout << "leftFront " << leftFront->GetAngle(0) << "\n";
-          mode = 0;
+      //     //std::cout << "leftFront " << leftFront->GetAngle(0) << "\n";
+      //     mode = 0;
 
-        }
-        turnClockwise(3.0);
+      //   }
+      //   turnClockwise(3.0);
         
-      } else{
-        if (mode == 0){
+      // } else{
+      //   if (mode == 0){
           
-          //std::cout << "rightFront " << rightFront->GetAngle(0) << "\n";
-          mode = 1;
-        }
-        turnCounterClockwise(6.0);
-      }
+      //     //std::cout << "rightFront " << rightFront->GetAngle(0) << "\n";
+      //     mode = 1;
+      //   }
+      //   turnCounterClockwise(6.0);
+      // }  
 
-      SetVelocity(5);
+      //std::cout << "rightFront " << rightBack->GetAngle(0) << "\n";
 
+      moveLeftForward(4);
+      moveRightForward(4);
 
 
       
@@ -160,8 +168,8 @@ namespace gazebo
     private: physics::JointPtr leftBack;
     private: physics::JointPtr rightFront;
     private: physics::JointPtr rightBack;
-    private: physics::JointPtr lidar;
-
+    private: math::Pose model_coor;
+    private: math::Pose goal_coor;
     // Pointer to the update event connection
     private: event::ConnectionPtr updateConnection;
   };
