@@ -163,7 +163,6 @@ def aStarSearch(obstacles = [], start_state = getStartState()):
     path = util.Stack()
     nodes.push((state, path))
     states_visited = set(obstacles)
-    print obstacles, states_visited
 
     while True:
         if nodes.isEmpty():

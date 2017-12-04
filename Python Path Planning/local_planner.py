@@ -109,18 +109,17 @@ environment = {}
 png = plan.data()
 cur_state = plan.getStartState()
 coordinates = [cur_state]
+png = vis.mod_array(obstacles, png, 125)
 
 while not plan.goal(cur_state):
     obs = lidar(cur_state)
     # print obs, cur_state
     for ob in obs:
         environment[ob] = 255
-    print environment.keys(), cur_state
     actions = plan.aStarSearch(environment.keys(), cur_state)
     for action in actions:
-        print cur_state
         x, y = cur_state[0] + 64, 64 - cur_state[1]
-        png[y][x] = 255
+        png[y][x] = 254
         x, y = cur_state
         dx, dy = delta[action]
         cur_state = (x + dx, y + dy)
@@ -128,21 +127,9 @@ while not plan.goal(cur_state):
         if not all([x in environment for x in lidar(cur_state)]):
             break
 
+png = vis.mod_array(environment, png, 255)
+
 with open("obstacle_astar.png","wb") as f:
     f.write(vis.makeGrayPNG(png))
 with open("obstacle_astar.txt","wb") as f:
     f.write(str(coordinates))
-
-# # change certain color 
-# im = Image.open('fig1.png')
-# data = np.array(im)
-
-# r1, g1, b1 = 255, 255, 255 # Original value
-# r2, g2, b2 = 255, 0, 0 # Value that we want to replace it with
-
-# red, green, blue = data[:,:,0], data[:,:,1], data[:,:,2]
-# mask = (red == r1) & (green == g1) & (blue == b1)
-# data[:,:,:3][mask] = [r2, g2, b2]
-
-# im = Image.fromarray(data)
-# im.save('fig1_modified.png')

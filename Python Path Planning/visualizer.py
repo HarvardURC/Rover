@@ -8,6 +8,12 @@ def map_to_array(d, size):
 		a[y][x] = d[key]
 	return a
 
+def mod_array(d, array, color):
+    for key in d.keys():
+        x, y = 64 + key[0], 64 - key[1]
+        array[y][x] = color
+    return array
+
 def makeGrayPNG(data, height = None, width = None):
     def I1(value):
         return struct.pack("!B", value & (2**8-1))
