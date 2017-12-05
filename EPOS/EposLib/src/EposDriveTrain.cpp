@@ -90,7 +90,7 @@ bool EposDriveTrain::stopAllMotors() {
 	bool status = 1;
 
 	//Loop through each of the nodes and send a stop signal to each of them
-	for (int i=1; i<6; i++) {
+	for (int i=1; i<=6; i++) {
 		//Try stopping the motor
 		if(!VCS_MoveWithVelocity(portHandle, i, 0, &errorCode)) {
 			logError("VCS_MoveWithVelocity", i, errorCode);
@@ -126,7 +126,7 @@ bool EposDriveTrain::enableAll() {
 	bool status = 1;
 
 	//Set all motor nodes to 'enable'
-	for (int i=1; i<6; i++) {
+	for (int i=1; i<=6; i++) {
 		if(!VCS_SetEnableState(portHandle, i, &errorCode)) {
 			logError("VCS_SetEnableState", i, errorCode);
 
@@ -143,7 +143,7 @@ bool EposDriveTrain::clearAllFaults() {
 	bool status = 1;
 
 	//Set all motor nodes to 'enable'
-	for (int i=1; i<6; i++) {
+	for (int i=1; i<=6; i++) {
 		if(!VCS_ClearFault(portHandle, i, &errorCode)) {
 			logError("VCS_ClearFault", i, errorCode);
 
