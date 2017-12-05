@@ -20,6 +20,8 @@ using namespace std;
 #define RELATIVE 0
 #define ABSOLUTE 1
 
+//TODO: Constants for different modes (profile velocity, profile position, etc)
+
 class EposDriveTrain {
 	//Global variables for EPOS controller parameters
 	string g_deviceName = "EPOS4";
@@ -71,9 +73,16 @@ public:
 	//Get position of a given motor
 	int getPosition(int);
 
+	//TODO: getVelocity
+
+	//TODO: getMovementState (i.e. if the drive has reached its target)
+
+	//TODO: getCurrent (motor current drawn by a node)
+
 
 private:
 	void logError(string, unsigned int);
+	void logError(string, int, unsigned int);
 };
 
 #endif /* EPOSDRIVETRAIN_H_ */
