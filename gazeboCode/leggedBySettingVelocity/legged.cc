@@ -11,12 +11,18 @@ const double pi = 3.14159;
 const double legAirSpeed = 7.0;
 // 20 degrees before home pos
 const double landingAngle = 0.349;
-double legGroundSpeed = legAirSpeed * (2*landingAngle/(2*pi - 2*landingAngle));
+const double legGroundSpeed = legAirSpeed * (2*landingAngle/(2*pi - 2*landingAngle));
+
+const double k_p = 5.0;
 
 // GLOBAL VARIABLES
 int state = 1;
 int legStates[6] = {0,0,0,0,0,0};
 double timeNow;
+
+const double maxTurningThreshold = 0.3;
+double turningThreshold = maxTurningThreshold;
+
 
 
 
@@ -48,21 +54,21 @@ void moveForward(gazebo::physics::JointPtr legs[6], double legAngles[6], int leg
           legs[2]->SetVelocity(0, legAirSpeed);
 
         // make left legs go to home position
-        if ((legAngles[3] > landingAngle) and (legAngles[3] < 2*landingAngle/(2*pi - 2*landingAngle))){
+        if ((legAngles[3] > landingAngle) and (legAngles[3] < 2*pi - 2*landingAngle)){
             legs[3]->SetVelocity(0, 0.0);
             legStates[3] = 1;
         }
         else 
             legs[3]->SetVelocity(0, legAirSpeed);
 
-        if ((legAngles[4] > landingAngle) and (legAngles[4] < 2*landingAngle/(2*pi - 2*landingAngle))){
+        if ((legAngles[4] > landingAngle) and (legAngles[4] < 2*pi - 2*landingAngle)){
             legs[4]->SetVelocity(0, 0.0);
             legStates[4] = 1;
         }
         else 
             legs[4]->SetVelocity(0, legAirSpeed);
 
-        if ((legAngles[5] > landingAngle) and (legAngles[5] < 2*landingAngle/(2*pi - 2*landingAngle))){
+        if ((legAngles[5] > landingAngle) and (legAngles[5] < 2*pi - 2*landingAngle)){
             legs[5]->SetVelocity(0, 0.0);
             legStates[5] = 1;
         }
@@ -202,7 +208,7 @@ void rotateLeft(gazebo::physics::JointPtr legs[6], double legAngles[6], int legS
           legStates[1] = 1;
         }
         else 
-          legs[1]->SetVelocity(0, legAirSpeed);
+          legs[1]->SetVelocity(0, -legAirSpeed);
 
         if (legAngles[2] > pi){
           legs[2]->SetVelocity(0, 0);
@@ -213,21 +219,21 @@ void rotateLeft(gazebo::physics::JointPtr legs[6], double legAngles[6], int legS
 
         
         // make left legs go to home position
-        if ((legAngles[3] > landingAngle) and (legAngles[3] < 2*landingAngle/(2*pi - 2*landingAngle))){
+        if ((legAngles[3] > landingAngle) and (legAngles[3] < 2*pi - 2*landingAngle)){
             legs[3]->SetVelocity(0, 0.0);
             legStates[3] = 1;
         }
         else 
             legs[3]->SetVelocity(0, -legAirSpeed);
 
-        if ((legAngles[4] > landingAngle) and (legAngles[4] < 2*landingAngle/(2*pi - 2*landingAngle))){
+        if ((legAngles[4] > landingAngle) and (legAngles[4] < 2*pi - 2*landingAngle)){
             legs[4]->SetVelocity(0, 0.0);
             legStates[4] = 1;
         }
         else 
             legs[4]->SetVelocity(0, legAirSpeed);
 
-        if ((legAngles[5] > landingAngle) and (legAngles[5] < 2*landingAngle/(2*pi - 2*landingAngle))){
+        if ((legAngles[5] > landingAngle) and (legAngles[5] < 2*pi - 2*landingAngle)){
             legs[5]->SetVelocity(0, 0.0);
             legStates[5] = 1;
         }
@@ -351,11 +357,172 @@ void rotateLeft(gazebo::physics::JointPtr legs[6], double legAngles[6], int legS
     }
 }
 
-/*
-void rotateRight(legs, legAngles){
-  
+void rotateRight(gazebo::physics::JointPtr legs[6], double legAngles[6], int legStates[6]){
+    // CLOCKWISE
+
+    // right side in the air
+    if (state == 1){
+
+        if (legAngles[0] > pi){
+          legs[0]->SetVelocity(0, 0);
+          legStates[0] = 1;
+        }
+        else 
+          legs[0]->SetVelocity(0, -legAirSpeed);
+
+        if (legAngles[1] > pi){
+          legs[1]->SetVelocity(0, 0);
+          legStates[1] = 1;
+        }
+        else 
+          legs[1]->SetVelocity(0, legAirSpeed);
+
+        if (legAngles[2] > pi){
+          legs[2]->SetVelocity(0, 0);
+          legStates[2] = 1;
+        }
+        else 
+          legs[2]->SetVelocity(0, -legAirSpeed);
+
+        
+        // make left legs go to home position
+        if (legAngles[3] > 2*pi - 2*landingAngle){
+            legs[3]->SetVelocity(0, 0.0);
+            legStates[3] = 1;
+        }
+        else 
+            legs[3]->SetVelocity(0, legAirSpeed);
+
+        if (legAngles[4] < landingAngle){
+            legs[4]->SetVelocity(0, 0.0);
+            legStates[4] = 1;
+        }
+        else 
+            legs[4]->SetVelocity(0, -legAirSpeed);
+
+        if (legAngles[5] > 2*pi - 2*landingAngle){
+            legs[5]->SetVelocity(0, 0.0);
+            legStates[5] = 1;
+        }
+        else 
+            legs[5]->SetVelocity(0, legAirSpeed);
+        
+
+        if (legStates[0] and legStates[1] and legStates[2]){
+          legStates[0] = legStates[1] = legStates[2] = legStates[3] = legStates[4] = legStates[5] = 0;
+          state = 2;
+        }
+    }
+    // move right feet to ground and move left feet to the air
+    else if (state == 2){
+      
+        // right legs finish air
+        if (legAngles[0] < landingAngle){
+          legs[0]->SetVelocity(0, 0);
+          legStates[0] = 1;
+        }
+        else 
+          legs[0]->SetVelocity(0, -legAirSpeed);
+
+        if (legAngles[1] > 2*pi - landingAngle){
+          legs[1]->SetVelocity(0, 0);
+          legStates[1] = 1;
+        }
+        else 
+          legs[1]->SetVelocity(0, legAirSpeed);
+
+        if (legAngles[2] < landingAngle){
+          legs[2]->SetVelocity(0, 0);
+          legStates[2] = 1;
+        }
+        else 
+          legs[2]->SetVelocity(0, -legAirSpeed);
+
+        // left legs finish ground step
+        if ((legAngles[3] > landingAngle) and (legAngles[3] < landingAngle * 2)){
+          legs[3]->SetVelocity(0, 0);
+          legStates[3] = 1;
+        }
+        else 
+          legs[3]->SetVelocity(0, legGroundSpeed);
+
+        if ((legAngles[4] > 2 * landingAngle) and (legAngles[4] < 2*pi - landingAngle)){
+          legs[4]->SetVelocity(0, 0);
+          legStates[4] = 1;
+        }
+        else 
+          legs[4]->SetVelocity(0, -legGroundSpeed);
+
+        if ((legAngles[5] > landingAngle) and (legAngles[5] < landingAngle * 2)){
+          legs[5]->SetVelocity(0, 0);
+          legStates[5] = 1;
+        }
+        else 
+          legs[5]->SetVelocity(0, legGroundSpeed);
+        
+
+        if (legStates[0] and legStates[1] and legStates[2] and legStates[3] and legStates[4] and legStates[5]){
+          legStates[0] = legStates[1] = legStates[2] = legStates[3] = legStates[4] = legStates[5] = 0;
+          state = 3;
+        }
+      
+    } 
+    // move left feet to ground and move right feet to the air
+    else if (state == 3){
+        // right legs finish ground step. Used AND to ensure that when its greater than landing angle, it 
+        //had just finished off the ground and not at the start (since the angle is around 6 radians at beginning of 
+       // ground movement)
+    
+        if ((legAngles[0] > landingAngle * 2) and (legAngles[0] < 2*pi - landingAngle)){
+          legs[0]->SetVelocity(0, 0);
+          legStates[0] = 1;
+        }
+        else 
+          legs[0]->SetVelocity(0, -legGroundSpeed);
+
+        if ((legAngles[1] > landingAngle) and (legAngles[1] < landingAngle * 2)){
+          legs[1]->SetVelocity(0, 0);
+          legStates[1] = 1;
+        }
+        else 
+          legs[1]->SetVelocity(0, legGroundSpeed);
+
+        if ((legAngles[2] > landingAngle * 2) and (legAngles[2] < 2*pi - landingAngle)){
+          legs[2]->SetVelocity(0, 0);
+          legStates[2] = 1;
+        }
+        else 
+          legs[2]->SetVelocity(0, -legGroundSpeed);
+
+        // left legs finish air
+        if (legAngles[3] > 2*pi - landingAngle){
+          legs[3]->SetVelocity(0, 0);
+          legStates[3] = 1;
+        }
+        else 
+          legs[3]->SetVelocity(0, legAirSpeed);
+
+        if (legAngles[4] < landingAngle){
+          legs[4]->SetVelocity(0, 0);
+          legStates[4] = 1;
+        }
+        else 
+          legs[4]->SetVelocity(0, -legAirSpeed);
+
+        if (legAngles[5] > 2*pi - landingAngle){
+          legs[5]->SetVelocity(0, 0);
+          legStates[5] = 1;
+        }
+        else 
+          legs[5]->SetVelocity(0, legAirSpeed);
+        
+
+        if (legStates[0] and legStates[1] and legStates[2] and legStates[3] and legStates[4] and legStates[5]){
+          legStates[0] = legStates[1] = legStates[2] = legStates[3] = legStates[4] = legStates[5] = 0;
+          state = 2;
+        }
+    }
 }
-*/
 
 
 
@@ -438,20 +605,24 @@ namespace gazebo
       int turning = 0;
       double yawError;
 
-      double turningThreshold = 0.15;
-      double k_p = 5.0;
+      
 
       double turningSave = turning;
       
       if (desYaw > actualYaw + turningThreshold)
       {
+        // shrink turning threshold so rover turns to very close to correct angle
+        turningThreshold = maxTurningThreshold/4.0;
+
         yawError = (desYaw - actualYaw) * k_p;
 
         rotateLeft(legs, legAngles, legStates);
         turning = 1;
 
       } 
-      else if (actualYaw - desYaw > 3.1415){
+      else if (actualYaw - desYaw > pi){
+        // shrink turning threshold so rover turns to very close to correct angle
+        turningThreshold = maxTurningThreshold/4.0;
 
         yawError = (actualYaw - desYaw) * k_p;
 
@@ -460,26 +631,35 @@ namespace gazebo
       }
       else if (desYaw < actualYaw - turningThreshold)
       {
+        // shrink turning threshold so rover turns to very close to correct angle
+        turningThreshold = maxTurningThreshold/4.0;
+
         // multiply by negative because this is negative
         yawError = -1.0 * (desYaw - actualYaw) * k_p;
 
-        //diffMove(1.0 + yawError, 0.0);
+        rotateRight(legs, legAngles, legStates);
         turning = 2;
       } 
-      else if (desYaw - actualYaw > 3.1415){
+      else if (desYaw - actualYaw > pi){
+        // shrink turning threshold so rover turns to very close to correct angle
+        turningThreshold = maxTurningThreshold/4.0;
+
         yawError = (desYaw - actualYaw) * k_p;
 
-        //diffMove(1.0 + yawError, 0.0);
+        rotateRight(legs, legAngles, legStates);
         turning = 2;
       }
       else {
         moveForward(legs, legAngles, legStates);
         turning = 3;
+
+        // expand turning threshold so rover doesn't have to keep turning
+        turningThreshold = maxTurningThreshold;
       }
 
       if (timeNow - saveTime > .5){
            saveTime = timeNow;
-           std::cout << "actualYaw: " << actualYaw << " desYaw: " << desYaw << " P_err: " << yawError << " Turning Index: " << turning << " x: " << x << " y: " << y << " z: " << z << " state: " << state << std::endl;
+           std::cout << "actualYaw: " << actualYaw << " desYaw: " << desYaw << " P_err: " << yawError << " Turning Index: " << turning << " x: " << x << " y: " << y << " z: " << z << std::endl;
       }
     
       // reset state to 1 if movement has changed
