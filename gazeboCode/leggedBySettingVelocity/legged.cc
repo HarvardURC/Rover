@@ -5,6 +5,13 @@
 #include <stdio.h>
 #include <ncurses.h>
 
+#include <iostream>
+
+#include <tuple>
+#include <vector>
+
+
+
 
 // CONSTANTS
 const double pi = 3.14159;
@@ -14,6 +21,7 @@ const double landingAngle = 0.349;
 const double legGroundSpeed = legAirSpeed * (2*landingAngle/(2*pi - 2*landingAngle));
 
 const double k_p = 5.0;
+const double distanceThreshold = .3;
 
 // GLOBAL VARIABLES
 int state = 1;
@@ -23,7 +31,21 @@ double timeNow;
 const double maxTurningThreshold = 0.3;
 double turningThreshold = maxTurningThreshold;
 
+int trajIndex = 0;
 
+typedef std::vector <std::pair<int,int>> pair_list;
+
+// CONVERT FROM ALBERT TRAJECTORY TO SUITABLE C++ TRAJECTORY USING THESE PYTHON COMMANDS:
+// str = ALBERTCHIEN TRAJECTORY FORMAT
+// str = str.replace(')', '{')
+// str = str.replace('(', '}')
+// str = str.replace(']', '}')
+// str = str.replace('[', '{')
+// return str
+
+pair_list trajectory = {{2, 0}, {2, 4}, {-2, 4}, {-2, -4}, {1, 0}};
+
+const double trajSize = trajectory.size();
 
 
 void moveForward(gazebo::physics::JointPtr legs[6], double legAngles[6], int legStates[6]){
@@ -584,23 +606,36 @@ namespace gazebo
           return;
       }
 
+      
+
+
+      
+
       // controller for following a point
       this->model_coor = this->model->GetWorldPose();
-
-      math::Vector3 goalVector(10.0,10.0,5.0);
-
       math::Vector3 modelPos(0,0,0);
       modelPos = this->model_coor.pos;
-      //double yaw = model.rot.yaw;
-      double x, y, z;
-      x = goalVector.x - modelPos.x;
-      y = goalVector.y - modelPos.y;
-      z = goalVector.z - modelPos.z;
 
-     // math::Vector3 ModelOrientation = this->model_coor.rot.GetYaw();
-      double actualYaw = this->model_coor.rot.GetYaw();//odelOrientation.x; 
+      // get current goal from the trajectory using trajIndex
+      double xgoal = trajectory[trajIndex].first;
+      double ygoal = trajectory[trajIndex].second;
 
-      double desYaw = atan2(y, x);
+      double xdisp, ydisp;
+      xdisp = xgoal - modelPos.x;
+      ydisp = ygoal - modelPos.y;
+
+      double dist2Goal = pow(xdisp*xdisp + ydisp*ydisp, .5);
+      if (dist2Goal < distanceThreshold){
+          trajIndex += 1;
+      }
+
+      if (trajIndex == trajSize){
+          return;
+      }
+
+      double actualYaw = this->model_coor.rot.GetYaw();
+
+      double desYaw = atan2(ydisp, xdisp);
 
       int turning = 0;
       double yawError;
@@ -659,7 +694,7 @@ namespace gazebo
 
       if (timeNow - saveTime > .5){
            saveTime = timeNow;
-           std::cout << "actualYaw: " << actualYaw << " desYaw: " << desYaw << " P_err: " << yawError << " Turning Index: " << turning << " x: " << x << " y: " << y << " z: " << z << std::endl;
+           std::cout << "actualYaw: " << actualYaw << " desYaw: " << desYaw << " Turning: " << turning << " xgoal: " << xgoal << " ygoal: " << ygoal << " xdisp: " << xdisp << " ydisp: " << ydisp << " dis2Goal: " << dist2Goal << std::endl;
       }
     
       // reset state to 1 if movement has changed
