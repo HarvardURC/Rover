@@ -159,10 +159,40 @@ int EposDriveTrain::getPosition(int node) {
 	int position;
 
 	if(!VCS_GetPositionIs(portHandle, node, &position, &errorCode)) {
-		logError("GetPositionIs", node, errorCode);
+		logError("VCS_GetPositionIs", node, errorCode);
 	}
 
 	return position;
+}
+
+int EposDriveTrain::getVelocity(int node) {
+	int velocity;
+
+	if(!VCS_GetVelocityIs(portHandle, node, &velocity, &errorCode)) {
+		logError("VCS_GetVelocityIs", node, errorCode);
+	}
+
+	return velocity;
+}
+
+bool EposDriveTrain::isAtTarget(int node) {
+	int targetReached;
+
+	if(!VCS_GetMovementState(portHandle, node, &targetReached, &errorCode)) {
+		logError("VCS_GetMovementState", node, errorCode);
+	}
+
+	return (bool) targetReached;
+}
+
+short EposDriveTrain::getCurrent(int node) {
+	short current;
+
+	if(!VCS_GetCurrentIs(portHandle, node, &current, &errorCode)) {
+		logError("VCS_GetMovementState", node, errorCode);
+	}
+
+	return current;
 }
 
 void EposDriveTrain::logError(string functName, unsigned int errorCode) {

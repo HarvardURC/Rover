@@ -73,11 +73,14 @@ public:
 	//Get position of a given motor
 	int getPosition(int);
 
-	//TODO: getVelocity
+	//Get motor velocity
+	int getVelocity(int);
 
-	//TODO: getMovementState (i.e. if the drive has reached its target)
+	//Check if a motor has reached its target
+	bool isAtTarget(int);
 
-	//TODO: getCurrent (motor current drawn by a node)
+	//Get motor current
+	short getCurrent(int);
 
 
 private:
