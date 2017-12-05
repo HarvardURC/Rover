@@ -6,11 +6,27 @@
 #include <ncurses.h>
 
 #include <iostream>
+#include <fstream>
 
 #include <tuple>
 #include <vector>
 
+typedef std::vector <std::pair<int,int>> pair_list;
 
+// CONVERT FROM ALBERT TRAJECTORY TO SUITABLE C++ TRAJECTORY USING THESE PYTHON COMMANDS:
+// str = ALBERT TRAJECTORY STRING
+// str = str.replace(')', '{')
+// str = str.replace('(', '}')
+// str = str.replace(']', '}')
+// str = str.replace('[', '{')
+// return str
+
+pair_list trajectory = {{2, 0}, {2, 2}, {-2, 2}, {-2, -2}, {2, -2}, {0,0}};
+
+const double trajSize = trajectory.size();
+
+// how close to trajectory point rover moves to before moving on to next point in trajectory
+const double distanceThreshold = .2;
 
 
 // CONSTANTS
@@ -21,7 +37,7 @@ const double landingAngle = 0.349;
 const double legGroundSpeed = legAirSpeed * (2*landingAngle/(2*pi - 2*landingAngle));
 
 const double k_p = 5.0;
-const double distanceThreshold = .3;
+
 
 // GLOBAL VARIABLES
 int state = 1;
@@ -33,19 +49,11 @@ double turningThreshold = maxTurningThreshold;
 
 int trajIndex = 0;
 
-typedef std::vector <std::pair<int,int>> pair_list;
-
-// CONVERT FROM ALBERT TRAJECTORY TO SUITABLE C++ TRAJECTORY USING THESE PYTHON COMMANDS:
-// str = ALBERTCHIEN TRAJECTORY FORMAT
-// str = str.replace(')', '{')
-// str = str.replace('(', '}')
-// str = str.replace(']', '}')
-// str = str.replace('[', '{')
-// return str
-
-pair_list trajectory = {{2, 0}, {2, 4}, {-2, 4}, {-2, -4}, {1, 0}};
-
-const double trajSize = trajectory.size();
+// variable for reading from gamepad, set usingGamepad = true if you want to control with gamecontroller
+// USING LOGITECH F310 Gamepad
+std::ifstream myfile;
+int gameData;
+bool usingGamepad = false;
 
 
 void moveForward(gazebo::physics::JointPtr legs[6], double legAngles[6], int legStates[6]){
@@ -605,11 +613,17 @@ namespace gazebo
       if (timeNow < 2){
           return;
       }
-
       
+      if (usingGamepad){
+          if (timeNow - saveTimeShorter > .15){
+               saveTimeShorter = timeNow;
 
-
-      
+              // read from controlValues.txt which is being updated by the gameController
+              myfile.open ("controlValues.txt");
+              myfile >> gameData;
+              myfile.close();
+          }
+      }
 
       // controller for following a point
       this->model_coor = this->model->GetWorldPose();
@@ -637,68 +651,72 @@ namespace gazebo
 
       double desYaw = atan2(ydisp, xdisp);
 
-      int turning = 0;
+      int turningState = 0;
       double yawError;
 
       
 
-      double turningSave = turning;
+      double turningStateSave = turningState;
+
+      // if usingGamepad control through gameData variable, else do controller to follow trajectory
+      if (usingGamepad){
+          // button X
+          if (gameData == 0){
+              rotateLeft(legs, legAngles, legStates);
+              turningState = 1;
+          } 
+          // button A
+          else if (gameData == 1){
+              for (int i = 0; i < 6; i++){
+                 legs[i]->SetVelocity(0, 0);
+              }
+          }
+          // button B
+          else if (gameData == 2){
+              rotateRight(legs, legAngles, legStates);
+              turningState = 2;
+          }
+          else if (gameData == 3){
+              moveForward(legs, legAngles, legStates);
+              turningState = 3;
+          }
+      } else{
+
+          // if the desired yaw is to the left of the permitted yaw interval, rotateLeft
+          if ((desYaw > actualYaw + turningThreshold) or (actualYaw - desYaw > pi))
+          {
+            rotateLeft(legs, legAngles, legStates);
+            turningState = 1;
+
+            // shrink turning threshold so rover turns to very close to correct angle
+            turningThreshold = maxTurningThreshold/4.0;
+          } 
+          // else if the desired yaw is to the right of the permitted yaw interval, rotateRight
+          else if ((desYaw < actualYaw - turningThreshold) or (desYaw - actualYaw > pi))
+          {
+            rotateRight(legs, legAngles, legStates);
+            turningState = 2;
+
+            // shrink turning threshold so rover turns to very close to correct angle
+            turningThreshold = maxTurningThreshold/4.0;
+          } 
+          else {
+            moveForward(legs, legAngles, legStates);
+            turningState = 3;
+
+            // expand turning threshold so rover doesn't have to keep rotating
+            turningThreshold = maxTurningThreshold;
+          }
+
+          if (timeNow - saveTime > .5){
+               saveTime = timeNow;
+               std::cout << "actualYaw: " << actualYaw << " desYaw: " << desYaw << " TurningState: " << turningState << " xgoal: " << xgoal << " ygoal: " << ygoal << " xdisp: " << xdisp << " ydisp: " << ydisp << " dis2Goal: " << dist2Goal << std::endl;
+          }
+      }
       
-      if (desYaw > actualYaw + turningThreshold)
-      {
-        // shrink turning threshold so rover turns to very close to correct angle
-        turningThreshold = maxTurningThreshold/4.0;
-
-        yawError = (desYaw - actualYaw) * k_p;
-
-        rotateLeft(legs, legAngles, legStates);
-        turning = 1;
-
-      } 
-      else if (actualYaw - desYaw > pi){
-        // shrink turning threshold so rover turns to very close to correct angle
-        turningThreshold = maxTurningThreshold/4.0;
-
-        yawError = (actualYaw - desYaw) * k_p;
-
-        rotateLeft(legs, legAngles, legStates);
-        turning = 1;
-      }
-      else if (desYaw < actualYaw - turningThreshold)
-      {
-        // shrink turning threshold so rover turns to very close to correct angle
-        turningThreshold = maxTurningThreshold/4.0;
-
-        // multiply by negative because this is negative
-        yawError = -1.0 * (desYaw - actualYaw) * k_p;
-
-        rotateRight(legs, legAngles, legStates);
-        turning = 2;
-      } 
-      else if (desYaw - actualYaw > pi){
-        // shrink turning threshold so rover turns to very close to correct angle
-        turningThreshold = maxTurningThreshold/4.0;
-
-        yawError = (desYaw - actualYaw) * k_p;
-
-        rotateRight(legs, legAngles, legStates);
-        turning = 2;
-      }
-      else {
-        moveForward(legs, legAngles, legStates);
-        turning = 3;
-
-        // expand turning threshold so rover doesn't have to keep turning
-        turningThreshold = maxTurningThreshold;
-      }
-
-      if (timeNow - saveTime > .5){
-           saveTime = timeNow;
-           std::cout << "actualYaw: " << actualYaw << " desYaw: " << desYaw << " Turning: " << turning << " xgoal: " << xgoal << " ygoal: " << ygoal << " xdisp: " << xdisp << " ydisp: " << ydisp << " dis2Goal: " << dist2Goal << std::endl;
-      }
     
-      // reset state to 1 if movement has changed
-      if (turningSave != turning){
+      // reset state to 1 if type of turningState has changed
+      if (turningStateSave != turningState){
         state = 1;
         legStates[0] = legStates[1] = legStates[2] = legStates[3] = legStates[4] = legStates[5] = 0;
       }      
@@ -727,11 +745,7 @@ namespace gazebo
     private: physics::JointPtr legs[6]; 
 
     // variables for walking
-    private: int count;
-    private: int mode;
     private: int state;
-    private: int leftStepCount = 0;
-    private: int rightStepCount = 0;
     private: double legAngles [6];
 
 
@@ -739,6 +753,7 @@ namespace gazebo
     private: math::Pose goal_coor;
     private: math::Vector3 goalVector;
     private: double saveTime;
+    private: double saveTimeShorter;
 
 
     // Pointer to the update event connection
