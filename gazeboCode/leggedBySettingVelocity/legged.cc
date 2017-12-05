@@ -53,7 +53,7 @@ int trajIndex = 0;
 // USING LOGITECH F310 Gamepad
 std::ifstream myfile;
 int gameData;
-const bool MANUAL_CONTROL = true;
+const bool MANUAL_CONTROL = false;
 
 
 void moveForward(gazebo::physics::JointPtr legs[6], double legAngles[6], int legStates[6]){
