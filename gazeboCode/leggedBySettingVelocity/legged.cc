@@ -53,7 +53,7 @@ int trajIndex = 0;
 // USING LOGITECH F310 Gamepad
 std::ifstream myfile;
 int gameData;
-bool usingGamepad = false;
+const bool MANUAL_CONTROL = true;
 
 
 void moveForward(gazebo::physics::JointPtr legs[6], double legAngles[6], int legStates[6]){
@@ -614,7 +614,7 @@ namespace gazebo
           return;
       }
       
-      if (usingGamepad){
+      if (MANUAL_CONTROL){
           if (timeNow - saveTimeShorter > .15){
                saveTimeShorter = timeNow;
 
@@ -659,7 +659,7 @@ namespace gazebo
       double turningStateSave = turningState;
 
       // if usingGamepad control through gameData variable, else do controller to follow trajectory
-      if (usingGamepad){
+      if (MANUAL_CONTROL){
           // button X
           if (gameData == 0){
               rotateLeft(legs, legAngles, legStates);
