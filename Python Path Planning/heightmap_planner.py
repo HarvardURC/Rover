@@ -1,3 +1,4 @@
+
 import util
 import visualizer as vis
 import copy
@@ -26,7 +27,7 @@ with open("landscape.png","wb") as f:
 x_scale = 50
 y_scale = 50
 z_scale = 20
-goal_state = (-64, 64)
+goal_state = (-64, -64)
 
 delta = {'N': (0, 1),
 	'S': (0, -1),
@@ -200,7 +201,7 @@ while actions:
 #     f.write(vis.makeGrayPNG(data_uc))
 # with open("coordinates_uc.txt","wb") as f:
 #     f.write(str(coordinates))
-with open("landscape_astar.png","wb") as f:
+with open("bottomleft_astar.png","wb") as f:
     f.write(vis.makeGrayPNG(data_astar))
-with open("coordinates_astar.txt","wb") as f:
+with open("bottomleft_astar.txt","wb") as f:
     f.write(str(coordinates))

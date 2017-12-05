@@ -111,9 +111,10 @@ cur_state = plan.getStartState()
 coordinates = [cur_state]
 png = vis.mod_array(obstacles, png, 125)
 
+counter = 0
+
 while not plan.goal(cur_state):
     obs = lidar(cur_state)
-    # print obs, cur_state
     for ob in obs:
         environment[ob] = 255
     actions = plan.aStarSearch(environment.keys(), cur_state)
@@ -122,6 +123,43 @@ while not plan.goal(cur_state):
         png[y][x] = 254
         x, y = cur_state
         dx, dy = delta[action]
+        counter += 1
+        if counter == 1:
+            png_tmp = vis.mod_array(environment, png, 255)
+            with open("obstacle_astar_1.png","wb") as f:
+                f.write(vis.makeGrayPNG(png_tmp))
+        if counter == 15:
+            png_tmp = vis.mod_array(environment, png, 255)
+            with open("obstacle_astar_15.png","wb") as f:
+                f.write(vis.makeGrayPNG(png_tmp))
+        if counter == 30:
+            png_tmp = vis.mod_array(environment, png, 255)
+            with open("obstacle_astar_30.png","wb") as f:
+                f.write(vis.makeGrayPNG(png_tmp))
+        if counter == 45:
+            png_tmp = vis.mod_array(environment, png, 255)
+            with open("obstacle_astar_45.png","wb") as f:
+                f.write(vis.makeGrayPNG(png_tmp))
+        if counter == 60:
+            png_tmp = vis.mod_array(environment, png, 255)
+            with open("obstacle_astar_60.png","wb") as f:
+                f.write(vis.makeGrayPNG(png_tmp))
+        if counter == 75:
+            png_tmp = vis.mod_array(environment, png, 255)
+            with open("obstacle_astar_75.png","wb") as f:
+                f.write(vis.makeGrayPNG(png_tmp))
+        if counter == 90:
+            png_tmp = vis.mod_array(environment, png, 255)
+            with open("obstacle_astar_90.png","wb") as f:
+                f.write(vis.makeGrayPNG(png_tmp))
+        if counter == 105:
+            png_tmp = vis.mod_array(environment, png, 255)
+            with open("obstacle_astar_105.png","wb") as f:
+                f.write(vis.makeGrayPNG(png_tmp))
+        if counter == 120:
+            png_tmp = vis.mod_array(environment, png, 255)
+            with open("obstacle_astar_120.png","wb") as f:
+                f.write(vis.makeGrayPNG(png_tmp))
         cur_state = (x + dx, y + dy)
         coordinates.append(cur_state)
         if not all([x in environment for x in lidar(cur_state)]):
