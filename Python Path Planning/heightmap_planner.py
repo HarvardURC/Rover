@@ -1,8 +1,27 @@
-
 import util
 import visualizer as vis
 import copy
 import math
+
+# Top left:
+# i = 1
+# Top right:
+# i = 2
+# Bottom left:
+# i = 3
+# Bottom right:
+i = 4
+
+def adj_x():
+    if i == 1 or i == 3:
+        return -1
+    return 1
+
+def adj_y():
+    if i == 1 or i == 2:
+        return -1
+    return 1
+
 
 # load ieghtmap file as list of [x, y, height]
 inputfile = open('heightmap.txt')
@@ -20,14 +39,14 @@ for line in lines:
 # visualization of landscape
 size = int(math.sqrt(len(lines)))
 def data(): return vis.map_to_array(height_map, size)
-with open("landscape.png","wb") as f:
-	f.write(vis.makeGrayPNG(data()))
+# with open("landscape.png","wb") as f:
+# 	f.write(vis.makeGrayPNG(data()))
 
 # scaling factor for distance in x, y, z
 x_scale = 50
 y_scale = 50
 z_scale = 20
-goal_state = (-64, -64)
+goal_state = (adj_x() * 64, adj_y() * 64)
 
 delta = {'N': (0, 1),
 	'S': (0, -1),
@@ -189,7 +208,8 @@ cur_state = getStartState()
 actions = aStarSearch()
 coordinates = [cur_state]
 while actions:
-    x, y = cur_state[0] + 64, 64 - cur_state[1]
+    # x, y = cur_state[0] + 64, 64 - cur_state[1]
+    x, y = 64 + cur_state[0], 64 + cur_state[1]
     data_astar[y][x] = 255
     # data_uc[y][x] = 255
     x, y = cur_state
@@ -201,7 +221,7 @@ while actions:
 #     f.write(vis.makeGrayPNG(data_uc))
 # with open("coordinates_uc.txt","wb") as f:
 #     f.write(str(coordinates))
-with open("bottomleft_astar.png","wb") as f:
-    f.write(vis.makeGrayPNG(data_astar))
-with open("bottomleft_astar.txt","wb") as f:
-    f.write(str(coordinates))
+# with open("topright_astar.png","wb") as f:
+#     f.write(vis.makeGrayPNG(data_astar))
+# with open("topright_astar.txt","wb") as f:
+#     f.write(str(coordinates))

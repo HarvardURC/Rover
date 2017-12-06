@@ -1,10 +1,8 @@
-import visualizer as vis
-import numpy as np
+import util, copy, math, time
 from PIL import Image
-import util
-import copy
-import math
+import numpy as np
 import heightmap_planner as plan
+import visualizer as vis
 
 delta = {'N': (0, 1),
     'S': (0, -1),
@@ -45,7 +43,7 @@ def makeline(point1, point2):
     x2, y2 = point2
     for x in range(x1, x2+1):
         for y in range(y1, y2+1):
-            obstacles[(-x, -y)] = 125
+            obstacles[(plan.adj_x() * x, plan.adj_y() * -y)] = 125
 
 # U starting obstacle
 makeline((-4, -4), (4, -4))
@@ -79,8 +77,8 @@ makeline((24, -40), (24, -30))
 makeline((25, -40), (25, -30))
 
 data = vis.map_to_array(obstacles, size)
-with open("obstacles.png","wb") as f:
-    f.write(vis.makeGrayPNG(data))
+# with open("obstacles.png","wb") as f:
+#     f.write(vis.makeGrayPNG(data))
 
 # SLAM-like algorithm
 # input: state
@@ -104,70 +102,179 @@ def lidar(state):
 
 # print lidar((-2, 0))
 # print obstacles.keys()
-environment = {}
+results = []
 
-png = plan.data()
-cur_state = plan.getStartState()
-coordinates = [cur_state]
-png = vis.mod_array(obstacles, png, 125)
+result = []
+loop = 0
 
-counter = 0
+while loop < 5:
+    # Local Planning with New Objects Detected
+    environment = {}
 
-while not plan.goal(cur_state):
-    obs = lidar(cur_state)
-    for ob in obs:
-        environment[ob] = 255
-    actions = plan.aStarSearch(environment.keys(), cur_state)
-    for action in actions:
-        x, y = cur_state[0] + 64, 64 - cur_state[1]
-        png[y][x] = 254
-        x, y = cur_state
-        dx, dy = delta[action]
-        counter += 1
-        if counter == 1:
-            png_tmp = vis.mod_array(environment, png, 255)
-            with open("obstacle_astar_1.png","wb") as f:
-                f.write(vis.makeGrayPNG(png_tmp))
-        if counter == 15:
-            png_tmp = vis.mod_array(environment, png, 255)
-            with open("obstacle_astar_15.png","wb") as f:
-                f.write(vis.makeGrayPNG(png_tmp))
-        if counter == 30:
-            png_tmp = vis.mod_array(environment, png, 255)
-            with open("obstacle_astar_30.png","wb") as f:
-                f.write(vis.makeGrayPNG(png_tmp))
-        if counter == 45:
-            png_tmp = vis.mod_array(environment, png, 255)
-            with open("obstacle_astar_45.png","wb") as f:
-                f.write(vis.makeGrayPNG(png_tmp))
-        if counter == 60:
-            png_tmp = vis.mod_array(environment, png, 255)
-            with open("obstacle_astar_60.png","wb") as f:
-                f.write(vis.makeGrayPNG(png_tmp))
-        if counter == 75:
-            png_tmp = vis.mod_array(environment, png, 255)
-            with open("obstacle_astar_75.png","wb") as f:
-                f.write(vis.makeGrayPNG(png_tmp))
-        if counter == 90:
-            png_tmp = vis.mod_array(environment, png, 255)
-            with open("obstacle_astar_90.png","wb") as f:
-                f.write(vis.makeGrayPNG(png_tmp))
-        if counter == 105:
-            png_tmp = vis.mod_array(environment, png, 255)
-            with open("obstacle_astar_105.png","wb") as f:
-                f.write(vis.makeGrayPNG(png_tmp))
-        if counter == 120:
-            png_tmp = vis.mod_array(environment, png, 255)
-            with open("obstacle_astar_120.png","wb") as f:
-                f.write(vis.makeGrayPNG(png_tmp))
-        cur_state = (x + dx, y + dy)
-        coordinates.append(cur_state)
-        if not all([x in environment for x in lidar(cur_state)]):
-            break
+    # png = plan.data()
+    cur_state = plan.getStartState()
+    # coordinates = [cur_state]
+    # png = vis.mod_array(obstacles, png, 125)
+    times = []
+    counter = 0
 
-png = vis.mod_array(environment, png, 255)
+    start_time = time.time()
+    while not plan.goal(cur_state):
+        for ob in lidar(cur_state):
+            environment[ob] = 255
+        actions = plan.aStarSearch(environment.keys(), cur_state)
+        for action in actions:
+            # x, y = cur_state[0] + 64, 64 + cur_state[1]
+            # png[y][x] = 254
+            x, y = cur_state
+            dx, dy = delta[action]
+            counter += 1
+            if counter == 1:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_1.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 15:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_15.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 30:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_30.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 45:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_45.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 60:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_60.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 75:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_75.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 90:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_90.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 105:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_105.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 120:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_120.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            cur_state = (x + dx, y + dy)
+            # coordinates.append(cur_state)
+            if not all([x in environment for x in lidar(cur_state)]):
+                break
+    result.append(times)
+    loop += 1
 
-with open("obstacle_astar.png","wb") as f:
-    f.write(vis.makeGrayPNG(png))
-with open("obstacle_astar.txt","wb") as f:
-    f.write(str(coordinates))
+results.append(result)
+
+# png = vis.mod_array(environment, png, 255)
+
+# with open("lidar_trig_topleft.png","wb") as f:
+#     f.write(vis.makeGrayPNG(png))
+# with open("lidar_trig_topleft.txt","wb") as f:
+#     f.write(str(coordinates))
+
+result = []
+loop = 0
+
+# Local Planning with Collision Detected
+while loop < 5:
+    environment = {}
+
+    # png = plan.data()
+    cur_state = plan.getStartState()
+    # coordinates = [cur_state]
+    # png = vis.mod_array(obstacles, png, 125)
+    times = []
+    counter = 0
+
+    start_time = time.time()
+    while not plan.goal(cur_state):
+        actions = plan.aStarSearch(environment.keys(), cur_state)
+        for action in actions:
+            # x, y = cur_state[0] + 64, 64 + cur_state[1]
+            # png[y][x] = 254
+            x, y = cur_state
+            for ob in lidar(cur_state):
+                environment[ob] = 255
+            dx, dy = delta[action]
+            counter += 1
+            if counter == 1:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_1.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 15:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_15.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 30:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_30.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 45:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_45.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 60:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_60.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 75:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_75.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 90:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_90.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 105:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_105.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if counter == 120:
+                times.append((time.time() - start_time))
+                # png_tmp = vis.mod_array(environment, png, 255)
+                # with open("obstacle_astar_120.png","wb") as f:
+                #     f.write(vis.makeGrayPNG(png_tmp))
+            if (x + dx, y + dy) in environment:
+                counter -= 1
+                break
+            cur_state = (x + dx, y + dy)
+            # coordinates.append(cur_state)
+    result.append(times)
+    loop += 1
+
+results.append(result)
+
+with open("run_time_bottom_right.txt","wb") as f:
+    f.write(str(results))
+# png = vis.mod_array(environment, png, 255)
+
+# with open("collision_trig_topright.png","wb") as f:
+#     f.write(vis.makeGrayPNG(png))
+# with open("collision_trig_topright.txt","wb") as f:
+#     f.write(str(coordinates))

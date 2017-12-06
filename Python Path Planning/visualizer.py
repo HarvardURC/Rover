@@ -4,13 +4,13 @@ import struct
 def map_to_array(d, size):
 	a = [[0 for x in range(size)] for y in range(size)] 
 	for key in d.keys():
-		x, y = 64 - key[0], 64 + key[1]
+		x, y = 64 + key[0], 64 + key[1]
 		a[y][x] = d[key]
 	return a
 
 def mod_array(d, array, color):
     for key in d.keys():
-        x, y = 64 + key[0], 64 - key[1]
+        x, y = 64 + key[0], 64 + key[1]
         array[y][x] = color
     return array
 
