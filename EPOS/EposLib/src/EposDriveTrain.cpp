@@ -2,7 +2,7 @@
  * EposDriveTrain.cpp
  *
  *  Created on: Nov 11, 2017
- *      Author: matthew
+ *      Author: Matthew Giles
  */
 
 #include "EposDriveTrain.h"
@@ -12,7 +12,7 @@ EposDriveTrain::EposDriveTrain(string portName) {
 }
 
 EposDriveTrain::~EposDriveTrain() {
-	// TODO Auto-generated destructor stub
+	// TODO: Make destructor. It should close the device opened in init()
 }
 
 unsigned int EposDriveTrain::init() {
@@ -90,10 +90,10 @@ bool EposDriveTrain::stopAllMotors() {
 	bool status = 1;
 
 	//Loop through each of the nodes and send a stop signal to each of them
-	for (int i=1; i<6; i++) {
+	for (int i=1; i<=6; i++) {
 		//Try stopping the motor
 		if(!VCS_MoveWithVelocity(portHandle, i, 0, &errorCode)) {
-			cerr << "VCS_MoveWithVelocity on Node " << i << "failed. Error code: 0x" << std::hex << errorCode << endl;
+			logError("VCS_MoveWithVelocity", i, errorCode);
 			//If it failed, then set the status accordingly
 			status = 0;
 		}
@@ -106,7 +106,7 @@ bool EposDriveTrain::enableNode(int node) {
 	bool status = VCS_SetEnableState(portHandle, node, &errorCode);
 
 	if (!status) {
-		cerr << "VCS_SetEnableState on Node " << node << " failed. Error code: 0x" << std::hex << errorCode << endl;
+		logError("VCS_SetEnableState", node, errorCode);
 	}
 
 	return status;
@@ -116,7 +116,7 @@ bool EposDriveTrain::clearFault(int node) {
 	bool status = VCS_ClearFault(portHandle, node, &errorCode);
 
 	if (!status) {
-		cerr << "VCS_ClearFault on Node " << node << " failed. Error code: 0x" << std::hex << errorCode << endl;
+		logError("VCS_ClearFault", node, errorCode);
 	}
 
 	return status;
@@ -126,9 +126,10 @@ bool EposDriveTrain::enableAll() {
 	bool status = 1;
 
 	//Set all motor nodes to 'enable'
-	for (int i=1; i<6; i++) {
+	for (int i=1; i<=6; i++) {
 		if(!VCS_SetEnableState(portHandle, i, &errorCode)) {
-			cerr << "VCS_SetEnableState on Node " << i << " failed. Error code: 0x" << std::hex << errorCode << endl;
+			logError("VCS_SetEnableState", i, errorCode);
+
 			//If it failed, set status accordingly
 			status = 0;
 		}
@@ -142,9 +143,9 @@ bool EposDriveTrain::clearAllFaults() {
 	bool status = 1;
 
 	//Set all motor nodes to 'enable'
-	for (int i=1; i<6; i++) {
+	for (int i=1; i<=6; i++) {
 		if(!VCS_ClearFault(portHandle, i, &errorCode)) {
-			cerr << "VCS_ClearFault on Node " << i << "failed. Error code: 0x" << std::hex << errorCode << endl;
+			logError("VCS_ClearFault", i, errorCode);
 
 			//If it failed, set status accordingly
 			status = 0;
@@ -158,12 +159,46 @@ int EposDriveTrain::getPosition(int node) {
 	int position;
 
 	if(!VCS_GetPositionIs(portHandle, node, &position, &errorCode)) {
-		cerr << "VCS_GetPositionIs on Node " << node << "failed. Error code: 0x" << std::hex << errorCode << endl;
+		logError("VCS_GetPositionIs", node, errorCode);
 	}
 
 	return position;
 }
 
+int EposDriveTrain::getVelocity(int node) {
+	int velocity;
+
+	if(!VCS_GetVelocityIs(portHandle, node, &velocity, &errorCode)) {
+		logError("VCS_GetVelocityIs", node, errorCode);
+	}
+
+	return velocity;
+}
+
+bool EposDriveTrain::isAtTarget(int node) {
+	int targetReached;
+
+	if(!VCS_GetMovementState(portHandle, node, &targetReached, &errorCode)) {
+		logError("VCS_GetMovementState", node, errorCode);
+	}
+
+	return (bool) targetReached;
+}
+
+short EposDriveTrain::getCurrent(int node) {
+	short current;
+
+	if(!VCS_GetCurrentIs(portHandle, node, &current, &errorCode)) {
+		logError("VCS_GetMovementState", node, errorCode);
+	}
+
+	return current;
+}
+
 void EposDriveTrain::logError(string functName, unsigned int errorCode) {
 	cerr << functName << " failed. Error code: 0x" << std::hex << errorCode << endl;
+}
+
+void EposDriveTrain::logError(string functName, int node, unsigned int errorCode) {
+	cerr << functName << " on Node " << node << "failed. Error code: 0x" << std::hex << errorCode << endl;
 }

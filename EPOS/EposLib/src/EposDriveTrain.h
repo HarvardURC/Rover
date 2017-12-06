@@ -2,7 +2,7 @@
  * EposDriveTrain.h
  *
  *  Created on: Nov 11, 2017
- *      Author: matthew
+ *      Author: Matthew Giles
  */
 
 #ifndef EPOSDRIVETRAIN_H_
@@ -17,8 +17,16 @@
 #include "Definitions.h"
 using namespace std;
 
+//Constants for position mode
 #define RELATIVE 0
 #define ABSOLUTE 1
+
+//Constants for different modes
+//Used in setMode
+#define PROFILE_POSITION_MODE 1
+#define PROFILE_VELOCITY_MODE 3
+#define POSITION_MODE -1
+#define VELOCITY_MODE -2
 
 class EposDriveTrain {
 	//Global variables for EPOS controller parameters
@@ -71,9 +79,19 @@ public:
 	//Get position of a given motor
 	int getPosition(int);
 
+	//Get motor velocity
+	int getVelocity(int);
+
+	//Check if a motor has reached its target
+	bool isAtTarget(int);
+
+	//Get motor current
+	short getCurrent(int);
+
 
 private:
 	void logError(string, unsigned int);
+	void logError(string, int, unsigned int);
 };
 
 #endif /* EPOSDRIVETRAIN_H_ */
