@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/Users/williambryk/Desktop/rover/gazeboCode/leggedBySettingVelocity/legged.cc
+/Users/mabasta/Rover/gazeboCode/leggedBySettingVelocity/legged.cc
 boost/bind.hpp
 -
 gazebo/gazebo.hh
@@ -18,6 +18,14 @@ gazebo/common/common.hh
 stdio.h
 -
 ncurses.h
+-
+iostream
+-
+fstream
+-
+tuple
+-
+vector
 -
 
 /usr/local/Cellar/gazebo8/8.1.1_5/include/gazebo-8/gazebo/Master.hh
@@ -38818,5 +38826,7 @@ iterator
 chrono
 -
 tuple
+-
+functional
 -
 

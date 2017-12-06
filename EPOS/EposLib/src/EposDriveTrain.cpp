@@ -2,7 +2,7 @@
  * EposDriveTrain.cpp
  *
  *  Created on: Nov 11, 2017
- *      Author: matthew
+ *      Author: Matthew Giles
  */
 
 #include "EposDriveTrain.h"
@@ -12,7 +12,7 @@ EposDriveTrain::EposDriveTrain(string portName) {
 }
 
 EposDriveTrain::~EposDriveTrain() {
-	// TODO Auto-generated destructor stub
+	// TODO: Make destructor. It should close the device opened in init()
 }
 
 unsigned int EposDriveTrain::init() {

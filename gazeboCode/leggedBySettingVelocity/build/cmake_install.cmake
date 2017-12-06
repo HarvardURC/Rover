@@ -1,4 +1,4 @@
-# Install script for directory: /Users/williambryk/Desktop/rover/gazeboCode/leggedBySettingVelocity
+# Install script for directory: /Users/mabasta/Rover/gazeboCode/leggedBySettingVelocity
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -35,5 +35,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/williambryk/Desktop/rover/gazeboCode/leggedBySettingVelocity/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/mabasta/Rover/gazeboCode/leggedBySettingVelocity/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
