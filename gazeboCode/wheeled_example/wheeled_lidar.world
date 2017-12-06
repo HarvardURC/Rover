@@ -17,11 +17,20 @@
         <collision name="collision">
           <geometry>
             <heightmap>
-              <uri>file://media/materials/textures/terrain.png</uri>
+              <uri>file://media/materials/textures/terrain1.png</uri>
               <size>129 129 10</size>
               <pos>0 0 0</pos>
             </heightmap>
           </geometry>
+          <surface>
+            <friction>
+              <torsional>
+                <coefficient>1.0</coefficient>
+                <surface_radius>0.5</surface_radius>
+                <use_patch_radius>false</use_patch_radius>
+              </torsional>
+            </friction>
+          </surface>
         </collision>
 
         <visual name="visual">
@@ -50,7 +59,7 @@
                 <min_height>4</min_height>
                 <fade_dist>5</fade_dist>
               </blend>
-              <uri>file://media/materials/textures/terrain.png</uri>
+              <uri>file://media/materials/textures/terrain1.png</uri>
               <size>129 129 10</size>
               <pos>0 0 0</pos>
             </heightmap>
@@ -59,145 +68,18 @@
       </link>
     </model>
 
-    <model name='asteroid'>
-      <pose> 8 4 2.5 .4 0 0</pose>
-      <link name='link_0'>
-        <pose frame=''>-1.31567 -1.56631 -0.840454 0.970208 -0 0</pose>
-        <gravity>1</gravity>
-        <visual name='visual'>
-          <pose frame=''>0 0 0 0 -0 0</pose>
-          <geometry>
-            <mesh>
-              <uri>/Users/mabasta/HURC/meshes/eros.dae</uri>
-              <scale>20 20 20</scale>
-            </mesh>
-          </geometry>
-          <transparency>0</transparency>
-          <cast_shadows>1</cast_shadows>
-        </visual>
-        <collision name='collision'>
-          <pose frame=''>0 0 0 0 -0 0</pose>
-          <geometry>
-            <mesh>
-              <uri>/Users/mabasta/HURC/meshes/eros.dae</uri>
-              <scale>20 20 20</scale>
-            </mesh>
-          </geometry>
-        </collision>
-
-      </link>
-      <static>1</static>
-      <allow_auto_disable>1</allow_auto_disable>
-      <pose frame=''>342.868 -244.293 0.579447 0.562946 -0.241822 -0.165365</pose>
-    </model>
-
-    <model name='itokawa'>
-      <pose> -15 -5 1.5 -1 0 0</pose>
-      <link name='link_0'>
-        <pose frame=''>-1.31567 -1.56631 -0.840454 0.970208 -0 0</pose>
-        <gravity>1</gravity>
-        <visual name='visual'>
-          <pose frame=''>0 0 0 0 -0 0</pose>
-          <geometry>
-            <mesh>
-              <uri>/Users/mabasta/HURC/meshes/itokawa.dae</uri>
-              <scale>20 20 20</scale>
-            </mesh>
-          </geometry>
-          <transparency>0</transparency>
-          <cast_shadows>1</cast_shadows>
-        </visual>
-        <collision name='collision'>
-          <pose frame=''>0 0 0 0 -0 0</pose>
-          <geometry>
-            <mesh>
-              <uri>/Users/mabasta/HURC/meshes/itokawa.dae</uri>
-              <scale>20 20 20</scale>
-            </mesh>
-          </geometry>
-        </collision>
-      </link>
-      <static>1</static>
-      <allow_auto_disable>1</allow_auto_disable>
-      <pose frame=''>342.868 -244.293 0.579447 0.562946 -0.241822 -0.165365</pose>
-    </model>
-
-    <model name='itokawa2'>
-      <pose> 12 32 1.8 -1 0 0</pose>
-      <link name='link_0'>
-        <pose frame=''>-1.31567 -1.56631 -0.840454 0.970208 -0 0</pose>
-        <gravity>1</gravity>
-        <visual name='visual'>
-          <pose frame=''>0 0 0 0 -0 0</pose>
-          <geometry>
-            <mesh>
-              <uri>/Users/mabasta/HURC/meshes/itokawa.dae</uri>
-              <scale>25 25 25</scale>
-            </mesh>
-          </geometry>
-          <transparency>0</transparency>
-          <cast_shadows>1</cast_shadows>
-        </visual>
-        <collision name='collision'>
-          <pose frame=''>0 0 0 0 -0 0</pose>
-          <geometry>
-            <mesh>
-              <uri>/Users/mabasta/HURC/meshes/itokawa.dae</uri>
-              <scale>25 25 25</scale>
-            </mesh>
-          </geometry>
-        </collision>
-      </link>
-      <static>1</static>
-      <allow_auto_disable>1</allow_auto_disable>
-      <pose frame=''>342.868 -244.293 0.579447 0.562946 -0.241822 -0.165365</pose>
-    </model>
-
-
-    <model name='rocks'>
-      <pose> -8 12 2.5 .4 0 0</pose>
-      <link name='link_0'>
-        <pose frame=''>-1.31567 -1.56631 -0.840454 0.970208 -0 0</pose>
-        <gravity>1</gravity>
-        <visual name='visual'>
-          <pose frame=''>0 0 0 0 -0 0</pose>
-          <geometry>
-            <mesh>
-              <uri>/Users/mabasta/HURC/meshes/rocks_01_model.dae</uri>
-              <scale>3 3 3</scale>
-            </mesh>
-          </geometry>
-          <transparency>0</transparency>
-          <cast_shadows>1</cast_shadows>
-        </visual>
-        <collision name='collision'>
-          <pose frame=''>0 0 0 0 -0 0</pose>
-          <geometry>
-            <mesh>
-              <uri>/Users/mabasta/HURC/meshes/rocks_01_model.dae</uri>
-              <scale>3 3 3</scale>
-            </mesh>
-          </geometry>
-        </collision>
-
-      </link>
-      <static>1</static>
-      <allow_auto_disable>1</allow_auto_disable>
-      <pose frame=''>342.868 -244.293 0.579447 0.562946 -0.241822 -0.165365</pose>
-    </model>
-
-    <model name='start_pole'>
-      <pose>0 0 5 0 0 0</pose>
+    <model name='NEend_pole'>
+      <pose>62 62 5 0 0 0</pose>
       <link name='unit_cylinder::link'>
         <visual name='visual'>
           <geometry>
             <cylinder>
-              <radius>0.034805</radius>
+              <radius>0.134805</radius>
               <length>5.81016</length>
             </cylinder>
           </geometry>
           <material>
-            <ambient>0 1 0 1</ambient>
+            <ambient>1 0 0 1</ambient>
           </material>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <transparency>-0</transparency>
@@ -217,13 +99,13 @@
       <allow_auto_disable>1</allow_auto_disable>
    </model>
 
-    <model name='end_pole'>
-      <pose>40 35 5 0 0 0</pose>
+    <model name='NEend_pole'>
+      <pose>62 62 5 0 0 0</pose>
       <link name='unit_cylinder::link'>
         <visual name='visual'>
           <geometry>
             <cylinder>
-              <radius>0.034805</radius>
+              <radius>0.134805</radius>
               <length>5.81016</length>
             </cylinder>
           </geometry>
@@ -239,6 +121,99 @@
           <geometry>
             <cylinder>
               <radius>0.034805</radius>
+              <length>1.81016</length>
+            </cylinder>
+          </geometry>
+        </collision>
+      </link>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+   </model>
+
+   <model name='SEend_pole'>
+      <pose>-62 62 5 0 0 0</pose>
+      <link name='unit_cylinder::link'>
+        <visual name='visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.134805</radius>
+              <length>5.81016</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0 0 1 1</ambient>
+          </material>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <transparency>-0</transparency>
+          <cast_shadows>1</cast_shadows>
+        </visual>
+        <collision name='collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.034805</radius>
+              <length>1.81016</length>
+            </cylinder>
+          </geometry>
+        </collision>
+      </link>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+   </model>
+
+   <model name='NWend_pole'>
+      <pose>62 -62 5 0 0 0</pose>
+      <link name='unit_cylinder::link'>
+        <visual name='visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.134805</radius>
+              <length>5.81016</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+          </material>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <transparency>-0</transparency>
+          <cast_shadows>1</cast_shadows>
+        </visual>
+        <collision name='collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.034805</radius>
+              <length>1.81016</length>
+            </cylinder>
+          </geometry>
+        </collision>
+      </link>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+   </model>
+
+   <model name='SWend_pole'>
+      <pose>-62 -62 5 0 0 0</pose>
+      <link name='unit_cylinder::link'>
+        <visual name='visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.134805</radius>
+              <length>5.81016</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0 0 0 1</ambient>
+          </material>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <transparency>-0</transparency>
+          <cast_shadows>1</cast_shadows>
+        </visual>
+        <collision name='collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.134805</radius>
               <length>1.81016</length>
             </cylinder>
           </geometry>
@@ -249,9 +224,9 @@
    </model>
 
     <model name="car">
-    <pose>1 -1.5 5.1 0 0 0</pose>
+    <pose>1 -1.5 7.5 0 0 0</pose>
     <link name='chassis'>
-          <pose>0 0 .1 0 0 0</pose>
+          <pose>0 0 .4 0 0 0</pose>
           <inertial>
             <inertia>
               <ixx>1</ixx>
@@ -261,12 +236,12 @@
               <iyz>0</iyz>
               <izz>1</izz>
             </inertia>
-            <mass>5.0</mass>
+            <mass>10.0</mass>
           </inertial>
           <collision name='collision'>
             <geometry>
               <box>
-                <size>1 .5 .1</size>
+                <size>2 1.5 .2</size>
               </box>
             </geometry>
           </collision>
@@ -274,61 +249,37 @@
           <visual name='visual'>
             <geometry>
               <box>
-                <size>1 .5 .1</size>
+                <size>2 1.5 .2</size>
               </box>
             </geometry>
-          <material>
-            <script>
-              <name>ModelPreview_2::left_front_wheel::visual_MATERIAL_</name>
-            </script>
-            <ambient>1 0 0 1</ambient>
-            <shader type='vertex'>
-              <normal_map>__default__</normal_map>
-            </shader>
-        </material>
+            <material>
+              <ambient>1 0 0 1</ambient>
+              <shader type='vertex'>
+                <normal_map>__default__</normal_map>
+              </shader>
+            </material>
           </visual>
       </link>
 
       <link name="front_indicator">
-        <pose>.5 0 0.18 0 0 0</pose>
+        <pose>1 0 0.6 0 0 0</pose>
           <geometry>
               <sphere>
-              <radius>.03</radius>
+              <radius>.06</radius>
             </sphere>
           </geometry>
         <visual name="visual">
           <geometry>
               <sphere>
-              <radius>.03</radius>
+              <radius>.06</radius>
             </sphere>
           </geometry>
           <material>Gazebo/Blue</material>
         </visual>
-        <sensor type="ray" name="sensor">
-          <pose>0 0 -0.004645 1.5707 0 0</pose>
-          <visualize>true</visualize>
-          <update_rate>30</update_rate>
-          <ray>
-            <scan>
-              <horizontal>
-                <samples>32</samples>
-                <resolution>1</resolution>
-                <min_angle>-0.53529248</min_angle>
-                <max_angle>0.18622663</max_angle>
-              </horizontal>
-            </scan>
-            <range>
-              <min>0.05</min>
-              <max>10</max>
-              <resolution>0.02</resolution>
-            </range>
-          </ray>
-        </sensor>
       </link>
 
-
       <link name="left_front_wheel">
-        <pose>.5 .27 .1 1.5707 0 0</pose>
+        <pose>1 .85 .16 0 0 3.1414</pose>
         <inertial>
           <inertia>
             <ixx>1</ixx>
@@ -338,29 +289,59 @@
             <iyz>0</iyz>
             <izz>1</izz>
           </inertia>
-          <mass>1.0</mass>
+          <mass>2.0</mass>
         </inertial>
         <collision name="collision">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
         </visual>
       </link>
+
+      <link name="left_front_foot">
+        <pose>1.1 .85 -.27 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+
 
 
       <link name="right_front_wheel">
-        <pose>.5 -.27 .1 1.5707 0 0</pose>
+        <pose>1 -.85 .16 0 0 3.1414</pose>
         <inertial>
           <inertia>
             <ixx>1</ixx>
@@ -370,30 +351,28 @@
             <iyz>0</iyz>
             <izz>1</izz>
           </inertia>
-          <mass>1.0</mass>
+          <mass>2.0</mass>
         </inertial>
         <collision name="collision">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
         </visual>
       </link>
 
-
-
-      <link name="left_back_wheel">
-        <pose>-.5 .27 .1 1.5707 0 0</pose>
+      <link name="right_front_foot">
+        <pose>1.1 -.85 -.29 0 0 3.1414</pose>
         <inertial>
           <inertia>
             <ixx>1</ixx>
@@ -403,38 +382,210 @@
             <iyz>0</iyz>
             <izz>1</izz>
           </inertia>
-          <mass>1.0</mass>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+
+
+      <link name="left_middle_wheel">
+        <pose>0 .85 .16 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
         </inertial>
         <collision name="collision">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
-          <material>
-            <script>
-              <name>ModelPreview_2::left_front_wheel::visual_MATERIAL_</name>
-            </script>
-            <ambient>0 0 0 1</ambient>
-            <shader type='vertex'>
-              <normal_map>__default__</normal_map>
-            </shader>
-          </material>
+        </visual>
+      </link>
+
+      <link name="left_middle_foot">
+        <pose>.1 .85 -.29 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+
+
+      <link name="right_middle_wheel">
+        <pose>0 -.85 .16 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>.1</radius>
+              <length>.7</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>.1</radius>
+              <length>.7</length>
+            </cylinder>
+          </geometry>
+        </visual>
+      </link>
+
+      <link name="right_middle_foot">
+        <pose>.1 -.85 -.29 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+
+
+      <link name="left_back_wheel">
+        <pose>-1 .85 .16 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>.1</radius>
+              <length>.7</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>.1</radius>
+              <length>.7</length>
+            </cylinder>
+          </geometry>
+        </visual>
+      </link>
+
+      <link name="left_back_foot">
+        <pose>-.9 .85 -.29 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
         </visual>
       </link>
 
 
       <link name="right_back_wheel">
-        <pose>-.5 -.27 .1 1.5707 0 0</pose>
+        <pose>-1 -.85 .16 0 0 3.1414</pose>
         <inertial>
           <inertia>
             <ixx>1</ixx>
@@ -444,37 +595,58 @@
             <iyz>0</iyz>
             <izz>1</izz>
           </inertia>
-          <mass>1.0</mass>
+          <mass>2.0</mass>
         </inertial>
         <collision name="collision">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
-          <material>
-            <script>
-              <name>ModelPreview_2::left_front_wheel::visual_MATERIAL_</name>
-            </script>
-            <ambient>0 0 0 1</ambient>
-            <shader type='vertex'>
-              <normal_map>__default__</normal_map>
-            </shader>
-          </material>
         </visual>
       </link>
 
+      <link name="right_back_foot">
+        <pose>-.9 -.85 -.29 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+
+
       <joint type="revolute" name="left_front_wheel_hinge">
-        <pose>0 0 0 0 0 0</pose>
+        <pose>0 0 .1 0 0 0</pose>
         <child>left_front_wheel</child>
         <parent>chassis</parent>
         <axis>
@@ -484,7 +656,7 @@
 
 
       <joint type="revolute" name="right_back_wheel_hinge">
-        <pose>0 0 0 0 0 0</pose>
+        <pose>0 0 .1 0 0 0</pose>
         <child>right_back_wheel</child>
         <parent>chassis</parent>
         <axis>
@@ -492,8 +664,29 @@
         </axis>
       </joint>
 
+
+      <joint type="revolute" name="left_middle_wheel_hinge">
+        <pose>0 0 .1 0 0 0</pose>
+        <child>left_middle_wheel</child>
+        <parent>chassis</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+        </axis>
+      </joint>
+
+
+      <joint type="revolute" name="right_middle_wheel_hinge">
+        <pose>0 0 .1 0 0 0</pose>
+        <child>right_middle_wheel</child>
+        <parent>chassis</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+        </axis>
+      </joint>
+
+
       <joint type="revolute" name="left_back_wheel_hinge">
-        <pose>0 0 0 0 0 0</pose>
+        <pose>0 0 .1 0 0 0</pose>
         <child>left_back_wheel</child>
         <parent>chassis</parent>
         <axis>
@@ -501,8 +694,9 @@
         </axis>
       </joint>
 
+
       <joint type="revolute" name="right_front_wheel_hinge">
-        <pose>0 0 0 0 0 0</pose>
+        <pose>0 0 .1 0 0 0</pose>
         <child>right_front_wheel</child>
         <parent>chassis</parent>
         <axis>
@@ -511,20 +705,49 @@
       </joint>
 
 
-      <joint type="revolute" name="indicator_joint">
-        <pose>0 0 -.08 0 0 0</pose>
+      <joint type="fixed" name="indicator_joint">
+        <pose>0 0 0 0 0 0</pose>
         <child>front_indicator</child>
         <parent>chassis</parent>
-        <axis>
-          <xyz>0 0 1</xyz>
-          <limit>
-          <!-- Use a very large number to indicate a continuous revolution -->
-            <lower>-10000000000000000</lower>
-            <upper>10000000000000000</upper>
-        </limit>
-        </axis>
       </joint>
-    <plugin name="wheeledRobot" filename="libwheeledRobot.so"/>
-  </model>
+
+      <joint type="fixed" name="rf_foot_joint">
+        <pose>0 0 0 0 0 0</pose>
+        <child>right_front_foot</child>
+        <parent>right_front_wheel</parent>
+      </joint>
+
+      <joint type="fixed" name="rm_foot_joint">
+        <pose>0 0 0 0 0 0</pose>
+        <child>right_middle_foot</child>
+        <parent>right_middle_wheel</parent>
+      </joint>
+
+      <joint type="fixed" name="lm_foot_joint">
+        <pose>0 0 0 0 0 0</pose>
+        <child>left_middle_foot</child>
+        <parent>left_middle_wheel</parent>
+      </joint>
+      
+      <joint type="fixed" name="lb_foot_joint">
+        <pose>0 0 0 0 0 0</pose>
+        <child>left_back_foot</child>
+        <parent>left_back_wheel</parent>
+      </joint>
+
+      <joint type="fixed" name="rb_foot_joint">
+        <pose>0 0 0 0 0 0</pose>
+        <child>right_back_foot</child>
+        <parent>right_back_wheel</parent>
+      </joint>
+      
+      <joint type="fixed" name="lf_foot_joint">
+        <pose>0 0 0 0 0 0</pose>
+        <child>left_front_foot</child>
+        <parent>left_front_wheel</parent>
+      </joint>
+
+      <plugin name="wheeledRobot" filename="libwheeledRobot.so"/>
+    </model>
 </world>
 </sdf>

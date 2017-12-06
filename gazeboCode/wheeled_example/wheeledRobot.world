@@ -11,10 +11,11 @@
       <uri>model://sun</uri>
     </include>
 
-    <model name="car">
-
+   <model name="car">
+    <pose>1 -1.5 7.5 0 0 0</pose>
     <link name='chassis'>
-          <pose>0 0 .1 0 0 0</pose>
+        <gravity>0</gravity>
+          <pose>0 0 .4 0 0 0</pose>
           <inertial>
             <inertia>
               <ixx>1</ixx>
@@ -24,12 +25,12 @@
               <iyz>0</iyz>
               <izz>1</izz>
             </inertia>
-            <mass>5.0</mass>
+            <mass>10.0</mass>
           </inertial>
           <collision name='collision'>
             <geometry>
               <box>
-                <size>1 .5 .1</size>
+                <size>2 1.5 .2</size>
               </box>
             </geometry>
           </collision>
@@ -37,32 +38,37 @@
           <visual name='visual'>
             <geometry>
               <box>
-                <size>1 .5 .1</size>
+                <size>2 1.5 .2</size>
               </box>
             </geometry>
+            <material>
+              <ambient>1 0 0 1</ambient>
+              <shader type='vertex'>
+                <normal_map>__default__</normal_map>
+              </shader>
+            </material>
           </visual>
       </link>
 
       <link name="front_indicator">
-        <pose>.5 0 0.18 0 0 0</pose>
+        <pose>1 0 0.6 0 0 0</pose>
           <geometry>
               <sphere>
-              <radius>.03</radius>
+              <radius>.06</radius>
             </sphere>
           </geometry>
         <visual name="visual">
           <geometry>
               <sphere>
-              <radius>.03</radius>
+              <radius>.06</radius>
             </sphere>
           </geometry>
           <material>Gazebo/Blue</material>
         </visual>
       </link>
 
-
       <link name="left_front_wheel">
-        <pose>.5 .27 .1 1.5707 0 0</pose>
+        <pose>1 .85 .16 0 0 3.1414</pose>
         <inertial>
           <inertia>
             <ixx>1</ixx>
@@ -72,29 +78,59 @@
             <iyz>0</iyz>
             <izz>1</izz>
           </inertia>
-          <mass>1.0</mass>
+          <mass>2.0</mass>
         </inertial>
         <collision name="collision">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
         </visual>
       </link>
+
+<!--       <link name="left_front_foot">
+        <pose>1.1 .85 -.27 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+ -->
 
 
       <link name="right_front_wheel">
-        <pose>.5 -.27 .1 1.5707 0 0</pose>
+        <pose>1 -.85 .16 0 0 3.1414</pose>
         <inertial>
           <inertia>
             <ixx>1</ixx>
@@ -104,30 +140,180 @@
             <iyz>0</iyz>
             <izz>1</izz>
           </inertia>
-          <mass>1.0</mass>
+          <mass>2.0</mass>
         </inertial>
         <collision name="collision">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
         </visual>
       </link>
 
+<!--       <link name="right_front_foot">
+        <pose>1.1 -.85 -.29 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </visual>
+      </link> -->
+
+
+      <link name="left_middle_wheel">
+        <pose>0 .85 .16 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>.1</radius>
+              <length>.7</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>.1</radius>
+              <length>.7</length>
+            </cylinder>
+          </geometry>
+        </visual>
+      </link>
+<!-- 
+      <link name="left_middle_foot">
+        <pose>.1 .85 -.29 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+ -->
+
+      <link name="right_middle_wheel">
+        <pose>0 -.85 .16 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>.1</radius>
+              <length>.7</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>.1</radius>
+              <length>.7</length>
+            </cylinder>
+          </geometry>
+        </visual>
+      </link>
+
+<!--       <link name="right_middle_foot">
+        <pose>.1 -.85 -.29 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </visual>
+      </link> -->
 
 
       <link name="left_back_wheel">
-        <pose>-.5 .27 .1 1.5707 0 0</pose>
+        <pose>-1 .85 .16 0 0 3.1414</pose>
         <inertial>
           <inertia>
             <ixx>1</ixx>
@@ -137,29 +323,58 @@
             <iyz>0</iyz>
             <izz>1</izz>
           </inertia>
-          <mass>1.0</mass>
+          <mass>2.0</mass>
         </inertial>
         <collision name="collision">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
         </visual>
       </link>
+
+<!--       <link name="left_back_foot">
+        <pose>-.9 .85 -.29 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </visual>
+      </link> -->
 
 
       <link name="right_back_wheel">
-        <pose>-.5 -.27 .1 1.5707 0 0</pose>
+        <pose>-1 -.85 .16 0 0 3.1414</pose>
         <inertial>
           <inertia>
             <ixx>1</ixx>
@@ -169,29 +384,58 @@
             <iyz>0</iyz>
             <izz>1</izz>
           </inertia>
-          <mass>1.0</mass>
+          <mass>2.0</mass>
         </inertial>
         <collision name="collision">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <cylinder>
-              <radius>.2</radius>
-              <length>.1</length>
+              <radius>.1</radius>
+              <length>.7</length>
             </cylinder>
           </geometry>
         </visual>
       </link>
 
+<!--       <link name="right_back_foot">
+        <pose>-.9 -.85 -.29 0 0 3.1414</pose>
+        <inertial>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>2.0</mass>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>.4 .15 .15</size>
+            </box>
+          </geometry>
+        </visual>
+      </link> -->
+
 
       <joint type="revolute" name="left_front_wheel_hinge">
-        <pose>0 0 0 0 0 0</pose>
+        <pose>0 0 .1 0 0 0</pose>
         <child>left_front_wheel</child>
         <parent>chassis</parent>
         <axis>
@@ -201,7 +445,7 @@
 
 
       <joint type="revolute" name="right_back_wheel_hinge">
-        <pose>0 0 0 0 0 0</pose>
+        <pose>0 0 .1 0 0 0</pose>
         <child>right_back_wheel</child>
         <parent>chassis</parent>
         <axis>
@@ -210,9 +454,28 @@
       </joint>
 
 
+      <joint type="revolute" name="left_middle_wheel_hinge">
+        <pose>0 0 .1 0 0 0</pose>
+        <child>left_middle_wheel</child>
+        <parent>chassis</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+        </axis>
+      </joint>
+
+
+      <joint type="revolute" name="right_middle_wheel_hinge">
+        <pose>0 0 .1 0 0 0</pose>
+        <child>right_middle_wheel</child>
+        <parent>chassis</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+        </axis>
+      </joint>
+
 
       <joint type="revolute" name="left_back_wheel_hinge">
-        <pose>0 0 0 0 0 0</pose>
+        <pose>0 0 .1 0 0 0</pose>
         <child>left_back_wheel</child>
         <parent>chassis</parent>
         <axis>
@@ -220,10 +483,9 @@
         </axis>
       </joint>
 
-      
 
       <joint type="revolute" name="right_front_wheel_hinge">
-        <pose>0 0 0 0 0 0</pose>
+        <pose>0 0 .1 0 0 0</pose>
         <child>right_front_wheel</child>
         <parent>chassis</parent>
         <axis>
@@ -231,12 +493,49 @@
         </axis>
       </joint>
 
+
       <joint type="fixed" name="indicator_joint">
         <pose>0 0 0 0 0 0</pose>
         <child>front_indicator</child>
         <parent>chassis</parent>
       </joint>
+<!-- 
+      <joint type="fixed" name="rf_foot_joint">
+        <pose>0 0 0 0 0 0</pose>
+        <child>right_front_foot</child>
+        <parent>right_front_wheel</parent>
+      </joint>
 
+      <joint type="fixed" name="rm_foot_joint">
+        <pose>0 0 0 0 0 0</pose>
+        <child>right_middle_foot</child>
+        <parent>right_middle_wheel</parent>
+      </joint>
+
+      <joint type="fixed" name="lm_foot_joint">
+        <pose>0 0 0 0 0 0</pose>
+        <child>left_middle_foot</child>
+        <parent>left_middle_wheel</parent>
+      </joint>
+      
+      <joint type="fixed" name="lb_foot_joint">
+        <pose>0 0 0 0 0 0</pose>
+        <child>left_back_foot</child>
+        <parent>left_back_wheel</parent>
+      </joint>
+
+      <joint type="fixed" name="rb_foot_joint">
+        <pose>0 0 0 0 0 0</pose>
+        <child>right_back_foot</child>
+        <parent>right_back_wheel</parent>
+      </joint>
+      
+      <joint type="fixed" name="lf_foot_joint">
+        <pose>0 0 0 0 0 0</pose>
+        <child>left_front_foot</child>
+        <parent>left_front_wheel</parent>
+      </joint>
+ -->
       <plugin name="wheeledRobot" filename="libwheeledRobot.so"/>
     </model>
 </world>
