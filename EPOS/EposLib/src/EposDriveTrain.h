@@ -2,7 +2,7 @@
  * EposDriveTrain.h
  *
  *  Created on: Nov 11, 2017
- *      Author: matthew
+ *      Author: Matthew Giles
  */
 
 #ifndef EPOSDRIVETRAIN_H_
@@ -17,10 +17,16 @@
 #include "Definitions.h"
 using namespace std;
 
+//Constants for position mode
 #define RELATIVE 0
 #define ABSOLUTE 1
 
-//TODO: Constants for different modes (profile velocity, profile position, etc)
+//Constants for different modes
+//Used in setMode
+#define PROFILE_POSITION_MODE 1
+#define PROFILE_VELOCITY_MODE 3
+#define POSITION_MODE -1
+#define VELOCITY_MODE -2
 
 class EposDriveTrain {
 	//Global variables for EPOS controller parameters
