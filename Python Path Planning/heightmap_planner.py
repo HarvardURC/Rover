@@ -31,7 +31,7 @@ height_map = dict()
 
 for line in lines:
 	val = line.split(', ')
-	x = int(float(val[0])-0.5)
+	x = -int(float(val[0])-0.5)
 	y = int(float(val[1])+0.5)
 	h = int(val[2])
 	height_map[(x, y)] = h
@@ -221,7 +221,7 @@ while actions:
 #     f.write(vis.makeGrayPNG(data_uc))
 # with open("coordinates_uc.txt","wb") as f:
 #     f.write(str(coordinates))
-# with open("topright_astar.png","wb") as f:
-#     f.write(vis.makeGrayPNG(data_astar))
-# with open("topright_astar.txt","wb") as f:
-#     f.write(str(coordinates))
+with open("bottomright_astar.png","wb") as f:
+    f.write(vis.makeGrayPNG(data_astar))
+with open("bottomright_astar.txt","wb") as f:
+    f.write(str(coordinates))
