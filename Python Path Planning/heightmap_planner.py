@@ -4,13 +4,13 @@ import copy
 import math
 
 # Top left:
-# i = 1
+i = 1
 # Top right:
 # i = 2
 # Bottom left:
 # i = 3
 # Bottom right:
-i = 4
+# i = 4
 
 def adj_x():
     if i == 1 or i == 3:
@@ -34,7 +34,7 @@ for line in lines:
 	x = -int(float(val[0])-0.5)
 	y = int(float(val[1])+0.5)
 	h = int(val[2])
-	height_map[(-y, -x)] = h
+	height_map[(-x, -y)] = h
 
 # visualization of landscape
 size = int(math.sqrt(len(lines)))
@@ -215,13 +215,13 @@ while actions:
     x, y = cur_state
     dx, dy = delta[actions.pop(0)]
     cur_state = (x + dx, y + dy)
-    coordinates.append(cur_state)
+    coordinates.append((cur_state[1], cur_state[0]))
 
 # with open("landscape_uc.png","wb") as f:
 #     f.write(vis.makeGrayPNG(data_uc))
 # with open("coordinates_uc.txt","wb") as f:
 #     f.write(str(coordinates))
-with open("bottomright_astar.png","wb") as f:
+with open("topleft_astar.png","wb") as f:
     f.write(vis.makeGrayPNG(data_astar))
-with open("bottomright_astar.txt","wb") as f:
+with open("topleft_astar.txt","wb") as f:
     f.write(str(coordinates))
