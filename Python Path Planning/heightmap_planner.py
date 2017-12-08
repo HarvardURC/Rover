@@ -22,6 +22,22 @@ def adj_y():
         return -1
     return 1
 
+# scaling factor for distance in x, y, z
+x_scale = 50
+y_scale = 50
+z_scale = 20
+goal_state = (adj_x() * 64, adj_y() * 64)
+
+# Dictionary of coordinate changes based on direction
+delta = {'N': (0, 1),
+    'S': (0, -1),
+    'E': (1, 0),
+    'W': (-1, 0),
+    'NW': (-1, 1),
+    'SW': (-1, -1),
+    'NE': (1, 1),
+    'SE': (1, -1),
+    'STOP': (0, 0)}
 
 # load ieghtmap file as list of [x, y, height]
 inputfile = open('heightmap.txt')
@@ -39,24 +55,8 @@ for line in lines:
 # visualization of landscape
 size = int(math.sqrt(len(lines)))
 def data(): return vis.map_to_array(height_map, size)
-# with open("landscape.png","wb") as f:
-# 	f.write(vis.makeGrayPNG(data()))
-
-# scaling factor for distance in x, y, z
-x_scale = 50
-y_scale = 50
-z_scale = 20
-goal_state = (adj_x() * 64, adj_y() * 64)
-
-delta = {'N': (0, 1),
-	'S': (0, -1),
-	'E': (1, 0),
-	'W': (-1, 0),
-	'NW': (-1, 1),
-	'SW': (-1, -1),
-	'NE': (1, 1),
-	'SE': (1, -1),
-	'STOP': (0, 0)}
+with open("landscape.png","wb") as f:
+	f.write(vis.makeGrayPNG(data()))
 
 def getStartState():
 	return (0, 0) # middle of board
@@ -71,7 +71,7 @@ def distance(state1, state2):
 	return math.sqrt(
 		(x_scale*(x1-x2))**2 + (y_scale*(y1-y2))**2 + (z_scale*(h1-h2))**2)
 
-# gives neighboring states as a list given robot's state
+# gives neighboring states as a list given rover's state
 def getSuccessors(state):
 	result = []
 	actions = ['N', 'S', 'E', 'W', 'NW', 'SW', 'NE', 'SE']
@@ -201,14 +201,13 @@ def aStarSearch(obstacles = [], start_state = getStartState()):
 
 # visualize path on landscape
 # data = vis.map_to_array(height_map, size)
-data_uc = data()
+# data_uc = data()
 data_astar = data()
 cur_state = getStartState()
 # actions = uniformCostSearch()
 actions = aStarSearch()
 coordinates = [cur_state]
 while actions:
-    # x, y = cur_state[0] + 64, 64 - cur_state[1]
     x, y = 64 + cur_state[0], 64 + cur_state[1]
     data_astar[y][x] = 255
     # data_uc[y][x] = 255

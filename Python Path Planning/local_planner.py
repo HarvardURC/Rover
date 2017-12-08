@@ -107,16 +107,18 @@ results = []
 result = []
 loop = 0
 
+### Local Planning with New Objects Detected ###
+# loop to run algorithm 5 times for timing averages
 while loop < 5:
-    # Local Planning with New Objects Detected
     environment = {}
-
-    # png = plan.data()
     cur_state = plan.getStartState()
-    # coordinates = [cur_state]
-    # png = vis.mod_array(obstacles, png, 125)
     times = []
     counter = 0
+    coordinates = [cur_state]
+
+    # preload an image of the obstacles on the heightmap
+    png = plan.data()
+    png = vis.mod_array(obstacles, png, 125)
 
     start_time = time.time()
     while not plan.goal(cur_state):
@@ -124,58 +126,60 @@ while loop < 5:
             environment[ob] = 255
         actions = plan.aStarSearch(environment.keys(), cur_state)
         for action in actions:
-            # x, y = cur_state[0] + 64, 64 + cur_state[1]
-            # png[y][x] = 254
+            x, y = cur_state[0] + 64, 64 + cur_state[1]
+            png[y][x] = 254
             x, y = cur_state
             dx, dy = delta[action]
             counter += 1
+
+            # to generate run times and visuals at different time steps
             if counter == 1:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_1.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("obstacle_astar_1.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 15:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_15.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("obstacle_astar_15.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 30:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_30.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("obstacle_astar_30.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 45:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_45.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("obstacle_astar_45.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 60:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_60.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("obstacle_astar_60.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 75:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_75.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("obstacle_astar_75.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 90:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_90.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("obstacle_astar_90.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 105:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_105.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("obstacle_astar_105.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 120:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_120.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("obstacle_astar_120.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             cur_state = (x + dx, y + dy)
-            # coordinates.append(cur_state)
+            coordinates.append(cur_state)
             if not all([x in environment for x in lidar(cur_state)]):
                 break
     result.append(times)
@@ -183,98 +187,106 @@ while loop < 5:
 
 results.append(result)
 
-# png = vis.mod_array(environment, png, 255)
+png = vis.mod_array(environment, png, 255)
 
-# with open("lidar_trig_topleft.png","wb") as f:
-#     f.write(vis.makeGrayPNG(png))
-# with open("lidar_trig_topleft.txt","wb") as f:
-#     f.write(str(coordinates))
+with open("lidar_trig_topleft.png","wb") as f:
+    f.write(vis.makeGrayPNG(png))
+with open("lidar_trig_topleft.txt","wb") as f:
+    f.write(str(coordinates))
 
 result = []
 loop = 0
 
-# Local Planning with Collision Detected
+### Local Planning with Collision Detected ##
+# loop to run algorithm 5 times for timing averages
 while loop < 5:
     environment = {}
-
-    # png = plan.data()
     cur_state = plan.getStartState()
-    # coordinates = [cur_state]
-    # png = vis.mod_array(obstacles, png, 125)
     times = []
     counter = 0
+    coordinates = [cur_state]
+
+    # preload an image of the obstacles on the heightmap
+    png = plan.data()
+    png = vis.mod_array(obstacles, png, 125)
 
     start_time = time.time()
     while not plan.goal(cur_state):
         actions = plan.aStarSearch(environment.keys(), cur_state)
         for action in actions:
-            # x, y = cur_state[0] + 64, 64 + cur_state[1]
-            # png[y][x] = 254
+            x, y = cur_state[0] + 64, 64 + cur_state[1]
+            png[y][x] = 254
             x, y = cur_state
             for ob in lidar(cur_state):
                 environment[ob] = 255
             dx, dy = delta[action]
             counter += 1
+
+            # to generate run times and visuals at different time steps
             if counter == 1:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_1.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("collision_astar_1.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 15:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_15.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("collision_astar_15.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 30:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_30.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("collision_astar_30.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 45:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_45.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("collision_astar_45.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 60:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_60.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("collision_astar_60.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 75:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_75.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("collision_astar_75.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 90:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_90.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("collision_astar_90.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 105:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_105.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("collision_astar_105.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if counter == 120:
                 times.append((time.time() - start_time))
-                # png_tmp = vis.mod_array(environment, png, 255)
-                # with open("obstacle_astar_120.png","wb") as f:
-                #     f.write(vis.makeGrayPNG(png_tmp))
+                png_tmp = vis.mod_array(environment, png, 255)
+                with open("collision_astar_120.png","wb") as f:
+                    f.write(vis.makeGrayPNG(png_tmp))
             if (x + dx, y + dy) in environment:
                 counter -= 1
                 break
             cur_state = (x + dx, y + dy)
-            # coordinates.append(cur_state)
+            coordinates.append(cur_state)
     result.append(times)
     loop += 1
 
 results.append(result)
 
+png = vis.mod_array(environment, png, 255)
+
+with open("collision_trig_topright.png","wb") as f:
+    f.write(vis.makeGrayPNG(png))
+with open("collision_trig_topright.txt","wb") as f:
+    f.write(str(coordinates))
+
+# Output run time results
+# First half of list is obstacle triggered with 5 trials
+# Second half of list is collision triggered with 5 trials
 with open("run_time_bottom_right.txt","wb") as f:
     f.write(str(results))
-# png = vis.mod_array(environment, png, 255)
-
-# with open("collision_trig_topright.png","wb") as f:
-#     f.write(vis.makeGrayPNG(png))
-# with open("collision_trig_topright.txt","wb") as f:
-#     f.write(str(coordinates))
