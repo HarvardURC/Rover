@@ -6,9 +6,6 @@ Add this line to the rest of the include statements:
 
 #include "EposDriveTrain.h"
 
-An example program (EposLibTest.cpp) is also included with this library.
-It should move motors 2-6 for a few seconds, then move motor 1 to a position and back a couple of times.
-
 ## Usage:
 
 First, a drive train object must be declared. This class' constructor accepts a string as an argument.
