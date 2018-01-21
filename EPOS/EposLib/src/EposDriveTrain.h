@@ -98,6 +98,9 @@ public:
 	//Get motor current
 	short getCurrent(int);
 
+	unsigned char getNumFaults(int);
+	unsigned int getFaultCode(int, unsigned char);
+
 
 private:
 	void logError(string, unsigned int);

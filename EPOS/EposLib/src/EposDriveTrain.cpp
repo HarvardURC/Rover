@@ -88,7 +88,7 @@ unsigned int EposDriveTrain::setPosition(int node, long position, bool absolute)
 	VCS_MoveToPosition(portHandle, node, position, absolute, 1, &errorCode);
 
 	if(errorCode != 0) {
-		logError("VCS_MoveToPosition", errorCode);
+		logError("VCS_MoveToPosition", node, errorCode);
 	}
 
 	return errorCode;
@@ -98,7 +98,7 @@ unsigned int EposDriveTrain::setPositionProfile(int node, long velocity, long ac
 	VCS_SetPositionProfile(portHandle, node, velocity, accel, decel, &errorCode);
 
 	if(errorCode != 0) {
-		logError("VCS_SetPositionProfile", errorCode);
+		logError("VCS_SetPositionProfile", node, errorCode);
 	}
 
 	return errorCode;
@@ -251,6 +251,26 @@ short EposDriveTrain::getCurrent(int node) {
 	}
 
 	return current;
+}
+
+unsigned char EposDriveTrain::getNumFaults(int node) {
+	unsigned char numFaults;
+
+	if(!VCS_GetNbOfDeviceError(portHandle, node, &numFaults, &errorCode)) {
+		logError("VCS_GetNbOfDeviceError", node, errorCode);
+	}
+
+	return numFaults;
+}
+
+unsigned int EposDriveTrain::getFaultCode(int node, unsigned char faultNum) {
+	unsigned int faultCode;
+
+	if(!VCS_GetDeviceErrorCode(portHandle, node, faultNum, &faultCode, &errorCode)) {
+		logError("VCS_GetDeviceErrorCode", node, errorCode);
+	}
+
+	return faultCode;
 }
 
 void EposDriveTrain::logError(string functName, unsigned int errorCode) {
