@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include "EposDriveTrain.h"
 //#include "Definitions.h"
 using namespace std;
 
@@ -23,11 +24,12 @@ string g_interfaceName = "USB";
 string g_portName = "USB0";
 
 //Nodes to test
-int nodeId = 5;
-int node2Id = 4;
+int nodeId = 1; //this is 5
+int node2Id = 6; // this is 4
+
 
 //How long motor will run for, in ms
-const long timeThreshold = 3000;
+const long timeThreshold = 1000;
 
 long motorSpeed = 1500;
 

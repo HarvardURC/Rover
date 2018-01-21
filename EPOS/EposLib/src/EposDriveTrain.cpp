@@ -83,6 +83,16 @@ unsigned int EposDriveTrain::setPosition(int node, long position, bool absolute)
 	return errorCode;
 }
 
+bool EposDriveTrain::halt(int node){
+	bool status = VCS_HaltVelocityMovement(portHandle, node, &errorCode);
+
+	if (!status) {
+		logError("VCS_HaltVelocityMovement", node, errorCode);
+	}
+
+	return status;
+
+}
 bool EposDriveTrain::stopAllMotors() {
 	//Send a stop signal to each of the motor nodes
 
@@ -112,6 +122,16 @@ bool EposDriveTrain::enableNode(int node) {
 	return status;
 }
 
+bool EposDriveTrain::disableNode(int node) {
+	bool status = VCS_SetDisableState(portHandle, node, &errorCode);
+
+	if (!status) {
+		logError("VCS_SetEnableState", node, errorCode);
+	}
+
+	return status;
+}
+
 bool EposDriveTrain::clearFault(int node) {
 	bool status = VCS_ClearFault(portHandle, node, &errorCode);
 
@@ -126,7 +146,7 @@ bool EposDriveTrain::enableAll() {
 	bool status = 1;
 
 	//Set all motor nodes to 'enable'
-	for (int i=1; i<=6; i++) {
+	for (int i=1; i<7; i++) {
 		if(!VCS_SetEnableState(portHandle, i, &errorCode)) {
 			logError("VCS_SetEnableState", i, errorCode);
 
@@ -137,6 +157,23 @@ bool EposDriveTrain::enableAll() {
 
 	return status;
 }
+bool EposDriveTrain::disableAll() {
+	//If everything succeeds, return 1. Otherwise return 0
+	bool status = 1;
+
+	//Set all motor nodes to 'enable'
+	for (int i=1; i<=6; i++) {
+		if(!VCS_SetDisableState(portHandle, i, &errorCode)) {
+			logError("VCS_SetEnableState", i, errorCode);
+
+			//If it failed, set status accordingly
+			status = 0;
+		}
+	}
+
+	return status;
+}
+
 
 bool EposDriveTrain::clearAllFaults() {
 	//If everything succeeds, return 1. Otherwise return 0

@@ -61,17 +61,23 @@ public:
 	//Move a motor to a position
 	unsigned int setPosition(int, long, bool);
 
+	bool halt(int);
 	//Stop everything
 	bool stopAllMotors();
 
 	//Enable one node
 	bool enableNode(int);
 
+	bool disableNode(int);
+
 	//Clear faults from one node
 	bool clearFault(int);
 
 	//Enable all motors
 	bool enableAll();
+
+	//disable all motors
+	bool disableAll();
 
 	//Clear errors
 	bool clearAllFaults();
