@@ -58,8 +58,12 @@ public:
 	//Move a motor at a velocity
 	unsigned int setVelocity(int, long);
 
+	unsigned int setVelocityProfile(int, long, long);
+
 	//Move a motor to a position
 	unsigned int setPosition(int, long, bool);
+
+	unsigned int setPositionProfile(int, long, long, long);
 
 	bool halt(int);
 	//Stop everything
