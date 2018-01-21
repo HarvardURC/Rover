@@ -26,10 +26,11 @@ int legStates[6] = {0,0,0,0,0,0};
 double legAngles [6];
 
 const double pi = 3.14159;
-const double legAirSpeed = 7.0*200;
+const double legAirSpeed = 7.0*100;
 // 20 degrees before home pos
 const double landingAngle = 0.349*1.5;
 const double legGroundSpeed = legAirSpeed *(2*landingAngle/(2*pi - 2*landingAngle));
+
   int getActualID(int willsStupidNumbering)
   {
     switch(willsStupidNumbering) {
@@ -127,8 +128,8 @@ int main () {
 
     //cout << "test" << endl;
     //driveTrain.setVelocity(getActualID(0), 1000);
-    cout << "legGroundSpeed " << legGroundSpeed <<" state: " << state << "  legAngle[0] : " <<  legAngles[0]  << "  legAngle[1] : " <<  legAngles[1] <<"  legAngle[2] : " <<  legAngles[2] << " legAngle[3] : " <<  legAngles[3] <<"  legAngle[4] : " <<  legAngles[4] <<"  legAngle[5] : " <<  legAngles[5] <<endl;
-
+    //cout << "legGroundSpeed " << legGroundSpeed <<" state: " << state << "  legAngle[0] : " <<  legAngles[0]  << "  legAngle[1] : " <<  legAngles[1] <<"  legAngle[2] : " <<  legAngles[2] << " legAngle[3] : " <<  legAngles[3] <<"  legAngle[4] : " <<  legAngles[4] <<"  legAngle[5] : " <<  legAngles[5] <<endl;
+      cout << "motor:2 = " << legAngles[2] << endl;
     //cout << "realvalue 0 : " << driveTrain.getPosition(getActualID(0))  <<" state: " << state << "  legAngle[0] : " <<  legAngles[0] << "  legAngle[1] : " <<  legAngles[1] <<"  legAngle[2] : " <<  legAngles[2] <<"  legAngle[3] : " <<  legAngles[3] <<"  legAngle[4] : " <<  legAngles[4] <<"  legAngle[5] : " <<  legAngles[5] <<endl;
     
     if (state == 1){
@@ -155,7 +156,7 @@ int main () {
               driveTrain.setVelocity(getActualID(2), legAirSpeed);
 
           // make left legs go to home position
-          if ((legAngles[3] > landingAngle) and (legAngles[3] < 2*pi - 2*landingAngle)){
+          if ((legAngles[3] < landingAngle) or (legAngles[3] > 2*pi - landingAngle)){
               driveTrain.halt(getActualID(3));
               legStates[3] = 1;
           }
@@ -163,7 +164,7 @@ int main () {
               driveTrain.setVelocity(getActualID(3), legAirSpeed);
 
 
-          if ((legAngles[4] > landingAngle) and (legAngles[4] < 2*pi - 2*landingAngle)){
+          if ((legAngles[4] < landingAngle) or (legAngles[4] > 2*pi - landingAngle)){
               driveTrain.halt(getActualID(4));
               legStates[4] = 1;
           }
@@ -171,7 +172,7 @@ int main () {
               driveTrain.setVelocity(getActualID(4), -legAirSpeed);
 
 
-          if ((legAngles[5] > landingAngle) and (legAngles[5] < 2*pi - 2*landingAngle)){
+          if ((legAngles[5] < landingAngle) or (legAngles[5] > 2*pi - landingAngle)){
               driveTrain.halt(getActualID(5));
               legStates[5] = 1;
           }
@@ -179,7 +180,7 @@ int main () {
               driveTrain.setVelocity(getActualID(5), legAirSpeed);
 
 
-          if (legStates[0] and legStates[1] and legStates[2]){
+          if (legStates[0] and legStates[1] and legStates[2] and legStates[3] and legStates[4] and legStates[5]){
             legStates[0] = legStates[1] = legStates[2] = legStates[3] = legStates[4] = legStates[5] = 0;
             state = 2;
           }
@@ -192,44 +193,56 @@ int main () {
             driveTrain.halt(getActualID(0));
             legStates[0] = 1;
           }
-          else 
+          else{
             driveTrain.setVelocity(getActualID(0), -legAirSpeed);
+            legStates[0] = 0;
+          }
 
           if (legAngles[1] > 2*pi - landingAngle){
             driveTrain.halt(getActualID(1));
             legStates[1] = 1;
           }
-          else 
+          else{
             driveTrain.setVelocity(getActualID(1), -legAirSpeed);
+            legStates[1] = 0;
+          }
 
           if (legAngles[2] > 2*pi - landingAngle){
             driveTrain.halt(getActualID(2));
             legStates[2] = 1;
           }
-          else 
+          else{
             driveTrain.setVelocity(getActualID(2), legAirSpeed);
+            legStates[2] = 0;
+          }
 
           // left legs finish ground step
           if ((legAngles[3] > landingAngle) and (legAngles[3] < landingAngle * 2)){
             driveTrain.halt(getActualID(3));
             legStates[3] = 1;
           }
-          else 
+          else{
             driveTrain.setVelocity(getActualID(3), legGroundSpeed);
+            legStates[3] = 0;
+          }
 
           if ((legAngles[4] > landingAngle) and (legAngles[4] < landingAngle * 2)){
             driveTrain.halt(getActualID(4));
             legStates[4] = 1;
           }
-          else 
+          else{
             driveTrain.setVelocity(getActualID(4), -legGroundSpeed);
+            legStates[4] = 0;
+          }
 
           if ((legAngles[5] > landingAngle) and (legAngles[5] < landingAngle * 2)){
             driveTrain.halt(getActualID(5));
             legStates[5] = 1;
           }
-          else 
+          else{
             driveTrain.setVelocity(getActualID(5), legGroundSpeed);
+            legStates[5] = 0;
+          }
 
 
           if (legStates[0] and legStates[1] and legStates[2] and legStates[3] and legStates[4] and legStates[5]){
@@ -245,44 +258,56 @@ int main () {
             driveTrain.halt(getActualID(0));
             legStates[0] = 1;
           }
-          else 
+          else{
             driveTrain.setVelocity(getActualID(0), -legGroundSpeed);
+            legStates[0] = 0;
+          }
 
           if ((legAngles[1] > landingAngle) and (legAngles[1] < landingAngle * 2)){
             driveTrain.halt(getActualID(1));
             legStates[1] = 1;
           }
-          else 
+          else{
             driveTrain.setVelocity(getActualID(1), -legGroundSpeed);
+            legStates[1] = 0;
+          }
 
           if ((legAngles[2] > landingAngle) and (legAngles[2] < landingAngle * 2)){
             driveTrain.halt(getActualID(2));
             legStates[2] = 1;
           }
-          else 
+          else{ 
             driveTrain.setVelocity(getActualID(2), legGroundSpeed);
+            legStates[2] = 0;
+          }
 
           // left legs finish air
           if (legAngles[3] > 2*pi - landingAngle){
             driveTrain.halt(getActualID(3));
             legStates[3] = 1;
           }
-          else 
+          else{
             driveTrain.setVelocity(getActualID(3), legAirSpeed);
+            legStates[3] = 0;
+          }
 
           if (legAngles[4] > 2*pi - landingAngle){
             driveTrain.halt(getActualID(4));
             legStates[4] = 1;
           }
-          else 
+          else{
             driveTrain.setVelocity(getActualID(4), -legAirSpeed);
+            legStates[4] = 0;
+          }
 
           if (legAngles[5] > 2*pi - landingAngle){
             driveTrain.halt(getActualID(5));
             legStates[5] = 1;
           }
-          else 
+          else{
             driveTrain.setVelocity(getActualID(5), legAirSpeed);
+            legStates[5] = 0;
+          }
 
 
           if (legStates[0] and legStates[1] and legStates[2] and legStates[3] and legStates[4] and legStates[5]){
