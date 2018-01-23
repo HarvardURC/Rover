@@ -8,39 +8,162 @@
 #include "Definitions.h"
 #include "EposDriveTrain.h"
 #include <unistd.h>
-
 using namespace std;
 
 //time to wait in ms
 long sleepTime = 3000;
+
+//Encoder units per rotation
 int MODVALUE = 176128;
-int offsetvalue1 = 15105;
-int offsetvalue2 = 15105;
-int offsetvalue3 = 15105;
-int offsetvalue4 = 15105;
-int offsetvalue5 = 15105;
-int offsetvalue6 = 15105;
+const double pi = 3.14159265;
+const float START_OFFSET_ANGLE = pi/2;
 
 int state = 1;
 int legStates[6] = {0,0,0,0,0,0};
 double legAngles [6];
 
-const double pi = 3.14159;
-const double legAirSpeed = 7.0*100;
-// 20 degrees before home pos
-const double landingAngle = 0.349*1.5;
+
+const double legAirSpeed = 7.0*200;
+const double landingAngle = 0.349;
 const double legGroundSpeed = legAirSpeed *(2*landingAngle/(2*pi - 2*landingAngle));
 
-  int getActualID(int willsStupidNumbering)
-  {
-    switch(willsStupidNumbering) {
-        case 0 : return 4; 
-        case 1 : return 6;
-        case 2 : return 2; 
-        case 3 : return 1;
-        case 4 : return 5; 
-        case 5 : return 3;
+const int FRONTLEFT   = 1;
+const int MIDDLELEFT  = 2;
+const int BACKLEFT    = 3;
+const int FRONTRIGHT  = 4;
+const int MIDDLERIGHT = 5;  
+const int BACKRIGHT   = 6;
+const int accel = 10000;
+const int deccel = 10000;
+//const int vel = 6000;
+
+
+
+  // converts curPos (absolute maxon coordinates) and goalAngle (radians) into goalPos (maxon coordinates)
+  // goalAngle for all legs is defined to be zero if pointed down and pi/2 if pointing toward back of rover
+  int getGoalPos(int legID, int curPos, float goalAngle, bool rotClockwise){
+    // get whether the leg is one of the legs on the right side of the rover
+    bool isRightSideLeg = ((legID == FRONTRIGHT) or (legID == MIDDLERIGHT) or (legID == BACKRIGHT));
+      
+    // goalAngleMaxonCoord is the goal angle in maxon coordinates where 0 is pointing down and MODVALUE/4 is pointing
+    // toward the back of the rover
+    int goalAngleMaxonCoord = (int) (MODVALUE * goalAngle / (2*pi));
+    int curAngleMaxonCoord;
+    
+    // adjust curPos to account for the offset angle from zero that all motors started at
+    // its different for right and left legs because of opposite orientation of the right side motors
+    // and the left side motors. Left side motors rotate clockwise toward the front when the maxon coordinates 
+    // are increasing
+    int originalCurPos = curPos;
+    
+    if (!isRightSideLeg) {
+      curPos = curPos + (int)(START_OFFSET_ANGLE * MODVALUE / (2 * pi));
+    } else {
+      curPos = curPos - (int)(START_OFFSET_ANGLE * MODVALUE / (2 * pi));
     }
+    
+    // get the current angle of the leg in terms of maxon coordinates modded to between 0 and MODVALUE
+    // this depends on whether the 
+    if ((curPos >= 0) and (!isRightSideLeg)){
+      curAngleMaxonCoord = (curPos % MODVALUE);
+    }
+    else if ((curPos < 0) and (!isRightSideLeg)){
+      curAngleMaxonCoord = MODVALUE + (curPos % MODVALUE);
+    }
+    else if ((curPos >= 0) and (isRightSideLeg)){
+    	curAngleMaxonCoord =  -1 * (curPos % MODVALUE) + MODVALUE;
+    }
+    else if ((curPos < 0) and (isRightSideLeg)){
+    	curAngleMaxonCoord = -1 * (curPos % MODVALUE);
+    }
+    
+    int diff = goalAngleMaxonCoord - curAngleMaxonCoord;
+    
+    cout << "legID: " << legID << " originalCurPos: " << originalCurPos << " curPos: " << curPos << " curAngleMaxon: " << curAngleMaxonCoord << " goalMaxon: " << goalAngleMaxonCoord << endl;
+    
+    int delta;
+    // Calculate delta (maxon coordinates) that we want to add to the current position
+    // Note that if a leg is told to go clockwise to its current position, it 
+    if (rotClockwise) {
+      if (diff > 0) {
+        delta = diff;
+      } else {
+        delta = diff + MODVALUE;
+      }
+    } else {
+      if (diff > 0) {
+        delta = diff - MODVALUE;
+      } else {
+        delta = diff;
+      }
+    }
+
+    // if legID is one of the right legs then they are physically oriented such
+    // that clockwise motion is negative. Therefore must multiply delta by a factor of -1
+    if (isRightSideLeg)
+      delta = -1 * delta;
+    
+    return (originalCurPos + delta);
+  }
+
+  // moves all three right legs (FRONTRIGHT, BACKRIGHT, MIDDLELEFT)
+  // takes in absolute position
+  void moveRightLegs(float goalAngle, int vel, EposDriveTrain driveTrain, bool rotClockwise){
+    // set legs to specified speed
+    driveTrain.setPositionProfile(FRONTRIGHT, vel, accel,deccel);
+    driveTrain.setPositionProfile(MIDDLELEFT, vel, accel,deccel);
+    driveTrain.setPositionProfile(BACKRIGHT, vel, accel,deccel);
+
+    // Need to get current positions in order to calculate goal position in maxon coordinates
+    int frontRightCurPos = driveTrain.getPosition(FRONTRIGHT);
+    int middleLeftCurPos = driveTrain.getPosition(MIDDLELEFT);
+    int backRightCurPos = driveTrain.getPosition(BACKRIGHT);
+
+    // convert to goal position in maxon coordinates using current position (maxon coordinates)
+    // and the goalAngle (radians)
+    int frontRightGoalPos = getGoalPos(FRONTRIGHT, frontRightCurPos, goalAngle, rotClockwise);
+    int middleLeftGoalPos = getGoalPos(MIDDLELEFT, middleLeftCurPos, goalAngle, rotClockwise);
+    int backRightGoalPos = getGoalPos(BACKRIGHT, backRightCurPos, goalAngle, rotClockwise);
+
+    // set the position
+    driveTrain.setPosition(FRONTRIGHT, frontRightGoalPos, true);
+    driveTrain.setPosition(MIDDLELEFT, middleLeftGoalPos, true);
+    driveTrain.setPosition(BACKRIGHT, backRightGoalPos, true);
+  }
+
+  // moves all three left legs (FRONTLEFT, BACKLEFT, MIDDLERIGHT)
+  void moveLeftLegs(float goalAngle, int vel, EposDriveTrain driveTrain, bool rotClockwise){
+    // set legs to specified speed
+    driveTrain.setPositionProfile(FRONTLEFT, vel, accel,deccel);
+    driveTrain.setPositionProfile(MIDDLERIGHT, vel, accel,deccel);
+    driveTrain.setPositionProfile(BACKLEFT, vel, accel,deccel);
+
+    // Need to get current positions in order to calculate goal position in maxon coordinates
+    int frontLeftCurPos = driveTrain.getPosition(FRONTLEFT);
+    int middleRightCurPos = driveTrain.getPosition(MIDDLERIGHT);
+    int backLeftCurPos = driveTrain.getPosition(BACKLEFT);
+
+    // convert to goal position in maxon coordinates using current position (maxon coordinates)
+    // and the goal angle (radians)
+    int frontLeftGoalPos = getGoalPos(FRONTLEFT, frontLeftCurPos, goalAngle, rotClockwise);
+    int middleRightGoalPos = getGoalPos(MIDDLERIGHT, middleRightCurPos, goalAngle, rotClockwise);
+    int backLeftGoalPos = getGoalPos(BACKLEFT, backLeftCurPos, goalAngle, rotClockwise);
+
+    // set the position
+    driveTrain.setPosition(FRONTLEFT, frontLeftGoalPos, true);
+    driveTrain.setPosition(MIDDLERIGHT, middleRightGoalPos, true);
+    driveTrain.setPosition(BACKLEFT, backLeftGoalPos, true);
+  }
+
+	// check that all motors have reached their goal position
+  bool allAreAtTargets(EposDriveTrain driveTrain){
+  	return 
+    (driveTrain.isAtTarget(FRONTRIGHT) and
+    driveTrain.isAtTarget(MIDDLELEFT) and
+    driveTrain.isAtTarget(BACKRIGHT) and 
+    driveTrain.isAtTarget(FRONTLEFT) and
+    driveTrain.isAtTarget(MIDDLERIGHT) and
+    driveTrain.isAtTarget(BACKLEFT));
   }
 
 
@@ -61,262 +184,81 @@ int main () {
   driveTrain.clearAllFaults();
 
   for (int i = 1; i<=6; i++) {
-    //Set the i-th node to velocity mode
-    driveTrain.setMode(i, PROFILE_VELOCITY_MODE);
-
-    //Set the velocity of the i-th node
-    //driveTrain.setVelocity(i, 1000);
+    //Set the i-th node to appropriate mode
+    driveTrain.setMode(i, PROFILE_POSITION_MODE);
   }
-
-  // //Wait for a few seconds
-  // usleep(sleepTime * 1000);
-
-  // for (int i = 4; i <= 6; i++) {
-  //   //Stop each motor
-  //   //stopAllMotors() would also work here; replace this for loop with it
-  //   driveTrain.setVelocity(i, 0);
-  // }
-
-  // //Set node 1 to profile position mode
-  // driveTrain.setMode(2, PROFILE_POSITION_MODE);
-
-  // //Move the motor on node 1 back and forth a few times in position mode
-  // //ABSOLUTE is a macro declared in EposDriveTrain.h
-  // //For relative motion, use RELATIVE instead
-  // for (int i=0; i<2; i++) {
-  //   usleep(3000*1000);
-
-  //   driveTrain.setPosition(2, 0, ABSOLUTE);
-
-  //   usleep(3000*1000);
-
-  //   driveTrain.setPosition(2, 100000, ABSOLUTE);
-  //   //Units used in setPosition are encoder units.
-  //   //What angle this actually corresponds to depends on the encoder, gear ratio, etc.
-  // }
   
+  // flag for making sure state is only called once
+  bool moveCommandFlag = true;
   
-  // Converts wills stupid ID to actual motor ID
-
-
   while(true)
-  {
-
+  {  
     
-    //cout << "Count1 = " << motor1 % modValue << "Count2= " << motor2 % modValue<< "Count3 = " << motor3 % modValue<< "Count4 = " << motor4 % modValue<< "Count5 = " << motor5 % modValue<< "Count6 = " << motor6 % modValue  << endl;
-    int motor0WillPos = -(driveTrain.getPosition(getActualID(0)) % MODVALUE);
-    int motor1WillPos = -(driveTrain.getPosition(getActualID(1)) % MODVALUE);
-    int motor2WillPos = driveTrain.getPosition(getActualID(2)) % MODVALUE;
-    int motor3WillPos = driveTrain.getPosition(getActualID(3)) % MODVALUE;
-    int motor4WillPos = -(driveTrain.getPosition(getActualID(4)) % MODVALUE);
-    int motor5WillPos = driveTrain.getPosition(getActualID(5)) % MODVALUE;
+  	 // moveRightLegs(landingAngle, legAirSpeed, driveTrain, true);
+  	 // sleep(4);
+  	 //moveRightLegs(2*pi - landingAngle, legAirSpeed, driveTrain, true);
+  	 // moveLeftLegs(pi, legGroundSpeed, driveTrain, true);
+  	 // moveLeftLegs(2*pi/3, legAirSpeed, driveTrain, true);
+  	 // sleep(6);
+  	 //sleep(4);
+  	 
     
-    legAngles[0] = 2*pi * ((float)motor0WillPos/MODVALUE);
-    legAngles[1] = 2*pi * ((float)motor1WillPos/MODVALUE);
-    legAngles[2] = 2*pi * ((float)motor2WillPos/MODVALUE);
-    legAngles[3] = 2*pi * ((float)motor3WillPos/MODVALUE);
-    legAngles[4] = 2*pi * ((float)motor4WillPos/MODVALUE);
-    legAngles[5] = 2*pi * ((float)motor5WillPos/MODVALUE);
+    // *** STATE MACHINE ***
     
-    // in case angle is negative convert to positive
-      legAngles[0] = legAngles[0] + 2*pi*(legAngles[0] < 0);
-      legAngles[1] = legAngles[1] + 2*pi*(legAngles[1] < 0);
-      legAngles[2] = legAngles[2] + 2*pi*(legAngles[2] < 0);
-      legAngles[3] = legAngles[3] + 2*pi*(legAngles[3] < 0);
-      legAngles[4] = legAngles[4] + 2*pi*(legAngles[4] < 0);
-      legAngles[5] = legAngles[5] + 2*pi*(legAngles[5] < 0);
-
-    //cout << "test" << endl;
-    //driveTrain.setVelocity(getActualID(0), 1000);
-    //cout << "legGroundSpeed " << legGroundSpeed <<" state: " << state << "  legAngle[0] : " <<  legAngles[0]  << "  legAngle[1] : " <<  legAngles[1] <<"  legAngle[2] : " <<  legAngles[2] << " legAngle[3] : " <<  legAngles[3] <<"  legAngle[4] : " <<  legAngles[4] <<"  legAngle[5] : " <<  legAngles[5] <<endl;
-      cout << "motor:2 = " << legAngles[2] << endl;
-    //cout << "realvalue 0 : " << driveTrain.getPosition(getActualID(0))  <<" state: " << state << "  legAngle[0] : " <<  legAngles[0] << "  legAngle[1] : " <<  legAngles[1] <<"  legAngle[2] : " <<  legAngles[2] <<"  legAngle[3] : " <<  legAngles[3] <<"  legAngle[4] : " <<  legAngles[4] <<"  legAngle[5] : " <<  legAngles[5] <<endl;
-    
+    // state 1 setups rover depending on initial configuration
+    // this could also work with two states, but a setup state might be needed in the future
     if (state == 1){
-
-          if (legAngles[0] > pi){
-            driveTrain.halt(getActualID(0));
-            legStates[0] = 1;
-          }
-          else 
-            driveTrain.setVelocity(getActualID(0), -legAirSpeed);
-
-          if (legAngles[1] > pi){
-            driveTrain.halt(getActualID(1));
-            legStates[1] = 1;
-          }
-          else 
-            driveTrain.setVelocity(getActualID(1), -legAirSpeed);
-
-          if (legAngles[2] > pi){
-            driveTrain.halt(getActualID(2));
-            legStates[2] = 1;
-          }
-          else 
-              driveTrain.setVelocity(getActualID(2), legAirSpeed);
-
-          // make left legs go to home position
-          if ((legAngles[3] < landingAngle) or (legAngles[3] > 2*pi - landingAngle)){
-              driveTrain.halt(getActualID(3));
-              legStates[3] = 1;
-          }
-          else 
-              driveTrain.setVelocity(getActualID(3), legAirSpeed);
-
-
-          if ((legAngles[4] < landingAngle) or (legAngles[4] > 2*pi - landingAngle)){
-              driveTrain.halt(getActualID(4));
-              legStates[4] = 1;
-          }
-          else 
-              driveTrain.setVelocity(getActualID(4), -legAirSpeed);
-
-
-          if ((legAngles[5] < landingAngle) or (legAngles[5] > 2*pi - landingAngle)){
-              driveTrain.halt(getActualID(5));
-              legStates[5] = 1;
-          }
-          else 
-              driveTrain.setVelocity(getActualID(5), legAirSpeed);
-
-
-          if (legStates[0] and legStates[1] and legStates[2] and legStates[3] and legStates[4] and legStates[5]){
-            legStates[0] = legStates[1] = legStates[2] = legStates[3] = legStates[4] = legStates[5] = 0;
-            state = 2;
-          }
+      // stateCommandCalled is meant so that moveRightLegs and moveLeftLegs are only called once per state
+      if (moveCommandFlag)
+      {
+        moveRightLegs(landingAngle, legAirSpeed, driveTrain, true);
+        moveLeftLegs(2*pi - landingAngle, legAirSpeed, driveTrain, true);   
       }
-      // move right feet to ground and move left feet to the air
-      else if (state == 2){
-
-          // right legs finish air
-          if (legAngles[0] > 2*pi - landingAngle){
-            driveTrain.halt(getActualID(0));
-            legStates[0] = 1;
-          }
-          else{
-            driveTrain.setVelocity(getActualID(0), -legAirSpeed);
-            legStates[0] = 0;
-          }
-
-          if (legAngles[1] > 2*pi - landingAngle){
-            driveTrain.halt(getActualID(1));
-            legStates[1] = 1;
-          }
-          else{
-            driveTrain.setVelocity(getActualID(1), -legAirSpeed);
-            legStates[1] = 0;
-          }
-
-          if (legAngles[2] > 2*pi - landingAngle){
-            driveTrain.halt(getActualID(2));
-            legStates[2] = 1;
-          }
-          else{
-            driveTrain.setVelocity(getActualID(2), legAirSpeed);
-            legStates[2] = 0;
-          }
-
-          // left legs finish ground step
-          if ((legAngles[3] > landingAngle) and (legAngles[3] < landingAngle * 2)){
-            driveTrain.halt(getActualID(3));
-            legStates[3] = 1;
-          }
-          else{
-            driveTrain.setVelocity(getActualID(3), legGroundSpeed);
-            legStates[3] = 0;
-          }
-
-          if ((legAngles[4] > landingAngle) and (legAngles[4] < landingAngle * 2)){
-            driveTrain.halt(getActualID(4));
-            legStates[4] = 1;
-          }
-          else{
-            driveTrain.setVelocity(getActualID(4), -legGroundSpeed);
-            legStates[4] = 0;
-          }
-
-          if ((legAngles[5] > landingAngle) and (legAngles[5] < landingAngle * 2)){
-            driveTrain.halt(getActualID(5));
-            legStates[5] = 1;
-          }
-          else{
-            driveTrain.setVelocity(getActualID(5), legGroundSpeed);
-            legStates[5] = 0;
-          }
-
-
-          if (legStates[0] and legStates[1] and legStates[2] and legStates[3] and legStates[4] and legStates[5]){
-            legStates[0] = legStates[1] = legStates[2] = legStates[3] = legStates[4] = legStates[5] = 0;
-            state = 3;
-          }
-
-      } 
-      // move left feet to ground and move right feet to the air
-      else if (state == 3){
-          // right legs finish ground step
-          if ((legAngles[0] > landingAngle) and (legAngles[0] < landingAngle * 2)){
-            driveTrain.halt(getActualID(0));
-            legStates[0] = 1;
-          }
-          else{
-            driveTrain.setVelocity(getActualID(0), -legGroundSpeed);
-            legStates[0] = 0;
-          }
-
-          if ((legAngles[1] > landingAngle) and (legAngles[1] < landingAngle * 2)){
-            driveTrain.halt(getActualID(1));
-            legStates[1] = 1;
-          }
-          else{
-            driveTrain.setVelocity(getActualID(1), -legGroundSpeed);
-            legStates[1] = 0;
-          }
-
-          if ((legAngles[2] > landingAngle) and (legAngles[2] < landingAngle * 2)){
-            driveTrain.halt(getActualID(2));
-            legStates[2] = 1;
-          }
-          else{ 
-            driveTrain.setVelocity(getActualID(2), legGroundSpeed);
-            legStates[2] = 0;
-          }
-
-          // left legs finish air
-          if (legAngles[3] > 2*pi - landingAngle){
-            driveTrain.halt(getActualID(3));
-            legStates[3] = 1;
-          }
-          else{
-            driveTrain.setVelocity(getActualID(3), legAirSpeed);
-            legStates[3] = 0;
-          }
-
-          if (legAngles[4] > 2*pi - landingAngle){
-            driveTrain.halt(getActualID(4));
-            legStates[4] = 1;
-          }
-          else{
-            driveTrain.setVelocity(getActualID(4), -legAirSpeed);
-            legStates[4] = 0;
-          }
-
-          if (legAngles[5] > 2*pi - landingAngle){
-            driveTrain.halt(getActualID(5));
-            legStates[5] = 1;
-          }
-          else{
-            driveTrain.setVelocity(getActualID(5), legAirSpeed);
-            legStates[5] = 0;
-          }
-
-
-          if (legStates[0] and legStates[1] and legStates[2] and legStates[3] and legStates[4] and legStates[5]){
-            legStates[0] = legStates[1] = legStates[2] = legStates[3] = legStates[4] = legStates[5] = 0;
-            state = 2;
-          }
-      } 
-      //usleep(1000);
+      
+      if (moveCommandFlag){
+      	moveCommandFlag = false;
+      }
+      
+      if (allAreAtTargets(driveTrain)){
+        state = 2;
+        moveCommandFlag = true;
+      }
     }
+    // move right feet through air and move left feet on ground
+    else if (state == 2){
+      if (moveCommandFlag) {
+        moveRightLegs(2*pi - landingAngle, legAirSpeed, driveTrain, true);
+        moveLeftLegs(landingAngle, legGroundSpeed, driveTrain, true); 
+      }
+      
+      if (moveCommandFlag){
+      	moveCommandFlag = false;
+      }
+             
+      if (allAreAtTargets(driveTrain)){
+        state = 3;
+        moveCommandFlag = true;
+      }
+          
+    } 
+    // move left feet through air and move left feet on ground
+    else if (state == 3){
+      if (moveCommandFlag){
+        moveRightLegs(landingAngle, legGroundSpeed, driveTrain, true);
+        moveLeftLegs(2*pi - landingAngle, legAirSpeed, driveTrain, true);  
+      }
+      
+      if (moveCommandFlag){
+      	moveCommandFlag = false;
+      }
+        
+      if (allAreAtTargets(driveTrain)){
+        state = 2;
+        moveCommandFlag = true;
+      }
+    } 
+    // //usleep(1000);
+  }
 
     return 0;
 }
