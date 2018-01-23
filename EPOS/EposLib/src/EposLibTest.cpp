@@ -108,48 +108,36 @@ const int deccel = 10000;
 
   // moves all three right legs (FRONTRIGHT, BACKRIGHT, MIDDLELEFT)
   // takes in absolute position
-  void moveRightLegs(float goalAngle, int vel, EposDriveTrain driveTrain, bool rotClockwise){
+  void moveLegs(float goalAngleRight, int velRight, float goalAngleLeft, int velLeft, EposDriveTrain driveTrain, bool rotClockwise){
     // set legs to specified speed
-    driveTrain.setPositionProfile(FRONTRIGHT, vel, accel,deccel);
-    driveTrain.setPositionProfile(MIDDLELEFT, vel, accel,deccel);
-    driveTrain.setPositionProfile(BACKRIGHT, vel, accel,deccel);
+    driveTrain.setPositionProfile(FRONTRIGHT, velRight, accel,deccel);
+    driveTrain.setPositionProfile(MIDDLELEFT, velRight, accel,deccel);
+    driveTrain.setPositionProfile(BACKRIGHT, velRight, accel,deccel);
+    driveTrain.setPositionProfile(FRONTLEFT, velLeft, accel,deccel);
+    driveTrain.setPositionProfile(MIDDLERIGHT, velLeft, accel,deccel);
+    driveTrain.setPositionProfile(BACKLEFT, velLeft, accel,deccel);
 
     // Need to get current positions in order to calculate goal position in maxon coordinates
     int frontRightCurPos = driveTrain.getPosition(FRONTRIGHT);
     int middleLeftCurPos = driveTrain.getPosition(MIDDLELEFT);
     int backRightCurPos = driveTrain.getPosition(BACKRIGHT);
-
-    // convert to goal position in maxon coordinates using current position (maxon coordinates)
-    // and the goalAngle (radians)
-    int frontRightGoalPos = getGoalPos(FRONTRIGHT, frontRightCurPos, goalAngle, rotClockwise);
-    int middleLeftGoalPos = getGoalPos(MIDDLELEFT, middleLeftCurPos, goalAngle, rotClockwise);
-    int backRightGoalPos = getGoalPos(BACKRIGHT, backRightCurPos, goalAngle, rotClockwise);
-
-    // set the position
-    driveTrain.setPosition(FRONTRIGHT, frontRightGoalPos, true);
-    driveTrain.setPosition(MIDDLELEFT, middleLeftGoalPos, true);
-    driveTrain.setPosition(BACKRIGHT, backRightGoalPos, true);
-  }
-
-  // moves all three left legs (FRONTLEFT, BACKLEFT, MIDDLERIGHT)
-  void moveLeftLegs(float goalAngle, int vel, EposDriveTrain driveTrain, bool rotClockwise){
-    // set legs to specified speed
-    driveTrain.setPositionProfile(FRONTLEFT, vel, accel,deccel);
-    driveTrain.setPositionProfile(MIDDLERIGHT, vel, accel,deccel);
-    driveTrain.setPositionProfile(BACKLEFT, vel, accel,deccel);
-
-    // Need to get current positions in order to calculate goal position in maxon coordinates
     int frontLeftCurPos = driveTrain.getPosition(FRONTLEFT);
     int middleRightCurPos = driveTrain.getPosition(MIDDLERIGHT);
     int backLeftCurPos = driveTrain.getPosition(BACKLEFT);
 
     // convert to goal position in maxon coordinates using current position (maxon coordinates)
-    // and the goal angle (radians)
+    // and the goalAngle (radians)
+    int frontRightGoalPos = getGoalPos(FRONTRIGHT, frontRightCurPos, goalAngleRight, rotClockwise);
+    int middleLeftGoalPos = getGoalPos(MIDDLELEFT, middleLeftCurPos, goalAngleRight, rotClockwise);
+    int backRightGoalPos = getGoalPos(BACKRIGHT, backRightCurPos, goalAngleRight, rotClockwise);
     int frontLeftGoalPos = getGoalPos(FRONTLEFT, frontLeftCurPos, goalAngle, rotClockwise);
     int middleRightGoalPos = getGoalPos(MIDDLERIGHT, middleRightCurPos, goalAngle, rotClockwise);
     int backLeftGoalPos = getGoalPos(BACKLEFT, backLeftCurPos, goalAngle, rotClockwise);
 
     // set the position
+    driveTrain.setPosition(FRONTRIGHT, frontRightGoalPos, true);
+    driveTrain.setPosition(MIDDLELEFT, middleLeftGoalPos, true);
+    driveTrain.setPosition(BACKRIGHT, backRightGoalPos, true);
     driveTrain.setPosition(FRONTLEFT, frontLeftGoalPos, true);
     driveTrain.setPosition(MIDDLERIGHT, middleRightGoalPos, true);
     driveTrain.setPosition(BACKLEFT, backLeftGoalPos, true);
@@ -211,8 +199,7 @@ int main () {
       // stateCommandCalled is meant so that moveRightLegs and moveLeftLegs are only called once per state
       if (moveCommandFlag)
       {
-        moveRightLegs(landingAngle, legAirSpeed, driveTrain, true);
-        moveLeftLegs(2*pi - landingAngle, legAirSpeed, driveTrain, true);   
+        moveLegs(landingAngle, legAirSpeed, 2*pi - landingAngle, legAirSpeed, driveTrain, true);
       }
       
       if (moveCommandFlag){
@@ -227,8 +214,7 @@ int main () {
     // move right feet through air and move left feet on ground
     else if (state == 2){
       if (moveCommandFlag) {
-        moveRightLegs(2*pi - landingAngle, legAirSpeed, driveTrain, true);
-        moveLeftLegs(landingAngle, legGroundSpeed, driveTrain, true); 
+        moveRightLegs(2*pi - landingAngle, legAirSpeed, landingAngle, legGroundSpeed, driveTrain, true);
       }
       
       if (moveCommandFlag){
@@ -244,8 +230,7 @@ int main () {
     // move left feet through air and move left feet on ground
     else if (state == 3){
       if (moveCommandFlag){
-        moveRightLegs(landingAngle, legGroundSpeed, driveTrain, true);
-        moveLeftLegs(2*pi - landingAngle, legAirSpeed, driveTrain, true);  
+        moveRightLegs(landingAngle, legGroundSpeed, 2*pi - landingAngle, legAirSpeed, driveTrain, true);
       }
       
       if (moveCommandFlag){
