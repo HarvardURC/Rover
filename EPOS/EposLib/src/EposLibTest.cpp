@@ -14,7 +14,7 @@ using namespace std;
 long sleepTime = 3000;
 
 //Encoder units per rotation
-int MODVALUE = 176128;
+int MODVALUE = 175619; // ALL HAIL THE MAGIC NUMBER old one://176128;
 const double pi = 3.14159265;
 const float START_OFFSET_ANGLE = pi/2;
 
@@ -23,9 +23,9 @@ int legStates[6] = {0,0,0,0,0,0};
 double legAngles [6];
 
 
-const double legAirSpeed = 7.0*200;
+const double legAirSpeed = 7.0*350;
 const double landingAngle = 0.349;
-const double legGroundSpeed = legAirSpeed *(2*landingAngle/(2*pi - 2*landingAngle));
+const double legGroundSpeed = legAirSpeed *(2*landingAngle/(2*pi - 2*landingAngle))*0.7;
 
 const int FRONTLEFT   = 1;
 const int MIDDLELEFT  = 2;
@@ -33,8 +33,8 @@ const int BACKLEFT    = 3;
 const int FRONTRIGHT  = 4;
 const int MIDDLERIGHT = 5;  
 const int BACKRIGHT   = 6;
-const int accel = 10000;
-const int deccel = 10000;
+const int accel = 6000;
+const int deccel = 6000;
 //const int vel = 6000;
 
 
@@ -79,7 +79,7 @@ const int deccel = 10000;
     
     int diff = goalAngleMaxonCoord - curAngleMaxonCoord;
     
-    cout << "legID: " << legID << " originalCurPos: " << originalCurPos << " curPos: " << curPos << " curAngleMaxon: " << curAngleMaxonCoord << " goalMaxon: " << goalAngleMaxonCoord << endl;
+    //cout << "legID: " << legID << " originalCurPos: " << originalCurPos << " curPos: " << curPos << " curAngleMaxon: " << curAngleMaxonCoord << " goalMaxon: " << goalAngleMaxonCoord << endl;
     
     int delta;
     // Calculate delta (maxon coordinates) that we want to add to the current position
@@ -130,9 +130,9 @@ const int deccel = 10000;
     int frontRightGoalPos = getGoalPos(FRONTRIGHT, frontRightCurPos, goalAngleRight, rotClockwise);
     int middleLeftGoalPos = getGoalPos(MIDDLELEFT, middleLeftCurPos, goalAngleRight, rotClockwise);
     int backRightGoalPos = getGoalPos(BACKRIGHT, backRightCurPos, goalAngleRight, rotClockwise);
-    int frontLeftGoalPos = getGoalPos(FRONTLEFT, frontLeftCurPos, goalAngle, rotClockwise);
-    int middleRightGoalPos = getGoalPos(MIDDLERIGHT, middleRightCurPos, goalAngle, rotClockwise);
-    int backLeftGoalPos = getGoalPos(BACKLEFT, backLeftCurPos, goalAngle, rotClockwise);
+    int frontLeftGoalPos = getGoalPos(FRONTLEFT, frontLeftCurPos, goalAngleLeft, rotClockwise);
+    int middleRightGoalPos = getGoalPos(MIDDLERIGHT, middleRightCurPos, goalAngleLeft, rotClockwise);
+    int backLeftGoalPos = getGoalPos(BACKLEFT, backLeftCurPos, goalAngleLeft, rotClockwise);
 
     // set the position
     driveTrain.setPosition(FRONTRIGHT, frontRightGoalPos, true);
@@ -214,7 +214,7 @@ int main () {
     // move right feet through air and move left feet on ground
     else if (state == 2){
       if (moveCommandFlag) {
-        moveRightLegs(2*pi - landingAngle, legAirSpeed, landingAngle, legGroundSpeed, driveTrain, true);
+        moveLegs(2*pi - landingAngle, legAirSpeed, landingAngle, legGroundSpeed, driveTrain, true);
       }
       
       if (moveCommandFlag){
@@ -230,7 +230,7 @@ int main () {
     // move left feet through air and move left feet on ground
     else if (state == 3){
       if (moveCommandFlag){
-        moveRightLegs(landingAngle, legGroundSpeed, 2*pi - landingAngle, legAirSpeed, driveTrain, true);
+        moveLegs(landingAngle, legGroundSpeed, 2*pi - landingAngle, legAirSpeed, driveTrain, true);
       }
       
       if (moveCommandFlag){
