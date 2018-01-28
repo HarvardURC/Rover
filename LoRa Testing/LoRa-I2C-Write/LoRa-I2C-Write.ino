@@ -44,6 +44,7 @@ void setup()
     Serial.println("LoRa radio init failed");
     while (1);
   }
+  
   Serial.println("LoRa radio init OK!");
 
   // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM
@@ -63,46 +64,31 @@ void setup()
 
   Wire.begin(SLAVE_ADDRESS);
   Wire.onReceive(receiveData);
-  Wire.onRequest(sendData);
 }
 
 void loop()
 {
-  if (rf95.available())
-  {
-    // Should be a message for us now   
-    
-    if (rf95.recv(buf, &len))
-    {
-      digitalWrite(LED, HIGH);
-      RH_RF95::printBuffer("Received: ", buf, len);
-      Serial.print("Got: ");
-      Serial.println((char*)buf);
-      Serial.print("RSSI: ");
-
-//      Wire.write((char*)buf, len);
-      
-      Serial.println(rf95.lastRssi(), DEC);
-      delay(10);
-      // Send a reply
-      delay(200); // may or may not be needed
-      uint8_t data[] = "And hello back to you";
-      rf95.send(data, sizeof(data));
-      rf95.waitPacketSent();
-      Serial.println("Sent a reply");
-      digitalWrite(LED, LOW);
-    }
-    else
-    {
-      Serial.println("Receive failed");
-    }
-  }
+  
 }
 
 void receiveData(int byteCount){
+  int counter = 0;
+  
   while(Wire.available()) {
-    int number = Wire.read();
-    // Handle data here
+    buf[counter] = Wire.read();
+    counter++;
+
+    if (counter >= RH_RF95_MAX_MESSAGE_LEN) {
+      return;
+    }
+  }
+
+  rf95.send(buf, sizeof(buf));
+  rf95.waitPacketSent();
+  Serial.println("Sent a reply");
+
+  for (int i = 0; i < RH_RF95_MAX_MESSAGE_LEN; i++) {
+    buf[i] = '\0';
   }
 }
 
