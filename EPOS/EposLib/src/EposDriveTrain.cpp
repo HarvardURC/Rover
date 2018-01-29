@@ -70,6 +70,30 @@ unsigned int EposDriveTrain::setVelocity(int node, long velocity) {
 	return errorCode;
 }
 
+unsigned int EposDriveTrain::setVelocityProfile(int node, long accel, long decel) {
+ 	//Set the velocity at the given controller node
+ 	VCS_SetVelocityProfile(portHandle, node, accel, decel, &errorCode);
+ 
+ 	if(errorCode != 0) {
+ 		logError("VCS_SetVelocityProfile", errorCode);
+ 
+ 	}
+ 
+ 	return errorCode;
+ }
+unsigned int EposDriveTrain::setPositionProfile(int node, long velocity, long accel, long decel) {
+ 	
+ 	VCS_SetPositionProfile(portHandle, node, velocity, accel, decel, &errorCode);
+  
+  	if(errorCode != 0) {
+ 		//logError("VCS_SetPositionProfile", errorCode);
+ 		//cout << "VCS_SetPositionProfile" << errorCode << endl;
+ 		//logError("VCS_MoveToPosition", errorCode);
+  	}
+  
+  	return errorCode;
+ }
+
 unsigned int EposDriveTrain::setPosition(int node, long position, bool absolute) {
 	//Set the target position at the given node
 	//If absolute=1, then it's an absolute movement
