@@ -89,7 +89,7 @@ wtilt1 = cylinder (pos=l2.pos + l2.axis, axis=l2_axis, radius=.3, color=color.bl
 wtilt2 = cylinder (pos=l2.pos + l2.axis, axis=l2_axis, radius=.3, color=color.blue)
 
 x = 10
-y = 0
+y = 9
 z = 5
 
 
@@ -155,6 +155,7 @@ def updateLegsAndBase():
     wtilt1.axis = rotatedWithtilt
     wtilt2.axis = rotatedWithtilt
 
+    print((x,y,z), base.axis + holder.axis + l1.axis + l2.axis)
    
     
 
@@ -181,39 +182,10 @@ while True:
 
 
     # controls for rotation and such
-    if scene.kb.keys:
-        k = scene.kb.getkey()
-        if k == 'z':
-            scene.range = scene.range * 1.5 
-        elif k == 'c':
-            scene.range = scene.range / 1.5 
-        elif k == 'right':
-            x += 1
-        elif k == 'left':
-            x -= 1
-        elif k == 'up':
-            y += 1
-        elif k == 'down':
-            y -= 1
-        elif k == 'q':
-            z += 1
-        elif k == 'a':
-            z -= 1
-        elif k == '.':
-            s.clawPercent += .1
-        elif k == ',':
-            s.clawPercent -= .1
-        elif k == 'p':
-            s.Angles["wpan"] += .11
-        elif k == 't':
-            s.Angles["wtilt"] += .11
-        elif k == '1':
-            if s.mode == "clawDown":
-                s.mode = "free"
-            else:
-                s.mode = "clawDown"
+    #if scene.kb.keys:
+        #k = scene.kb.getkey()
             
-    elif scene.mouse.events:
+    if scene.mouse.events:
         m = scene.mouse.getevent()
         if m.drag == 'middle':
             zoom = True
@@ -259,6 +231,21 @@ while True:
     
     pygame.event.pump()
 
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                scene.range = scene.range * 1.5 
+                print("left")
+            elif event.key == pygame.K_RIGHT:
+                scene.range = scene.range / 1.5 
+                print("right")
+            elif event.key == pygame.K_m:
+                if s.mode == "clawDown":
+                    s.mode = "free"
+                else:
+                    s.mode = "clawDown"
+
         # read input from the two joysticks   
     for i in range(0, j.get_numaxes()):
         # make sure toggle is past a certain cutoff angle
@@ -276,10 +263,19 @@ while True:
     for i in range(0, j.get_numbuttons()):
         if j.get_button(i) != 0:
             print (which_button[i], "button Joystick Num:", i)
-            if which_button[i] == "button_RB":
+            if which_button[i] == "button_A":
                 s.clawPercent -= .1 * s.controllerButtonScaleFactor
-            elif which_button[i] == "button_LB":
+            elif which_button[i] == "button_Y":
                 s.clawPercent += .1 * s.controllerButtonScaleFactor
+            elif which_button[i] == "button_RB":
+                s.Angles["wpan"] += .1 * s.controllerButtonScaleFactor
+            elif which_button[i] == "button_LB":
+                s.Angles["wpan"] -= .1 * s.controllerButtonScaleFactor
+            elif which_button[i] == "button_RT":
+                s.Angles["wtilt"] += .1 * s.controllerButtonScaleFactor
+            elif which_button[i] == "button_LT":
+                s.Angles["wtilt"] -= .1 * s.controllerButtonScaleFactor
+                
 
 #which_toggle = ["LeftToggle_horizontal", "LeftToggle_vertical", "RightToggle_horizontal", "RightToggle_vertical",]
 #which_button = ["button_X", "button_A", "button_B", "button_Y", "button_LB", "button_RB", "button_LT", "button_RT", "button_back", "button_start", "button_toggleleft", "button_toggleright"]
