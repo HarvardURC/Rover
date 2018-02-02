@@ -45,7 +45,8 @@ public:
 	const int MODVALUE = 175619; //ALL HAIL THE MAGIC NUMBER
 
 	//Default constructor
-	EposDriveTrain(string);
+	//EposDriveTrain(string);
+	EposDriveTrain();
 
 	//"Special" constructor for changing everything
 	//EposDriveTrain(string, string, string, string);
