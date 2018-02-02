@@ -41,8 +41,12 @@ class EposDriveTrain {
 	unsigned int errorCode;
 
 public:
+	
+	const int MODVALUE = 175619; //ALL HAIL THE MAGIC NUMBER
+
 	//Default constructor
-	EposDriveTrain(string);
+	//EposDriveTrain(string);
+	EposDriveTrain();
 
 	//"Special" constructor for changing everything
 	//EposDriveTrain(string, string, string, string);
@@ -98,8 +102,8 @@ public:
 	//Get motor current
 	short getCurrent(int);
 
-	unsigned char getNumFaults(int);
-	unsigned int getFaultCode(int, unsigned char);
+	//unsigned char getNumFaults(int);
+	//unsigned int getFaultCode(int, unsigned char);
 
 
 private:

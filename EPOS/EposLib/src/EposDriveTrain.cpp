@@ -7,8 +7,10 @@
 
 #include "EposDriveTrain.h"
 
-EposDriveTrain::EposDriveTrain(string portName) {
-	g_portName = portName;
+using namespace std;
+
+EposDriveTrain::EposDriveTrain(/*string portName*/) {
+	//g_portName = portName;
 }
 
 EposDriveTrain::~EposDriveTrain() {
