@@ -263,5 +263,5 @@ void EposDriveTrain::logError(string functName, unsigned int errorCode) {
 }
 
 void EposDriveTrain::logError(string functName, int node, unsigned int errorCode) {
-	cerr << functName << " on Node " << node << "failed. Error code: 0x" << std::hex << errorCode << endl;
+	cerr << functName << " on Node " << node << " failed. Error code: 0x" << std::hex << errorCode << endl;
 }
