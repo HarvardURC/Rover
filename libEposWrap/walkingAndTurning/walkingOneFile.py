@@ -29,7 +29,7 @@ deccel = 10000;
 
 
 def getMoveCommandInfo(curMovement, state):
-    global pi
+    global pi, landingAngle, legAirSpeed, legGroundSpeed
     a = 2*pi - landingAngle
     b = landingAngles
     air = legAirSpeed
@@ -84,7 +84,7 @@ def getMoveCommandInfo(curMovement, state):
 
 
 def getSetupInfo(curMovement, curPos):
-    global pi
+    global pi, landingAngle, legAirSpeed, legGroundSpeed
     a = 2*pi - landingAngle
     b = landingAngles
     air = legAirSpeed
@@ -117,6 +117,8 @@ def getSetupInfo(curMovement, curPos):
 
 # Move legs function implemented in python
 def moveLegs(goalAngles, vels, goClockwises, driveTrain):
+    global pi, landingAngle, legAirSpeed, legGroundSpeed
+    
     # set legs to specified position profile
     for i in range(6):
         driveTrain.setPositionProfile(i + 1, vels[i], accel,deccel);
