@@ -51,16 +51,23 @@ for i in range(1,7):
 
 # flag for making sure state is only called once
 moveCommandFlag = True 
+
+a = 2*pi - landingAngle;
+b = landingAngles
+air = legAirSpeed;
+ground = legGroundSpeed;
   
 while(True): 
     # *** STATE MACHINE ***
-
+    goClockwises = [True, True, True, True, True, True];
     # state 1 setups rover depending on initial configuration
     # this could also work with two states, but a setup state might be needed in the future
     if (state == 1):
         # stateCommandCalled is meant so that moveRightLegs and moveLeftLegs are only called once per state
         if (moveCommandFlag):
-            driveTrain.moveLegs(landingAngle, legAirSpeed, 2*pi - landingAngle, legAirSpeed, True) 
+            legAngles = [a, b, a, b, a, b];
+            legSpeeds = [air, air, air, air, air, air];
+            driveTrain.moveLegs(legAngles, legSpeeds, goClockwises) 
         
         if (moveCommandFlag):
             moveCommandFlag = False 
@@ -72,7 +79,9 @@ while(True):
     # move right feet through air and move left feet on ground
     elif (state == 2):
         if (moveCommandFlag):
-            moveLegs(2*pi - landingAngle, legAirSpeed, landingAngle, legGroundSpeed, True) 
+            legAngles = [b, a, b, a, b, a];
+            legSpeeds = [ground, air, ground, air, ground, air];
+            driveTrain.moveLegs(legAngles, legSpeeds, goClockwises) 
         
         if (moveCommandFlag):
             moveCommandFlag = False 
@@ -84,7 +93,9 @@ while(True):
     # move left feet through air and move left feet on ground
     elif (state == 3):
         if (moveCommandFlag):
-            driveTrain.moveLegs(landingAngle, legGroundSpeed, 2*pi - landingAngle, legAirSpeed, driveTrain, True) 
+            legAngles = [a, b, a, b, a, b];
+            legSpeeds = [air, ground, air, ground, air, ground];
+            driveTrain.moveLegs(legAngles, legSpeeds, goClockwises) 
         
         if (moveCommandFlag):
             moveCommandFlag = False 
