@@ -47,6 +47,27 @@ public:
 	//Default constructor
 	//EposDriveTrain(string);
 	EposDriveTrain();
+	const double pi = 3.14159265;
+	const float START_OFFSET_ANGLE = pi/2;
+
+	int state = 1;
+	int legStates[6] = {0,0,0,0,0,0};
+	double legAngles [6];
+
+
+	const double legAirSpeed = 7.0*350;
+	const double landingAngle = 0.349;
+	const double legGroundSpeed = legAirSpeed *(2*landingAngle/(2*pi - 2*landingAngle))*0.7;
+
+	const int FRONTLEFT   = 1;
+	const int MIDDLELEFT  = 2;
+	const int BACKLEFT    = 3;
+	const int FRONTRIGHT  = 4;
+	const int MIDDLERIGHT = 5;  
+	const int BACKRIGHT   = 6;
+	const int accel = 6000;
+	const int deccel = 6000;
+	//const int vel = 6000;
 
 	//"Special" constructor for changing everything
 	//EposDriveTrain(string, string, string, string);
@@ -101,6 +122,11 @@ public:
 
 	//Get motor current
 	short getCurrent(int);
+
+	//Walking algorithm functions
+	int getGoalPos(int, int, float, bool);
+	void moveLegs(float*, int*, bool*);
+	bool allAreAtTargets();
 
 	//unsigned char getNumFaults(int);
 	//unsigned int getFaultCode(int, unsigned char);

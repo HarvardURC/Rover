@@ -258,6 +258,111 @@ short EposDriveTrain::getCurrent(int node) {
 	return current;
 }
 
+
+  // converts curPos (absolute maxon coordinates) and goalAngle (radians) into goalPos (maxon coordinates)
+  // goalAngle for all legs is defined to be zero if pointed down and pi/2 if pointing toward back of rover
+int EposDriveTrain::getGoalPos(int legID, int curPos, float goalAngle, bool rotClockwise) {
+	// get whether the leg is one of the legs on the right side of the rover
+    bool isRightSideLeg = ((legID == FRONTRIGHT) or (legID == MIDDLERIGHT) or (legID == BACKRIGHT));
+      
+    // goalAngleMaxonCoord is the goal angle in maxon coordinates where 0 is pointing down and MODVALUE/4 is pointing
+    // toward the back of the rover
+    int goalAngleMaxonCoord = (int) (MODVALUE * goalAngle / (2*pi));
+    int curAngleMaxonCoord;
+
+    // adjust curPos to account for the offset angle from zero that all motors started at
+    // its different for right and left legs because of opposite orientation of the right side motors
+    // and the left side motors. Left side motors rotate clockwise toward the front when the maxon coordinates 
+    // are increasing
+    int originalCurPos = curPos;
+
+    if (!isRightSideLeg) {
+      curPos = curPos + (int)(START_OFFSET_ANGLE * MODVALUE / (2 * pi));
+    } else {
+      curPos = curPos - (int)(START_OFFSET_ANGLE * MODVALUE / (2 * pi));
+    }
+
+    // get the current angle of the leg in terms of maxon coordinates modded to between 0 and MODVALUE
+    // this depends on whether the 
+    if ((curPos >= 0) and (!isRightSideLeg)){
+      curAngleMaxonCoord = (curPos % MODVALUE);
+    }
+    else if ((curPos < 0) and (!isRightSideLeg)){
+      curAngleMaxonCoord = MODVALUE + (curPos % MODVALUE);
+    }
+    else if ((curPos >= 0) and (isRightSideLeg)){
+	    curAngleMaxonCoord =  -1 * (curPos % MODVALUE) + MODVALUE;
+    }
+    else if ((curPos < 0) and (isRightSideLeg)){
+	    curAngleMaxonCoord = -1 * (curPos % MODVALUE);
+    }
+
+    int diff = goalAngleMaxonCoord - curAngleMaxonCoord;
+
+    //cout << "legID: " << legID << " originalCurPos: " << originalCurPos << " curPos: " << curPos << " curAngleMaxon: " << curAngleMaxonCoord << " goalMaxon: " << goalAngleMaxonCoord << endl;
+
+    int delta;
+    // Calculate delta (maxon coordinates) that we want to add to the current position
+    // Note that if a leg is told to go clockwise to its current position, it 
+    if (rotClockwise) {
+      if (diff > 0) {
+        delta = diff;
+      } else {
+        delta = diff + MODVALUE;
+      }
+    } else {
+      if (diff > 0) {
+        delta = diff - MODVALUE;
+      } else {
+        delta = diff;
+      }
+    }
+
+    // if legID is one of the right legs then they are physically oriented such
+    // that clockwise motion is negative. Therefore must multiply delta by a factor of -1
+    if (isRightSideLeg)
+      delta = -1 * delta;
+
+    return (originalCurPos + delta);
+}
+
+void EposDriveTrain::moveLegs(float * goalAngles, int * vels, bool * goClockwises) {
+    // set legs to specified position profile
+    for (int i = 1; i <= 6; i++){
+      this->setPositionProfile(i, vels[i], accel,deccel);
+    }
+
+    // Need to get current positions in order to calculate goal position in maxon coordinates
+    int curPosArray[] = {0,0,0,0,0,0};
+    for (int i = 1; i <= 6; i++){
+      curPosArray[i] = this->getPosition(i);
+    }
+
+	int goalPosArray[6];
+
+    // convert to goal position in maxon coordinates using current position (maxon coordinates)
+    // and the goalAngle (radians)
+	// copy these goal positions into array
+	for (int i = 1; i <= 6; i++) {
+		goalPosArray[i] = getGoalPos(i, curPosArray[i], goalAngles[i], goClockwises[i]);
+	}
+
+    // set the position
+    for (int i = 1; i <= 6; i++){
+      this->setPosition(i, goalPosArray[i], true);
+    }
+}
+
+bool EposDriveTrain::allAreAtTargets() {
+    return 
+    (this->isAtTarget(FRONTRIGHT) and
+    this->isAtTarget(MIDDLELEFT) and
+    this->isAtTarget(BACKRIGHT) and 
+    this->isAtTarget(FRONTLEFT) and
+    this->isAtTarget(MIDDLERIGHT) and
+    this->isAtTarget(BACKLEFT));
+}
+
 void EposDriveTrain::logError(string functName, unsigned int errorCode) {
 	cerr << functName << " failed. Error code: 0x" << std::hex << errorCode << endl;
 }
