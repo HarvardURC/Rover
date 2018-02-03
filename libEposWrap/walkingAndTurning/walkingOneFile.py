@@ -4,6 +4,8 @@ import DriveTrain
 import helperFunctions as hF
 
 # GLOBAL VARIABLES
+# global pi, landingAngle, PROFILE_POSITION_MODE
+
 state = 0
 doMovement = 'FORWARD'
 
@@ -31,7 +33,7 @@ deccel = 10000;
 def getMoveCommandInfo(curMovement, state):
     global pi
     a = 2*pi - landingAngle
-    b = landingAngles
+    b = landingAngle
     air = legAirSpeed
     ground = legGroundSpeed
 
@@ -86,7 +88,7 @@ def getMoveCommandInfo(curMovement, state):
 def getSetupInfo(curMovement, curPos):
     global pi
     a = 2*pi - landingAngle
-    b = landingAngles
+    b = landingAngle
     air = legAirSpeed
     ground = legGroundSpeed
 
