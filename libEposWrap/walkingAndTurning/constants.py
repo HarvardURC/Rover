@@ -7,6 +7,7 @@ START_OFFSET_ANGLE = pi/2;
 legAirSpeed = int(7.0*200);
 landingAngle = 0.349;
 legGroundSpeed = int(legAirSpeed *(2*landingAngle/(2*pi - 2*landingAngle)));
+PROFILE_POSITION_MODE = 1
 
 FRONTLEFT   = 1;
 MIDDLELEFT  = 2;
