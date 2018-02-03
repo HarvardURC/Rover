@@ -21,7 +21,13 @@ print ('Initialized Joystick : %s' % j.get_name())
 which_toggle = ["LeftToggle_horizontal", "LeftToggle_vertical", "RightToggle_horizontal", "RightToggle_vertical",]
 which_button = ["button_X", "button_A", "button_B", "button_Y", "button_LB", "button_RB", "button_LT", "button_RT", "button_back", "button_start", "button_toggleleft", "button_toggleright"]
 
+savex = 10
+savey = 9
+savez = 5
 
+x = savex
+y = savey
+z = savez
 
 def revForV(v):
     if type(v) == tuple:
@@ -88,18 +94,20 @@ wpan = box (pos=l2.pos + l2.axis, height=s.WPAN_HEIGHT, width=s.WPAN_WIDTH, axis
 wtilt1 = cylinder (pos=l2.pos + l2.axis, axis=l2_axis, radius=.3, color=color.blue)
 wtilt2 = cylinder (pos=l2.pos + l2.axis, axis=l2_axis, radius=.3, color=color.blue)
 
-x = 10
-y = 9
-z = 5
-
 
 
 def updateLegsAndBase():
-    
-    
+    global x, y, z, savex, savey, savez
     newAngles = getIKAnglesFromPos(x,y,z)
-    if newAngles == False:
+    if newAngles == False or z < .5:
+        x = savex
+        y = savey
+        z = savez
         return
+    else:
+        savex = x
+        savey = y
+        savez = z
 
     # negative because vpython rotates these clockwise for some reason
     s.Angles["l1"] = newAngles["l1"]
@@ -155,11 +163,9 @@ def updateLegsAndBase():
     wtilt1.axis = rotatedWithtilt
     wtilt2.axis = rotatedWithtilt
 
-    print((x,y,z), base.axis + holder.axis + l1.axis + l2.axis)
+    #print((x,y,z), base.axis + holder.axis + l1.axis + l2.axis)
    
     
-
-
 
 
 
@@ -268,13 +274,13 @@ while True:
             elif which_button[i] == "button_Y":
                 s.clawPercent += .1 * s.controllerButtonScaleFactor
             elif which_button[i] == "button_RB":
-                s.Angles["wpan"] += .1 * s.controllerButtonScaleFactor
-            elif which_button[i] == "button_LB":
                 s.Angles["wpan"] -= .1 * s.controllerButtonScaleFactor
+            elif which_button[i] == "button_LB":
+                s.Angles["wpan"] += .1 * s.controllerButtonScaleFactor
             elif which_button[i] == "button_RT":
-                s.Angles["wtilt"] += .1 * s.controllerButtonScaleFactor
+                s.Angles["wtilt"] += .2 * s.controllerButtonScaleFactor
             elif which_button[i] == "button_LT":
-                s.Angles["wtilt"] -= .1 * s.controllerButtonScaleFactor
+                s.Angles["wtilt"] -= .2 * s.controllerButtonScaleFactor
                 
 
 #which_toggle = ["LeftToggle_horizontal", "LeftToggle_vertical", "RightToggle_horizontal", "RightToggle_vertical",]
