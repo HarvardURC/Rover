@@ -57,9 +57,9 @@ b = float(landingAngle)
 air = int(legAirSpeed)
 ground = int(legGroundSpeed)
   
-legAngles = driveTrain.floatArray()
-legSpeeds = driveTrain.intArray()
-goClockwises = driveTrain.boolArray()
+legAngles = DriveTrain.floatArray()
+legSpeeds = DriveTrain.intArray()
+goClockwises = DriveTrain.boolArray()
 
 while(True): 
     # *** STATE MACHINE ***
