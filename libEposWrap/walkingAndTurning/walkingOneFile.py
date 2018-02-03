@@ -29,7 +29,7 @@ deccel = 10000;
 
 
 def getMoveCommandInfo(curMovement, state):
-    #legAngles[6] int legSpeeds[6] bool goClockwises[6]
+    global pi
     a = 2*pi - landingAngle
     b = landingAngles
     air = legAirSpeed
@@ -84,6 +84,12 @@ def getMoveCommandInfo(curMovement, state):
 
 
 def getSetupInfo(curMovement, curPos):
+    global pi
+    a = 2*pi - landingAngle
+    b = landingAngles
+    air = legAirSpeed
+    ground = legGroundSpeed
+
     if curMovement == 'FORWARD':
         goClockwises = [True, True, True, True, True, True]
         legAngles = [a, b, a, b, a, b]
