@@ -1,10 +1,10 @@
-/*
- * walking.py
- *
- * Desc: Should run a state machine on the legs of the rover
- *
- *  Created on: Feb 1, 2018
- */
+'''
+walking.py
+
+Desc: Should run a state machine on the legs of the rover
+ 
+Created on: Feb 1, 2018
+'''
 
 import Definitions.h
 import EposDriveTrain
