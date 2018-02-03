@@ -10,9 +10,6 @@ import DriveTrain
 import ctypes
 driveTrain = DriveTrain.EposDriveTrain()
 
-# clear the errors
-driveTrain.clearAllFaults()
-
 #time to wait in ms
 sleepTime = 3000 
 
