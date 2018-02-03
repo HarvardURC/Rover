@@ -157,7 +157,7 @@ for i in range(6):
 
 
 # STANDUP ROVER
-m = hF.getMoveCommandInfo('STANDUP', 1)
+m = getMoveCommandInfo('STANDUP', 1)
 moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
 
 
@@ -173,7 +173,7 @@ while True:
         # stateCommandCalled is meant so that moveRightLegs and moveLeftLegs are only called once per state
         if moveCommandFlag:
             curPos = [driveTrain.getPosition(legID) for legID in range(1,7)]
-            m = hF.getSetupInfo(doMovement, curPos)
+            m = getSetupInfo(doMovement, curPos)
             moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
 
         if moveCommandFlag:
@@ -186,7 +186,7 @@ while True:
     # move right feet through air and move left feet on ground
     elif state == 1:
         if moveCommandFlag:
-            m = hF.getMoveCommandInfo(doMovement, 1)
+            m = getMoveCommandInfo(doMovement, 1)
             moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
         
         if moveCommandFlag:
@@ -200,7 +200,7 @@ while True:
     # move left feet through air and move left feet on ground
     elif state == 2:
         if moveCommandFlag:
-            m = hF.getMoveCommandInfo(doMovement, 2)
+            m = getMoveCommandInfo(doMovement, 2)
             moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
 
         if moveCommandFlag:
