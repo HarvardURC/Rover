@@ -49,7 +49,7 @@ for i in range(6):
 
 
 # STANDUP ROVER
-m = getMoveCommandInfo('STANDUP', 1)
+m = hF.getMoveCommandInfo('STANDUP', 1)
 moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
 
 
@@ -78,7 +78,7 @@ while True:
     # move right feet through air and move left feet on ground
     elif state == 1:
         if moveCommandFlag:
-            m = getMoveCommandInfo(doMovement, 1)
+            m = hF.getMoveCommandInfo(doMovement, 1)
             moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
         
         if moveCommandFlag:
@@ -92,7 +92,7 @@ while True:
     # move left feet through air and move left feet on ground
     elif state == 2:
         if moveCommandFlag:
-            m = getMoveCommandInfo(doMovement, 2)
+            m = hF.getMoveCommandInfo(doMovement, 2)
             moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
 
         if moveCommandFlag:
