@@ -52,10 +52,10 @@ for i in range(1,7):
 # flag for making sure state is only called once
 moveCommandFlag = True 
 
-a = 2*pi - landingAngle;
-b = landingAngles
-air = legAirSpeed;
-ground = legGroundSpeed;
+a = 2*pi - landingAngle
+b = landingAngle
+air = int(legAirSpeed)
+ground = int(legGroundSpeed)
   
 while(True): 
     # *** STATE MACHINE ***
