@@ -52,14 +52,18 @@ for i in range(1,7):
 # flag for making sure state is only called once
 moveCommandFlag = True 
 
-a = 2*pi - landingAngle
-b = landingAngle
+a = float(2*pi - landingAngle)
+b = float(landingAngle)
 air = int(legAirSpeed)
 ground = int(legGroundSpeed)
   
+legAngles = driveTrain.floatArray()
+legSpeeds = driveTrain.intArray()
+goClockwises = driveTrain.boolArray()
+
 while(True): 
     # *** STATE MACHINE ***
-    goClockwises = [True, True, True, True, True, True];
+    goClockwises[True, True, True, True, True, True];
     # state 1 setups rover depending on initial configuration
     # this could also work with two states, but a setup state might be needed in the future
     if (state == 1):
