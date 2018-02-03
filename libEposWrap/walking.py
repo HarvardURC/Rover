@@ -7,7 +7,11 @@ Created on: Feb 1, 2018
 '''
 
 import DriveTrain
+import ctypes
 driveTrain = DriveTrain.EposDriveTrain()
+
+# clear the errors
+driveTrain.clearAllFaults()
 
 #time to wait in ms
 sleepTime = 3000 
@@ -56,21 +60,23 @@ a = float(2*pi - landingAngle)
 b = float(landingAngle)
 air = int(legAirSpeed)
 ground = int(legGroundSpeed)
-  
+
+''' 
 legAngles = DriveTrain.floatArray()
 legSpeeds = DriveTrain.intArray()
 goClockwises = DriveTrain.boolArray()
+'''
 
 while(True): 
     # *** STATE MACHINE ***
-    goClockwises[True, True, True, True, True, True];
+    goClockwises = (ctypes.c_bool * 6)(True, True, True, True, True, True)
     # state 1 setups rover depending on initial configuration
     # this could also work with two states, but a setup state might be needed in the future
     if (state == 1):
         # stateCommandCalled is meant so that moveRightLegs and moveLeftLegs are only called once per state
         if (moveCommandFlag):
-            legAngles = [a, b, a, b, a, b];
-            legSpeeds = [air, air, air, air, air, air];
+            legAngles = (ctypes.c_float * 6)(a, b, a, b, a, b)
+            legSpeeds = (ctypes.c_int * 6)(air, air, air, air, air, air)
             driveTrain.moveLegs(legAngles, legSpeeds, goClockwises) 
         
         if (moveCommandFlag):
@@ -83,8 +89,8 @@ while(True):
     # move right feet through air and move left feet on ground
     elif (state == 2):
         if (moveCommandFlag):
-            legAngles = [b, a, b, a, b, a];
-            legSpeeds = [ground, air, ground, air, ground, air];
+            legAngles = (ctypes.c_float * 6)(b, a, b, a, b, a)
+            legSpeeds = (ctypes.c_int * 6)(ground, air, ground, air, ground, air)
             driveTrain.moveLegs(legAngles, legSpeeds, goClockwises) 
         
         if (moveCommandFlag):
@@ -97,8 +103,8 @@ while(True):
     # move left feet through air and move left feet on ground
     elif (state == 3):
         if (moveCommandFlag):
-            legAngles = [a, b, a, b, a, b];
-            legSpeeds = [air, ground, air, ground, air, ground];
+            legAngles = (ctypes.c_float * 6)(a, b, a, b, a, b)
+            legSpeeds = (ctypes.c_int * 6)(air, ground, air, ground, air, ground)
             driveTrain.moveLegs(legAngles, legSpeeds, goClockwises) 
         
         if (moveCommandFlag):
