@@ -48,9 +48,9 @@ def getMoveCommandInfo(curMovement, state):
 
     # setup object
     m = {}
-    m.legAngles = legAngles
-    m.legSpeeds = legSpeeds
-    m.goClockwises = goClockwises
+    m.["legAngles"] = legAngles
+    m.["legSpeeds"] = legSpeeds
+    m.["goClockwises"] = goClockwises
 
     return m
 
@@ -75,9 +75,9 @@ def getSetupInfo(curMovement, curPos):
     
     # setup object
     m = {}
-    m.legAngles = legAngles
-    m.legSpeeds = legSpeeds
-    m.goClockwises = goClockwises
+    m["legAngles"] = legAngles
+    m.["legSpeeds"] = legSpeeds
+    m.["goClockwises"] = goClockwises
 
     return m
 

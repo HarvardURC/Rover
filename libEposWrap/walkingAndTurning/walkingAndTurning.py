@@ -50,7 +50,7 @@ for i in range(6):
 
 # STANDUP ROVER
 m = getMoveCommandInfo('STANDUP', 1)
-moveLegs(m.legAngles, m.legSpeeds, m.goClockwises, driveTrain)
+moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
 
 
 
@@ -66,7 +66,7 @@ while True:
         if moveCommandFlag:
             curPos = [driveTrain.getPosition(legID) for legID in range(1,7)]
             m = hF.getSetupInfo(doMovement, curPos)
-            moveLegs(m.legAngles, m.legSpeeds, m.goClockwises, driveTrain)
+            moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
 
         if moveCommandFlag:
             moveCommandFlag = False
@@ -79,7 +79,7 @@ while True:
     elif state == 1:
         if moveCommandFlag:
             m = getMoveCommandInfo(doMovement, 1)
-            moveLegs(m.legAngles, m.legSpeeds, m.goClockwises, driveTrain)
+            moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
         
         if moveCommandFlag:
             moveCommandFlag = False
@@ -93,7 +93,7 @@ while True:
     elif state == 2:
         if moveCommandFlag:
             m = getMoveCommandInfo(doMovement, 2)
-            moveLegs(m.legAngles, m.legSpeeds, m.goClockwises, driveTrain)
+            moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
 
         if moveCommandFlag:
             moveCommandFlag = False
