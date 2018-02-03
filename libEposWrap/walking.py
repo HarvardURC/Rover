@@ -6,8 +6,6 @@ Desc: Should run a state machine on the legs of the rover
 Created on: Feb 1, 2018
 '''
 
-import Definitions.h
-import EposDriveTrain
 import DriveTrain
 driveTrain = DriveTrain.EposDriveTrain()
 
@@ -31,13 +29,10 @@ BACKLEFT    = 3
 FRONTRIGHT  = 4 
 MIDDLERIGHT = 5   
 BACKRIGHT   = 6 
+PROFILE_POSITION_MODE = 1
 accel = 6000 
 deccel = 6000 
 
-
-#Declare new drive train object. The constructor accepts a USB port name as a string
-#USB0 is typically the device that the motor controller connects to
-driveTrain() 
 
 print("Initializing...")
 
@@ -65,7 +60,7 @@ while(True):
     if (state == 1):
         # stateCommandCalled is meant so that moveRightLegs and moveLeftLegs are only called once per state
         if (moveCommandFlag):
-            moveLegs(landingAngle, legAirSpeed, 2*pi - landingAngle, legAirSpeed, driveTrain, True) 
+            driveTrain.moveLegs(landingAngle, legAirSpeed, 2*pi - landingAngle, legAirSpeed, True) 
         
         if (moveCommandFlag):
             moveCommandFlag = False 
@@ -73,11 +68,11 @@ while(True):
         if (allAreAtTargets(driveTrain)):
             state = 2 
             moveCommandFlag = True 
-    }
+    
     # move right feet through air and move left feet on ground
-    else if (state == 2):
+    elif (state == 2):
         if (moveCommandFlag):
-            moveLegs(2*pi - landingAngle, legAirSpeed, landingAngle, legGroundSpeed, driveTrain, True) 
+            moveLegs(2*pi - landingAngle, legAirSpeed, landingAngle, legGroundSpeed, True) 
         
         if (moveCommandFlag):
             moveCommandFlag = False 
@@ -87,9 +82,9 @@ while(True):
             moveCommandFlag = True 
 
     # move left feet through air and move left feet on ground
-    else if (state == 3):
+    elif (state == 3):
         if (moveCommandFlag):
-            moveLegs(landingAngle, legGroundSpeed, 2*pi - landingAngle, legAirSpeed, driveTrain, True) 
+            driveTrain.moveLegs(landingAngle, legGroundSpeed, 2*pi - landingAngle, legAirSpeed, driveTrain, True) 
         
         if (moveCommandFlag):
             moveCommandFlag = False 
