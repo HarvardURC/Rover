@@ -3,14 +3,11 @@ import constants
 import DriveTrain
 import helperFunctions as hF
 
-# GLOBAL VARIABLES
-# global pi, landingAngle, PROFILE_POSITION_MODE
-
 state = 0
 doMovement = 'FORWARD'
 
 #Encoder units per rotation
-MODVALUE = 176128;
+MODVALUE = 175619;
 
 pi = 3.14159265;
 START_OFFSET_ANGLE = pi/2;
@@ -31,7 +28,7 @@ deccel = 10000;
 
 
 def getMoveCommandInfo(curMovement, state):
-    global pi
+    global pi, landingAngle, legAirSpeed, legGroundSpeed
     a = 2*pi - landingAngle
     b = landingAngle
     air = legAirSpeed
@@ -86,7 +83,7 @@ def getMoveCommandInfo(curMovement, state):
 
 
 def getSetupInfo(curMovement, curPos):
-    global pi
+    global pi, landingAngle, legAirSpeed, legGroundSpeed
     a = 2*pi - landingAngle
     b = landingAngle
     air = legAirSpeed
@@ -119,6 +116,8 @@ def getSetupInfo(curMovement, curPos):
 
 # Move legs function implemented in python
 def moveLegs(goalAngles, vels, goClockwises, driveTrain):
+    global pi, landingAngle, legAirSpeed, legGroundSpeed
+    
     # set legs to specified position profile
     for i in range(6):
         driveTrain.setPositionProfile(i + 1, vels[i], accel,deccel);
