@@ -3,14 +3,11 @@ import constants
 import DriveTrain
 import helperFunctions as hF
 
-# GLOBAL VARIABLES
-# global pi, landingAngle, PROFILE_POSITION_MODE
-
 state = 0
 doMovement = 'FORWARD'
 
 #Encoder units per rotation
-MODVALUE = 176128;
+MODVALUE = 175619;
 
 pi = 3.14159265;
 START_OFFSET_ANGLE = pi/2;
