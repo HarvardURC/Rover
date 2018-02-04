@@ -108,19 +108,22 @@ const int deccel = 6000;
 
   // moves all three right legs (FRONTRIGHT, BACKRIGHT, MIDDLELEFT)
   // takes in absolute position
-  void moveLegs(float * goalAngles, int * vels, bool * goClockwises, EposDriveTrain driveTrain){
-    // set legs to specified position profile
-    for (int i = 0; i < 6; i++){
-      legID = i + 1;
-      driveTrain.setPositionProfile(legID, vels[i], accel,deccel);
-    }
+  void moveLegs(float goalAngleRight, int velRight, float goalAngleLeft, int velLeft, EposDriveTrain driveTrain, bool rotClockwise){
+    // set legs to specified speed
+    driveTrain.setPositionProfile(FRONTRIGHT, velRight, accel,deccel);
+    driveTrain.setPositionProfile(MIDDLELEFT, velRight, accel,deccel);
+    driveTrain.setPositionProfile(BACKRIGHT, velRight, accel,deccel);
+    driveTrain.setPositionProfile(FRONTLEFT, velLeft, accel,deccel);
+    driveTrain.setPositionProfile(MIDDLERIGHT, velLeft, accel,deccel);
+    driveTrain.setPositionProfile(BACKLEFT, velLeft, accel,deccel);
 
     // Need to get current positions in order to calculate goal position in maxon coordinates
-    curPosArray = {0,0,0,0,0,0};
-    for (int i = 0; i < 6; i++){
-      legID = i + 1;
-      curPosArray[i] = driveTrain.getPosition(legID);
-    }
+    int frontRightCurPos = driveTrain.getPosition(FRONTRIGHT);
+    int middleLeftCurPos = driveTrain.getPosition(MIDDLELEFT);
+    int backRightCurPos = driveTrain.getPosition(BACKRIGHT);
+    int frontLeftCurPos = driveTrain.getPosition(FRONTLEFT);
+    int middleRightCurPos = driveTrain.getPosition(MIDDLERIGHT);
+    int backLeftCurPos = driveTrain.getPosition(BACKLEFT);
 
     // convert to goal position in maxon coordinates using current position (maxon coordinates)
     // and the goalAngle (radians)
@@ -132,11 +135,12 @@ const int deccel = 6000;
     int backLeftGoalPos = getGoalPos(BACKLEFT, backLeftCurPos, goalAngleLeft, rotClockwise);
 
     // set the position
-    for (int i = 0; i < 6; i++){
-      legID = i + 1;
-      driveTrain.setPosition(legID + 1, goalPosArray[i], true);
-    }
-
+    driveTrain.setPosition(FRONTRIGHT, frontRightGoalPos, true);
+    driveTrain.setPosition(MIDDLELEFT, middleLeftGoalPos, true);
+    driveTrain.setPosition(BACKRIGHT, backRightGoalPos, true);
+    driveTrain.setPosition(FRONTLEFT, frontLeftGoalPos, true);
+    driveTrain.setPosition(MIDDLERIGHT, middleRightGoalPos, true);
+    driveTrain.setPosition(BACKLEFT, backLeftGoalPos, true);
   }
 
 	// check that all motors have reached their goal position
@@ -177,6 +181,16 @@ int main () {
   
   while(true)
   {  
+    
+  	 // moveRightLegs(landingAngle, legAirSpeed, driveTrain, true);
+  	 // sleep(4);
+  	 //moveRightLegs(2*pi - landingAngle, legAirSpeed, driveTrain, true);
+  	 // moveLeftLegs(pi, legGroundSpeed, driveTrain, true);
+  	 // moveLeftLegs(2*pi/3, legAirSpeed, driveTrain, true);
+  	 // sleep(6);
+  	 //sleep(4);
+  	 
+    
     // *** STATE MACHINE ***
     
     // state 1 setups rover depending on initial configuration
@@ -185,14 +199,7 @@ int main () {
       // stateCommandCalled is meant so that moveRightLegs and moveLeftLegs are only called once per state
       if (moveCommandFlag)
       {
-        // setup arrays for moveLegs command
-        float l = 2*pi - landingAngle;
-        float r = landingAngle;
-        float legAngles[6]; = {l, r, l, r, l, r};
-        int legSpeeds[6] = {legAirSpeed, legAirSpeed, legAirSpeed, legAirSpeed, legAirSpeed, legAirSpeed};
-        bool goClockwises[6] = {true, true, true, true, true, true};
-        moveLegs(legAngles, legSpeeds, goClockwises, driveTrain);
-        //moveLegs(landingAngle, legAirSpeed, 2*pi - landingAngle, legAirSpeed, driveTrain, true);
+        moveLegs(landingAngle, legAirSpeed, 2*pi - landingAngle, legAirSpeed, driveTrain, true);
       }
       
       if (moveCommandFlag){
