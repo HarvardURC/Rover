@@ -1,0 +1,1 @@
+/home/pi/temp_humidity.py
