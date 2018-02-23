@@ -70,13 +70,13 @@ if x:
             for i in range(0, j.get_numaxes()):
                 # make sure toggle is past a certain cutoff angle
                 if abs(j.get_axis(i)) >= 0.07:
-                    print (which_toggle[i], j.get_axis(i), i)
+                    #print (which_toggle[i], j.get_axis(i), i)
                     
                     file.seek(0)
             
             for i in range(0, j.get_numbuttons()):
                 if j.get_button(i) != 0:
-                    print (which_button[i], "button Joystick Num:", i)
+                    #print (which_button[i], "button Joystick Num:", i)
 
                     # write to controlValues.txt which button I'm pressing
                     file.seek(0)

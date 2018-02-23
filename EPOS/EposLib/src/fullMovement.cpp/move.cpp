@@ -5,37 +5,18 @@
  *      Author: Matthew Giles & John Alex Keszler
  */
 
-#include "Definitions.h"
-#include "EposDriveTrain.h"
+
+
+
 #include <unistd.h>
+
+#include "constants.h"
 using namespace std;
 
-//time to wait in ms
-long sleepTime = 3000;
-
-//Encoder units per rotation
-int MODVALUE = 175619; // ALL HAIL THE MAGIC NUMBER old one://176128;
-const double pi = 3.14159265;
-const float START_OFFSET_ANGLE = pi/2;
 
 int state = 1;
 int legStates[6] = {0,0,0,0,0,0};
 double legAngles [6];
-
-
-const double legAirSpeed = 7.0*350;
-const double landingAngle = 0.349;
-const double legGroundSpeed = legAirSpeed *(2*landingAngle/(2*pi - 2*landingAngle))*0.7;
-
-const int FRONTLEFT   = 1;
-const int MIDDLELEFT  = 2;
-const int BACKLEFT    = 3;
-const int FRONTRIGHT  = 4;
-const int MIDDLERIGHT = 5;  
-const int BACKRIGHT   = 6;
-const int accel = 6000;
-const int deccel = 6000;
-//const int vel = 6000;
 
 
 
@@ -79,7 +60,7 @@ const int deccel = 6000;
     
     int diff = goalAngleMaxonCoord - curAngleMaxonCoord;
     
-    //cout << "legID: " << legID << " originalCurPos: " << originalCurPos << " curPos: " << curPos << " curAngleMaxon: " << curAngleMaxonCoord << " goalMaxon: " << goalAngleMaxonCoord << endl;
+    std::cout << "legID: " << legID << " originalCurPos: " << originalCurPos << " curPos: " << curPos << " curAngleMaxon: " << curAngleMaxonCoord << " goalMaxon: " << goalAngleMaxonCoord << std::endl;
     
     int delta;
     // Calculate delta (maxon coordinates) that we want to add to the current position
@@ -108,39 +89,34 @@ const int deccel = 6000;
 
   // moves all three right legs (FRONTRIGHT, BACKRIGHT, MIDDLELEFT)
   // takes in absolute position
-  void moveLegs(float goalAngleRight, int velRight, float goalAngleLeft, int velLeft, EposDriveTrain driveTrain, bool rotClockwise){
-    // set legs to specified speed
-    driveTrain.setPositionProfile(FRONTRIGHT, velRight, accel,deccel);
-    driveTrain.setPositionProfile(MIDDLELEFT, velRight, accel,deccel);
-    driveTrain.setPositionProfile(BACKRIGHT, velRight, accel,deccel);
-    driveTrain.setPositionProfile(FRONTLEFT, velLeft, accel,deccel);
-    driveTrain.setPositionProfile(MIDDLERIGHT, velLeft, accel,deccel);
-    driveTrain.setPositionProfile(BACKLEFT, velLeft, accel,deccel);
+  void moveLegs(float * goalAngles, int * vels, bool * goClockwises, EposDriveTrain driveTrain){
+    // set legs to specified position profile
+    for (int i = 0; i < 6; i++){
+      int legID = i + 1;
+      driveTrain.setPositionProfile(legID, vels[i], accel,deccel);
+    }
 
     // Need to get current positions in order to calculate goal position in maxon coordinates
-    int frontRightCurPos = driveTrain.getPosition(FRONTRIGHT);
-    int middleLeftCurPos = driveTrain.getPosition(MIDDLELEFT);
-    int backRightCurPos = driveTrain.getPosition(BACKRIGHT);
-    int frontLeftCurPos = driveTrain.getPosition(FRONTLEFT);
-    int middleRightCurPos = driveTrain.getPosition(MIDDLERIGHT);
-    int backLeftCurPos = driveTrain.getPosition(BACKLEFT);
+    int curPosArray[6] = {0,0,0,0,0,0};
+    for (int i = 0; i < 6; i++){
+      int legID = i + 1;
+      curPosArray[i] = driveTrain.getPosition(legID);
+    }
 
     // convert to goal position in maxon coordinates using current position (maxon coordinates)
     // and the goalAngle (radians)
-    int frontRightGoalPos = getGoalPos(FRONTRIGHT, frontRightCurPos, goalAngleRight, rotClockwise);
-    int middleLeftGoalPos = getGoalPos(MIDDLELEFT, middleLeftCurPos, goalAngleRight, rotClockwise);
-    int backRightGoalPos = getGoalPos(BACKRIGHT, backRightCurPos, goalAngleRight, rotClockwise);
-    int frontLeftGoalPos = getGoalPos(FRONTLEFT, frontLeftCurPos, goalAngleLeft, rotClockwise);
-    int middleRightGoalPos = getGoalPos(MIDDLERIGHT, middleRightCurPos, goalAngleLeft, rotClockwise);
-    int backLeftGoalPos = getGoalPos(BACKLEFT, backLeftCurPos, goalAngleLeft, rotClockwise);
+    int goalPosArray[6] = {0,0,0,0,0,0};
+    for (int i = 0; i < 6; i++){
+      int legID = i + 1;
+      goalPosArray[i] = getGoalPos(legID, curPosArray[i], goalPosArray[i], goClockwises[i]);
+    }
 
     // set the position
-    driveTrain.setPosition(FRONTRIGHT, frontRightGoalPos, true);
-    driveTrain.setPosition(MIDDLELEFT, middleLeftGoalPos, true);
-    driveTrain.setPosition(BACKRIGHT, backRightGoalPos, true);
-    driveTrain.setPosition(FRONTLEFT, frontLeftGoalPos, true);
-    driveTrain.setPosition(MIDDLERIGHT, middleRightGoalPos, true);
-    driveTrain.setPosition(BACKLEFT, backLeftGoalPos, true);
+    for (int i = 0; i < 6; i++){
+      int legID = i + 1;
+      driveTrain.setPosition(legID, goalPosArray[i], true);
+    }
+
   }
 
 	// check that all motors have reached their goal position
@@ -158,9 +134,9 @@ const int deccel = 6000;
 int main () {
   //Declare new drive train object. The constructor accepts a USB port name as a string
   //USB0 is typically the device that the motor controller connects to
-  EposDriveTrain driveTrain();
+  EposDriveTrain driveTrain("USB0");
 
-  cout << "Initializing..." << endl;
+  std::cout << "Initializing..." << std::endl;
 
   //Initialize drive train object
   //Note: this object must be initialized by calling init() before trying to move any motors!
@@ -181,16 +157,6 @@ int main () {
   
   while(true)
   {  
-    
-  	 // moveRightLegs(landingAngle, legAirSpeed, driveTrain, true);
-  	 // sleep(4);
-  	 //moveRightLegs(2*pi - landingAngle, legAirSpeed, driveTrain, true);
-  	 // moveLeftLegs(pi, legGroundSpeed, driveTrain, true);
-  	 // moveLeftLegs(2*pi/3, legAirSpeed, driveTrain, true);
-  	 // sleep(6);
-  	 //sleep(4);
-  	 
-    
     // *** STATE MACHINE ***
     
     // state 1 setups rover depending on initial configuration
@@ -199,7 +165,14 @@ int main () {
       // stateCommandCalled is meant so that moveRightLegs and moveLeftLegs are only called once per state
       if (moveCommandFlag)
       {
-        moveLegs(landingAngle, legAirSpeed, 2*pi - landingAngle, legAirSpeed, driveTrain, true);
+        // setup arrays for moveLegs command
+        float l = 2*pi - landingAngle;
+        float r = landingAngle;
+        float legAngles[6] = {l, r, l, r, l, r};
+        int legSpeeds[6] = {legAirSpeed, legAirSpeed, legAirSpeed, legAirSpeed, legAirSpeed, legAirSpeed};
+        bool goClockwises[6] = {true, true, true, true, true, true};
+        moveLegs(legAngles, legSpeeds, goClockwises, driveTrain);
+        //moveLegs(landingAngle, legAirSpeed, 2*pi - landingAngle, legAirSpeed, driveTrain, true);
       }
       
       if (moveCommandFlag){
@@ -214,7 +187,14 @@ int main () {
     // move right feet through air and move left feet on ground
     else if (state == 2){
       if (moveCommandFlag) {
-        moveLegs(2*pi - landingAngle, legAirSpeed, landingAngle, legGroundSpeed, driveTrain, true);
+        // setup arrays for moveLegs command
+        float l = landingAngle;
+        float r = 2*pi - landingAngle;
+        float legAngles[6] = {l, r, l, r, l, r};
+        int legSpeeds[6] = {legGroundSpeed, legAirSpeed, legGroundSpeed, legAirSpeed, legGroundSpeed, legAirSpeed};
+        bool goClockwises[6] = {true, true, true, true, true, true};
+        moveLegs(legAngles, legSpeeds, goClockwises, driveTrain);
+        //moveRightLegs(2*pi - landingAngle, legAirSpeed, landingAngle, legGroundSpeed, driveTrain, true);
       }
       
       if (moveCommandFlag){
@@ -230,7 +210,14 @@ int main () {
     // move left feet through air and move left feet on ground
     else if (state == 3){
       if (moveCommandFlag){
-        moveLegs(landingAngle, legGroundSpeed, 2*pi - landingAngle, legAirSpeed, driveTrain, true);
+        // setup arrays for moveLegs command
+        float l = 2*pi - landingAngle;
+        float r = landingAngle;
+        float legAngles[6] = {l, r, l, r, l, r};
+        int legSpeeds[6] = {legAirSpeed, legGroundSpeed, legAirSpeed, legGroundSpeed, legAirSpeed, legGroundSpeed};
+        bool goClockwises[6] = {true, true, true, true, true, true};
+        moveLegs(legAngles, legSpeeds, goClockwises, driveTrain);
+        //moveRightLegs(landingAngle, legGroundSpeed, 2*pi - landingAngle, legAirSpeed, driveTrain, true);
       }
       
       if (moveCommandFlag){
@@ -242,7 +229,6 @@ int main () {
         moveCommandFlag = true;
       }
     } 
-    // //usleep(1000);
   }
 
     return 0;

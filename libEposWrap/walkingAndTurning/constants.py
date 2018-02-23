@@ -1,5 +1,5 @@
 #Encoder units per rotation
-MODVALUE = 176128;
+MODVALUE = 175619;
 
 pi = 3.14159265;
 START_OFFSET_ANGLE = pi/2;
