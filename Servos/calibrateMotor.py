@@ -20,8 +20,10 @@ pwm = Adafruit_PCA9685.PCA9685()
 #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
 
 # Configure min and max servo pulse lengths
-close_pos = 290  # Min pulse length out of 4096
-open_pos = 665  # Max pulse length out of 4096
+min_pos = 290  # Min pulse length out of 4096
+max_pos = 665  # Max pulse length out of 4096
+
+pinID = int(input("give the servo controller pin id for the servo: "))
 
 # Helper function to make setting a servo pulse width simpler.
 def set_servo_pulse(channel, pulse):
@@ -40,8 +42,6 @@ pwm.set_pwm_freq(60)
 print('Moving servo on channel 0, press Ctrl-C to quit...')
 while True:
     # Move servo on channel O between extremes.
-    tilt = int(input("give tilt angle"))
-    pan = int(input("give pan angle"))
-    pwm.set_pwm(0, 0, pan)
-    pwm.set_pwm(1,0,tilt)
+    newAngle = int(input("give servo angle. Max is " + str(max_pos) + ', Min is: ' + str(min_pos) + ' -> '))
+    pwm.set_pwm(pinID, 0, newAngle)
     time.sleep(.5)
