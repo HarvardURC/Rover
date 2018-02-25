@@ -1,4 +1,5 @@
 import time
+import random
 '''
 from lidarControl import Lidar_Lite
 import accelerometerControl as acc
@@ -43,7 +44,7 @@ lidarServo = {
 SWEEPANGLE = 50
 
 # returns the array of degree values for the servo to check
-def getSweepArray(sweepAngle, servoDelta):
+def createSweepArray(sweepAngle, servoDelta):
     length = int(sweepAngle * 2 / servoDelta)
 
     lower = 0
@@ -60,13 +61,14 @@ def getSweepArray(sweepAngle, servoDelta):
 
 
 # total sweep is this number of degrees left of zero degrees and right of zero degrees
-sweepDegrees = getSweepArray(SWEEPANGLE, SERVODELTA)
+sweepDegrees = createSweepArray(SWEEPANGLE, SERVODELTA)
 numPoints = len(sweepDegrees)
 
 # initialize lidar values to zero
-lidarValues = [0] * len(sweepDegrees)
+lidarValues = [0] * numPoints
+
 lidarIndex = 0
-lidarCount = 1
+increasing = True
 
 while True: 
     print lidarIndex
@@ -75,17 +77,25 @@ while True:
     #pwm.set_pwm(pinID, 0, gotoAngle)
     time.sleep(LOOPDELAY)
 
-    #distMeasured = lidar.getDistance() 
-    distMeasured = 4
+    distMeasured = lidar.getDistance() 
     lidarValues[lidarIndex] = distMeasured
 
     # either increment lidar index or decrement depending on whether the loop count is even
-    numLoopsDone = lidarCount/numPoints
-    if numLoopsDone % 2 == 0:
-        lidarIndex += 1
+    if increasing:
+        lidarIndex +=1
     else:
         lidarIndex -= 1
-    lidarCount += 1
+    
+    if lidarIndex == 10:
+        increasing = False
+    elif lidarIndex == 0:
+        increasing = True
+
+    print lidarValues
+    
+    
+    
+    
 
     
 
