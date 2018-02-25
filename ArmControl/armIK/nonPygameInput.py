@@ -10,7 +10,7 @@ def main(win):
     while 1:          
         try:                 
            key = win.getkey()
-           print key  
+           print key, key  
                 
            win.clear()                
            win.addstr("Detected key:")
