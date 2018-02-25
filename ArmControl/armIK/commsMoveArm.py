@@ -7,6 +7,7 @@ import time
 import math
 import RPi.GPIO as GPIO
 import json
+import smbus
 
 
 bus = smbus.SMBus(1)
@@ -89,9 +90,11 @@ while True:
     writeNumber(100)
     readStr = readString()
     intArray = convertReadStringToIntArray(readStr)
+    print intArray
 
     # GET SERVO COMMANDS
     COMMANDS = getCommands(intArray)
+
 
     # MOVE SERVOS
     if COMMANDS["wristTilt"]:
