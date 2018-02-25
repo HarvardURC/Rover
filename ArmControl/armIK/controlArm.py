@@ -23,7 +23,7 @@ wristTilt = {
 
 # continuous servo 
 continuousModes = {
-    "clockwise": 500,
+    "clockwise": 300,
     "counterclockwise": 100,
     "stop": 150
 }
@@ -138,8 +138,6 @@ else :
                     COMMANDS["continuous"] = continuousModes["counterclockwise"]
                 elif event.key == pygame.K_c:
                     COMMANDS["continuous"] = continuousModes["clockwise"]
-                else:
-                    COMMANDS["continuous"] = continuousModes["stop"]
 
                 # wrist
                 if event.key == pygame.K_w:
@@ -173,6 +171,7 @@ else :
                 
         if keydownEvents == []:
             COMMANDS["claw"] = None
+            COMMANDS["continuous"] = continuousModes["stop"]
 
         with open('data.txt', 'w') as outfile: 
             print(COMMANDS) 
