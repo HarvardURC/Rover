@@ -44,6 +44,18 @@ Actuator2 = {
 "maxpos": 475,
 "minpos": 250}
 
+wristPan = {
+"maxDegree": 9.75,
+"minDegree": 6.125,
+"maxpos": 475,
+"minpos": 250}
+
+wristTilt = {
+"maxDegree": 9.75,
+"minDegree": 6.125,
+"maxpos": 475,
+"minpos": 250}
+
 
 def mag(x,z):
     return (x**2 + z**2)**.5
@@ -122,7 +134,7 @@ def getActuatorPosFromLength(l, actuator = 1):
 
     return newPos
 
-def getServoPosFromThetas(theta1, theta2):
+def getActuatorPosFromThetas(theta1, theta2):
     l1Desired = getLengthFromTheta_l1(theta1)
     l2Desired = getLengthFromTheta_l2(theta2)
 
@@ -140,4 +152,4 @@ print "Angles", angles, (math.degrees(angles[0]), math.degrees(angles[1]))
 print getActuatorPosFromLength(lengths[0], 1)
 print getActuatorPosFromLength(lengths[1], 2)
 '''
-print "angles", getServoPosFromThetas(math.radians(30), math.radians(-20))
+print "angles", getActuatorPosFromThetas(math.radians(30), math.radians(-20))
