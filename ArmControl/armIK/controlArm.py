@@ -129,7 +129,7 @@ else :
             print "hello"
         '''
         #heldDownKeys = pygame.key.get_pressed()
-        print keydownEvents
+        
         for event in keydownEvents:
             if event.type == pygame.KEYDOWN:
                 print "CLICKED: ", event.key
@@ -162,7 +162,7 @@ else :
                     theta2 -= math.radians(3)
                 
                 (pos1, pos2) = aH.getActuatorPosFromThetas(theta1, theta2)
-                print "GOALPOS's", pos1, pos2
+                print "GOALPOSs of actuators", pos1, pos2
                 COMMANDS["l1Theta"] = pos1
                 COMMANDS["l2Theta"] = pos2
 
@@ -170,8 +170,9 @@ else :
                     COMMANDS["claw"] = "OPEN"
                 elif event.key == pygame.K_p:
                     COMMANDS["claw"] = "CLOSE"
-                else:
-                    COMMANDS["claw"] = None
+                
+        if keydownEvents = []
+            COMMANDS["claw"] = None
 
         with open('data.txt', 'w') as outfile: 
             print(COMMANDS) 
