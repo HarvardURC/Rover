@@ -84,7 +84,7 @@ def convertReadStringToIntArray(myStr):
     strArray = myStr.split(" ")
     intArray = [int(x) for x in strArray]
     return intArray
-    
+
 
 while True:
     writeNumber(100)
@@ -120,5 +120,3 @@ while True:
             pwm.set_pwm(L2PIN, 0, COMMANDS["l2Theta"])
         if COMMANDS["continuous"]:
             pwm.set_pwm(CONTINUOUSPIN, 0, COMMANDS["continuous"])
-
-    time.sleep(.05)
