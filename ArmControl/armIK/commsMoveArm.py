@@ -80,8 +80,7 @@ def readString():
     return strData
 
 def convertReadStringToIntArray(myStr):
-    underScoreIndex = myStr.index("_")
-    if underScoreIndex:
+    if "_" in myStr:
         myStr = myStr[:myStr.index("_")].strip()
     else:
         myStr.strip() 
