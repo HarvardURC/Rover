@@ -65,7 +65,7 @@ def convertDegreeToPos(servo, newDegree):
 #def convertPosToDegree(servo, newPos):
     
 def ifSafe(servo, oldPos, newPos):
-    if newPos > servo["maxDegree"] or newPos < servo["minDegree"]:
+    if newPos > servo["maxpos"] or newPos < servo["minpos"]:
         return oldPos
     else:
         return newPos
