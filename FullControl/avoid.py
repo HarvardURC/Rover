@@ -36,5 +36,8 @@ class main():
 			if self.lidarValues[self.center] < minDist:
 				self.stable = True
 
+		forward = int(stable == True)
+		return [forward, right, left]
+
 m = main()
 m.control()
