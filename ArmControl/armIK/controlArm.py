@@ -171,7 +171,7 @@ else :
                 elif event.key == pygame.K_p:
                     COMMANDS["claw"] = "CLOSE"
                 
-        if keydownEvents = []
+        if keydownEvents == []
             COMMANDS["claw"] = None
 
         with open('data.txt', 'w') as outfile: 
