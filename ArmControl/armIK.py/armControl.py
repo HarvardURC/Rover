@@ -33,16 +33,16 @@ L1_LENGTH = 14.5
 L2_LENGTH = 11.0
 
 Actuator1 = {
-"maxlen": 15.0,
-"minlen": 12.0,
-"maxpos": 200,
-"minpos": 500}
+"maxlen": 13.6,
+"minlen": 10.8,
+"maxpos": 365,
+"minpos": 275}
 
 Actuator2 = {
-"maxlen": 12.0,
-"minlen": 8.0,
-"maxpos": 240,
-"minpos": 500}
+"maxlen": 9.75,
+"minlen": 6.125,
+"maxpos": 475,
+"minpos": 250}
 
 
 def mag(x,z):
@@ -73,8 +73,8 @@ def getLengthFromTheta_l2(theta2):
 
     lengthToJoint = mag(l2PerpToJoint, l2parallelToJoint)
 
-    desiredX = lengthToJoint*math.cos(beta + theta2)
-    desiredZ = -1 * lengthToJoint*math.sin(beta + theta2)
+    desiredX = lengthToJoint*math.cos(-beta + theta2)
+    desiredZ = lengthToJoint*math.sin(-beta + theta2)
 
     desiredL = mag(desiredX - l2firstJointPos[0], desiredZ - l2firstJointPos[1])
 
@@ -94,9 +94,12 @@ def getIKAnglesFromPos(x,z):
 
     # get leg joint angles
     l2Angle = math.atan2(-1 * (1.0 - cosl2Angle**2)**.5, cosl2Angle)
+    
+
     l1Angle = math.atan2(new_z,new_x) - math.atan2(L2_LENGTH*math.sin(l2Angle), L1_LENGTH + L2_LENGTH*math.cos(l2Angle))
 
     return (l1Angle, l2Angle)
+
 
 def getLengthsFromPos(x,z):
     angles = getIKAnglesFromPos(x,z)
@@ -112,15 +115,29 @@ def getActuatorPosFromLength(l, actuator = 1):
     ratio = (a["maxpos"] - a["minpos"])/(a["maxlen"] - a["minlen"])
 
     if l > a["maxlen"] or l < a["minlen"]:
-        raise Exception("Told to go to length that the actuator cannot")
+        raise Exception("Actuator " + str(actuator) + " was told to go to length " + str(l) + " but the actuator cannot. Max=" + str(a["maxlen"]) + ", min=" + str(a["minlen"]))
     
     deltaLen = l - a["minlen"]
     newPos = a["minpos"] + deltaLen * ratio
 
     return newPos
-    
 
-lengths = getLengthsFromPos(12,4)
+def getServoPosFromThetas(theta1, theta2):
+    l1Desired = getLengthFromTheta_l1(theta1)
+    l2Desired = getLengthFromTheta_l2(theta2)
+
+    print "lengths:", l1Desired, l2Desired
+
+    return (getActuatorPosFromLength(l1Desired, 1), getActuatorPosFromLength(l2Desired, 2))
+
+'''
+lengths = getLengthsFromPos(16.5,14)
 print lengths
+angles = getIKAnglesFromPos(16.5,14)
+
+print "Angles", angles, (math.degrees(angles[0]), math.degrees(angles[1]))
+
 print getActuatorPosFromLength(lengths[0], 1)
 print getActuatorPosFromLength(lengths[1], 2)
+'''
+print "angles", getServoPosFromThetas(math.radians(30), math.radians(-20))
