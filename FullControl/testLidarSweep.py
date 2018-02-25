@@ -71,14 +71,18 @@ lidarIndex = 0
 increasing = True
 
 while True: 
-    print lidarIndex
     # go to next position in array
     gotoAngle = sweepDegrees[lidarIndex]
     #pwm.set_pwm(pinID, 0, gotoAngle)
     time.sleep(LOOPDELAY)
 
-    distMeasured = lidar.getDistance() 
+    # WHEN LIDAR IS CONNECTED, SWITCH TO THIS
+    #distMeasured = lidar.getDistance() 
+    distMeasured = 4
+
     lidarValues[lidarIndex] = distMeasured
+    print sweepDegrees
+    print lidarValues
 
     # either increment lidar index or decrement depending on whether the loop count is even
     if increasing:
@@ -91,7 +95,6 @@ while True:
     elif lidarIndex == 0:
         increasing = True
 
-    print lidarValues
     
     
     
