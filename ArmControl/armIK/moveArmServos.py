@@ -57,6 +57,11 @@ def getCommands():
 while True:
     # GET SERVO COMMANDS
     COMMANDS = getCommands()
+    COMMANDS["wristTilt"] = float(COMMANDS["wristTilt"])
+    COMMANDS["wristPan"] = float(COMMANDS["wristPan"])
+    COMMANDS["l1Theta"] = float(COMMANDS["l1Theta"])
+    COMMANDS["l2Theta"] = float(COMMANDS["l2Theta"])
+    COMMANDS["continuous"] = float(COMMANDS["continuous"])
 
     # MOVE SERVOS
     if COMMANDS["wristTilt"]:
