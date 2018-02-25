@@ -93,7 +93,7 @@ while True:
     writeNumber(100)
     readStr = readString()
     print readStr
-    if not readStr.isspace():
+    if len(readStr.split(" ")) > 1:
         intArray = convertReadStringToIntArray(readStr)
         #print intArray
 
