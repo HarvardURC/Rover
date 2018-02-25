@@ -4,6 +4,19 @@ import subprocess
 import sys
 import os
 
+
+# LIDAR STUFF -------
+from lidar_lite import Lidar_Lite
+
+lidar = Lidar_Lite()
+connected = lidar.connect(1)
+
+if connected < -1:
+  print "Not Connected"
+# ----------
+
+
+
 bus = smbus.SMBus(1)
 
 comms900 = 0x04
@@ -31,8 +44,20 @@ def readString():
     time.sleep(0.1)
     return strData
 
+def convertReadStringToIntArray(myStr):
+    readStr = readStr.split("_")[0]
+    strArray = readStr.split(" ")
+    intArray = [int(x) for x in strArray]
+    return intArray
+    
 while True:
     writeNumber(100)
-    var = readString()
-    print(var)
+    readStr = readString()
+    intArray = convertReadStringToIntArray(readStr)
+
+    print "Lidar info: ", lidar.getDistance(), lidar.getVelocity()
+
+    print("intArray", intArray)
+    
+    time.sleep(.1)
     

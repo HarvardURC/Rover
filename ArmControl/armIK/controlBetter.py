@@ -52,6 +52,8 @@ COMMANDS = {
 theta1 = math.radians(45)
 theta2 = math.radians(-45)
 
+IKMode = False
+
 
 def convertDegreeToPos(servo, newDegree):
     if newDegree > servo["maxDegree"] or newDegree < servo["minDegree"]:
@@ -65,7 +67,7 @@ def convertDegreeToPos(servo, newDegree):
 
 
 # checks that we can move servo within limits    
-def ifSafe(servo, oldPos, newPos):
+def moveIfSafe(servo, oldPos, newPos):
     if newPos > servo["maxpos"] or newPos < servo["minpos"]:
         return oldPos
     else:
@@ -92,7 +94,6 @@ if x:
     try:
         while True:
             pygame.event.pump()
-
 
             # read input from the two joysticks  
                  
@@ -132,23 +133,38 @@ else :
 
         # wrist
         if keys[K_w]:
-            COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] + 10)
+            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] + 10)
         elif keys[K_s]:
-            COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - 10)
+            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - 10)
         elif keys[K_a]:
-            COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + 10)
+            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + 10)
         elif keys[K_d]:
-            COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] - 10)
+            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] - 10)
 
         # actuators
-        if keys[K_UP]:
-            theta1 += math.radians(3)
-        elif keys[K_DOWN]:
-            theta1 -= math.radians(3)
-        elif keys[K_LEFT]:
-            theta2 += math.radians(3)
-        elif keys[K_RIGHT]:
-            theta2 -= math.radians(3)
+        if IKMode:
+            if keys[K_UP]:
+                z += .5
+            elif keys[K_DOWN]:
+                z -= .5
+            elif keys[K_LEFT]:
+                x -= .5 
+            elif keys[K_RIGHT]:
+                x -= .5
+
+            (theta1, theta2) = aH.getIKAnglesFromXZ(x,z)
+        else:
+            if keys[K_UP]:
+                theta1 += math.radians(3)
+            elif keys[K_DOWN]:
+                theta1 -= math.radians(3)
+            elif keys[K_LEFT]:
+                theta2 += math.radians(3)
+            elif keys[K_RIGHT]:
+                theta2 -= math.radians(3)
+            
+            (x,z) = aH.getXZFromAngles(theta1,theta2)
+            
                 
         (pos1, pos2) = aH.getActuatorPosFromThetas(theta1, theta2)
         print "GOALPOSs of actuators", pos1, pos2
@@ -161,6 +177,23 @@ else :
             COMMANDS["claw"] = 2
         else:
             COMMANDS["claw"] = 0
+        
+        # go to wrist home pos. h goes to home, g goes to new tilt sensors
+        if keys[K_h]:
+            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], wristTilt["homepos"])
+            COMMANDS["wristPAn"] = moveIfSafe(wristPan, COMMANDS["wristPan"], wristPan["homepos"])
+        elif keys[K_g]:
+            newTiltDegrees = math.degrees(theta1 + theta2) + 90
+            newTiltPos = int(convertDegreeToPos(wristTilt, newTiltDegrees))
+            print newTiltPos, newTiltDegrees
+            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], newTiltPos)
+            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], wristPan["homepos"])
+            
+
+        if keys[K_i]:
+            IKMode = True
+        elif keys[K_u]:
+            IKMode = False
                 
 
         with open('data.txt', 'w') as outfile: 
