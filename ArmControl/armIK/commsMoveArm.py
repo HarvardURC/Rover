@@ -89,34 +89,36 @@ def convertReadStringToIntArray(myStr):
 while True:
     writeNumber(100)
     readStr = readString()
-    intArray = convertReadStringToIntArray(readStr)
-    print intArray
+    print readStr
+    if len(readStr) > 10:
+        intArray = convertReadStringToIntArray(readStr)
+        #print intArray
 
-    # GET SERVO COMMANDS
-    COMMANDS = getCommands(intArray)
+        # GET SERVO COMMANDS
+        COMMANDS = getCommands(intArray)
 
 
-    # MOVE SERVOS
-    if COMMANDS["wristTilt"]:
-        pwm.set_pwm(WRISTTILTPIN, 0, COMMANDS["wristTilt"])
-    if COMMANDS["wristPan"]:
-        pwm.set_pwm(WRISTPANPIN, 0, COMMANDS["wristPan"])
-    if COMMANDS["claw"] != 0:
-        if COMMANDS["claw"] == 2:
+        # MOVE SERVOS
+        if COMMANDS["wristTilt"]:
+            pwm.set_pwm(WRISTTILTPIN, 0, COMMANDS["wristTilt"])
+        if COMMANDS["wristPan"]:
+            pwm.set_pwm(WRISTPANPIN, 0, COMMANDS["wristPan"])
+        if COMMANDS["claw"] != 0:
+            if COMMANDS["claw"] == 2:
+                GPIO.output(19, False)
+                GPIO.output(16, True)
+            elif COMMANDS["claw"] == 1:
+                GPIO.output(19, True)
+                GPIO.output(16, False)
+        else:
             GPIO.output(19, False)
-            GPIO.output(16, True)
-        elif COMMANDS["claw"] == 1:
-            GPIO.output(19, True)
             GPIO.output(16, False)
-    else:
-        GPIO.output(19, False)
-        GPIO.output(16, False)
 
-    if COMMANDS["l1Theta"]:
-        pwm.set_pwm(L1PIN, 0, COMMANDS["l1Theta"])
-    if COMMANDS["l2Theta"]:
-        pwm.set_pwm(L2PIN, 0, COMMANDS["l2Theta"])
-    if COMMANDS["continuous"]:
-        pwm.set_pwm(CONTINUOUSPIN, 0, COMMANDS["continuous"])
+        if COMMANDS["l1Theta"]:
+            pwm.set_pwm(L1PIN, 0, COMMANDS["l1Theta"])
+        if COMMANDS["l2Theta"]:
+            pwm.set_pwm(L2PIN, 0, COMMANDS["l2Theta"])
+        if COMMANDS["continuous"]:
+            pwm.set_pwm(CONTINUOUSPIN, 0, COMMANDS["continuous"])
 
     time.sleep(.05)
