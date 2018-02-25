@@ -49,8 +49,8 @@ COMMANDS = {
     "l2Theta" : 400
 }
 
-theta1 = math.radians(55)
-theta2 = math.radians(-30)
+theta1 = math.radians(45)
+theta2 = math.radians(-50)
 
 def convertDegreeToPos(servo, newDegree):
     if newDegree > servo["maxDegree"] or newDegree < servo["minDegree"]:
@@ -132,6 +132,7 @@ else :
         
         for event in keydownEvents:
             if event.type == pygame.KEYDOWN:
+                print "CLICKED: ", event.key
                 # continuous
                 if event.key == pygame.K_z:
                     COMMANDS["continuous"] = continuousModes["counterclockwise"]
