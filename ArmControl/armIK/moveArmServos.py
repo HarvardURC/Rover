@@ -3,7 +3,6 @@
 # Author: Tony DiCola
 # License: Public Domain
 from __future__ import division
-import actuatorHelpers as aH
 import time
 import math
 import RPi.GPIO as GPIO

@@ -49,7 +49,7 @@ COMMANDS = {
     "l2Theta" : 400
 }
 
-theta1 = 60
+theta1 = 55
 theta2 = -30
 
 def convertDegreeToPos(servo, newDegree):
@@ -161,8 +161,8 @@ else :
                     theta2 -= 3
                 
                 (pos1, pos2) = aH.getActuatorPosFromThetas(theta1, theta2)
-                COMMANDS["l1Theta"] = theta1
-                COMMANDS["l2Theta"] = theta2
+                COMMANDS["l1Theta"] = pos1
+                COMMANDS["l2Theta"] = pos2
 
                 if event.key == pygame.K_o:
                     COMMANDS["claw"] = "OPEN"
@@ -172,7 +172,7 @@ else :
                     COMMANDS["claw"] = None
 
         with open('data.txt', 'w') as outfile: 
-            #print(COMMANDS) 
+            print(COMMANDS) 
             json.dump(COMMANDS, outfile)
         
         time.sleep(.2)
