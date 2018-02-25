@@ -90,7 +90,7 @@ while True:
     writeNumber(100)
     readStr = readString()
     print readStr
-    if len(readStr) > 10:
+    if not readStr.isspace():
         intArray = convertReadStringToIntArray(readStr)
         #print intArray
 
