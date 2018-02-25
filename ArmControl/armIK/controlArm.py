@@ -160,7 +160,7 @@ else :
                 elif event.key == pygame.K_RIGHT:
                     theta2 -= 3
                 
-                (pos1, pos2) = hf.getActuatorPosFromThetas(theta1, theta2)
+                (pos1, pos2) = aH.getActuatorPosFromThetas(theta1, theta2)
                 COMMANDS["l1Theta"] = theta1
                 COMMANDS["l2Theta"] = theta2
 
