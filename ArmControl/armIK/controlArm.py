@@ -2,6 +2,8 @@ import json
 import time
 import pygame
 import math
+import actuatorHelpers as aH
+from pygame.locals import *
 
 wristPan = {
 "maxDegree": 87.0,
@@ -26,13 +28,25 @@ continuousModes = {
     "stop": 150
 }
 
+Actuator1 = {
+"maxlen": 13.6,
+"minlen": 10.8,
+"maxpos": 365,
+"minpos": 275}
+
+Actuator2 = {
+"maxlen": 9.75,
+"minlen": 6.125,
+"maxpos": 475,
+"minpos": 250}
+
 COMMANDS = {
     "wristTilt" : wristTilt["homepos"],
     "wristPan" : wristPan["homepos"],
     "claw" : None,
     "continuous" : None,
-    "l1Theta" : None,
-    "l2Theta" : None
+    "l1Theta" : 320,
+    "l2Theta" : 400
 }
 
 
@@ -49,7 +63,12 @@ def convertDegreeToPos(servo, newDegree):
 
 #def convertPosToDegree(servo, newPos):
     
-
+def ifSafe(servo, newPos):
+    if newPos > servo["maxDegree"] or newPos < servo["minDegree"]:
+        return COMMANDS["servo"]
+    else:
+        return newPos
+        
 
 
 
@@ -103,7 +122,13 @@ else :
     print "Switched to keyboard arrow keys for control"
     while True:
         keydownEvents = pygame.event.get()
+        '''
+        keys=pygame.key.get_pressed()
+        if keys[K_a]:
+            print "hello"
+        '''
         #heldDownKeys = pygame.key.get_pressed()
+        
         for event in keydownEvents:
             if event.type == pygame.KEYDOWN:
                 # continuous
@@ -116,13 +141,13 @@ else :
 
                 # wrist
                 if event.key == pygame.K_w:
-                    COMMANDS["wristTilt"] = COMMANDS["wristTilt"] + 3
+                    COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"] + 10)
                 elif event.key == pygame.K_s:
-                    COMMANDS["wristTilt"] = COMMANDS["wristTilt"] - 3
+                    COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"] - 10)
                 elif event.key == pygame.K_a:
-                    COMMANDS["wristPan"] = COMMANDS["wristPan"] + 3
+                    COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"] + 10)
                 elif event.key == pygame.K_d:
-                    COMMANDS["wristPan"] = COMMANDS["wristPan"] - 3
+                    COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"] - 10)
 
                 if event.key == pygame.K_o:
                     COMMANDS["claw"] = "OPEN"
@@ -130,7 +155,7 @@ else :
                     COMMANDS["claw"] = "CLOSE"
 
         with open('data.txt', 'w') as outfile: 
-            print(COMMANDS) 
+            #print(COMMANDS) 
             json.dump(COMMANDS, outfile)
         
         time.sleep(.2)

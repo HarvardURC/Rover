@@ -34,25 +34,15 @@ GPIO.setup(19, GPIO.OUT)
 GPIO.setup(16, GPIO.OUT)
 
 
-
 # GET PINS
 (CONTINUOUSPIN, L1PIN, L2PIN, WRISTPANPIN, WRISTTILTPIN) = (0,1,2,3,4)
 
-'''
-COMMANDS = {
-    "wristTilt" : None,
-    "wristPan" : None,
-    "claw" : None,
-    "continuous" : None,
-    "l1Theta" : None,
-    "l2Theta" : None
-}
-'''
 
 def getCommands():
     with open('data.txt') as json_file:  
         data = json.load(json_file)
     return data
+
 
 while True:
     # GET SERVO COMMANDS
@@ -85,11 +75,9 @@ while True:
         GPIO.output(16, False)
 
     if COMMANDS["l1Theta"]:
-        l1DesPos, l2DesPos = aH.getActuatorPosFromThetas(COMMANDS["l1Theta"], COMMANDS["l1Theta"])
-        pwm.set_pwm(L1PIN, 0, l1DesPos)
+        pwm.set_pwm(L1PIN, 0, COMMANDS["l1Theta")
     if COMMANDS["l2Theta"]:
-        l1DesPos, l2DesPos = aH.getActuatorPosFromThetas(COMMANDS["l2Theta"], COMMANDS["l2Theta"])
-        pwm.set_pwm(L2PIN, 0, l2DesPos)
+        pwm.set_pwm(L2PIN, 0, COMMANDS["l2Theta"])
     if COMMANDS["continuous"]:
         pwm.set_pwm(CONTINUOUSPIN, 0, COMMANDS["continuous"])
 
