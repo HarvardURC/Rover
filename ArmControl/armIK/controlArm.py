@@ -143,13 +143,13 @@ else :
 
                 # wrist
                 if event.key == pygame.K_w:
-                    COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] + 10)
+                    COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] + 40)
                 elif event.key == pygame.K_s:
-                    COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - 10)
+                    COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - 40)
                 elif event.key == pygame.K_a:
-                    COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + 10)
+                    COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + 40)
                 elif event.key == pygame.K_d:
-                    COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] - 10)
+                    COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] - 40)
 
                 # actuators
                 if event.key == pygame.K_UP:
