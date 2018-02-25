@@ -152,13 +152,13 @@ else :
 
                 # actuators
                 if event.key == pygame.K_UP:
-                    theta1 += 3
+                    theta1 += math.radians(3)
                 elif event.key == pygame.K_UP:
-                    theta1 -= 3
+                    theta1 -= math.radians(3)
                 elif event.key == pygame.K_LEFT:
-                    theta2 += 3
+                    theta2 += math.radians(3)
                 elif event.key == pygame.K_RIGHT:
-                    theta2 -= 3
+                    theta2 -= math.radians(3)
                 
                 (pos1, pos2) = aH.getActuatorPosFromThetas(theta1, theta2)
                 print "GOALPOS's", pos1, pos2
