@@ -49,8 +49,8 @@ COMMANDS = {
     "l2Theta" : 400
 }
 
-theta1 = 55
-theta2 = -30
+theta1 = math.radians(55)
+theta2 = math.radians(-30)
 
 def convertDegreeToPos(servo, newDegree):
     if newDegree > servo["maxDegree"] or newDegree < servo["minDegree"]:
@@ -161,6 +161,7 @@ else :
                     theta2 -= 3
                 
                 (pos1, pos2) = aH.getActuatorPosFromThetas(theta1, theta2)
+                print "GOALPOS's", pos1, pos2
                 COMMANDS["l1Theta"] = pos1
                 COMMANDS["l2Theta"] = pos2
 
