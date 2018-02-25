@@ -88,6 +88,7 @@ def convertReadStringToIntArray(myStr):
     intArray = [int(x) for x in strArray]
     return intArray
 
+clawFlagCount = 0
 
 while True:
     writeNumber(100)
@@ -106,14 +107,19 @@ while True:
             pwm.set_pwm(WRISTTILTPIN, 0, COMMANDS["wristTilt"])
         if COMMANDS["wristPan"]:
             pwm.set_pwm(WRISTPANPIN, 0, COMMANDS["wristPan"])
-        if COMMANDS["claw"] != 0:
-            if COMMANDS["claw"] == 2:
-                GPIO.output(19, False)
-                GPIO.output(16, True)
-            elif COMMANDS["claw"] == 1:
-                GPIO.output(19, True)
-                GPIO.output(16, False)
+        if clawFlagCount > 3:
+            if COMMANDS["claw"] != 0:
+                if COMMANDS["claw"] == 2:
+                    clawFlagCount = 0
+                    GPIO.output(19, False)
+                    GPIO.output(16, True)
+                elif COMMANDS["claw"] == 1:
+                    clawFlagCount = 0
+                    GPIO.output(19, True)
+                    GPIO.output(16, False)
         else:
+            if clawFlagCount < 5:
+                clawFlagCount += 1
             GPIO.output(19, False)
             GPIO.output(16, False)
 
