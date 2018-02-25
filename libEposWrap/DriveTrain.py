@@ -142,6 +142,10 @@ class EposDriveTrain(_object):
     __swig_getmethods__["legAngles"] = _DriveTrain.EposDriveTrain_legAngles_get
     if _newclass:
         legAngles = _swig_property(_DriveTrain.EposDriveTrain_legAngles_get, _DriveTrain.EposDriveTrain_legAngles_set)
+    __swig_setmethods__["targetPos"] = _DriveTrain.EposDriveTrain_targetPos_set
+    __swig_getmethods__["targetPos"] = _DriveTrain.EposDriveTrain_targetPos_get
+    if _newclass:
+        targetPos = _swig_property(_DriveTrain.EposDriveTrain_targetPos_get, _DriveTrain.EposDriveTrain_targetPos_set)
     __swig_getmethods__["legAirSpeed"] = _DriveTrain.EposDriveTrain_legAirSpeed_get
     if _newclass:
         legAirSpeed = _swig_property(_DriveTrain.EposDriveTrain_legAirSpeed_get)
@@ -240,6 +244,12 @@ class EposDriveTrain(_object):
 
     def allAreAtTargets(self):
         return _DriveTrain.EposDriveTrain_allAreAtTargets(self)
+
+    def isCloseEnough(self, arg2, arg3):
+        return _DriveTrain.EposDriveTrain_isCloseEnough(self, arg2, arg3)
+
+    def areAllCloseEnough(self, arg2):
+        return _DriveTrain.EposDriveTrain_areAllCloseEnough(self, arg2)
 EposDriveTrain_swigregister = _DriveTrain.EposDriveTrain_swigregister
 EposDriveTrain_swigregister(EposDriveTrain)
 

@@ -102,6 +102,8 @@ unsigned int EposDriveTrain::setPosition(int node, long position, bool absolute)
 	//If absolute=0, then it's a relative movement
 	VCS_MoveToPosition(portHandle, node, position, absolute, 1, &errorCode);
 
+	targetPos[node] = position;
+
 	if(errorCode != 0) {
 		logError("VCS_MoveToPosition", errorCode);
 	}
@@ -361,6 +363,23 @@ bool EposDriveTrain::allAreAtTargets() {
     this->isAtTarget(FRONTLEFT) and
     this->isAtTarget(MIDDLERIGHT) and
     this->isAtTarget(BACKLEFT));
+}
+
+bool EposDriveTrain::isCloseEnough(int node, int tolerance) {
+	int position = this->getPosition(node);
+	
+	return ( abs(position - targetPos[node]) < tolerance);
+}
+
+bool EposDriveTrain::areAllCloseEnough(int tolerance) {
+	bool status = true;
+
+	for(int i=1; i<=6; i++) {
+		if (!this->isCloseEnough(i, tolerance))
+			status = false;
+	}
+
+	return status;
 }
 
 void EposDriveTrain::logError(string functName, unsigned int errorCode) {
