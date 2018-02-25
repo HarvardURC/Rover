@@ -6,10 +6,10 @@ from testLidarSweep import testLidarSweep
 class main():
 	def __init__(self):
 		self.sweepdegrees = testLidarSweep.getData()[0]
-        self.lidarValues = testLidarSweep.get_lidarValues()[1]
-        self.numVals = len(self.lidarValues)
-        self.center = math.ceil(self.numVals/2)
-        self.minDist = 1
+		self.lidarValues = testLidarSweep.get_lidarValues()[1]
+		self.numVals = len(self.lidarValues)
+		self.center = math.ceil(self.numVals/2)
+		self.minDist = 1
 
     # filter function to remove noise and irrelevent readings
 	def filter(self):
