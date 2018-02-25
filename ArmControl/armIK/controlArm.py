@@ -49,7 +49,8 @@ COMMANDS = {
     "l2Theta" : 400
 }
 
-
+theta1 = 60
+theta2 = -30
 
 def convertDegreeToPos(servo, newDegree):
     if newDegree > servo["maxDegree"] or newDegree < servo["minDegree"]:
@@ -63,9 +64,9 @@ def convertDegreeToPos(servo, newDegree):
 
 #def convertPosToDegree(servo, newPos):
     
-def ifSafe(servo, newPos):
+def ifSafe(servo, oldPos, newPos):
     if newPos > servo["maxDegree"] or newPos < servo["minDegree"]:
-        return COMMANDS["servo"]
+        return oldPos
     else:
         return newPos
         
@@ -141,18 +142,34 @@ else :
 
                 # wrist
                 if event.key == pygame.K_w:
-                    COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"] + 10)
+                    COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] + 10)
                 elif event.key == pygame.K_s:
-                    COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"] - 10)
+                    COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - 10)
                 elif event.key == pygame.K_a:
-                    COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"] + 10)
+                    COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + 10)
                 elif event.key == pygame.K_d:
-                    COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"] - 10)
+                    COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] - 10)
+
+                # actuators
+                if event.key == pygame.K_UP:
+                    theta1 += 3
+                elif event.key == pygame.K_UP:
+                    theta1 -= 3
+                elif event.key == pygame.K_LEFT:
+                    theta2 += 3
+                elif event.key == pygame.K_RIGHT:
+                    theta2 -= 3
+                
+                (pos1, pos2) = hf.getActuatorPosFromThetas(theta1, theta2)
+                COMMANDS["l1Theta"] = theta1
+                COMMANDS["l2Theta"] = theta2
 
                 if event.key == pygame.K_o:
                     COMMANDS["claw"] = "OPEN"
                 elif event.key == pygame.K_p:
                     COMMANDS["claw"] = "CLOSE"
+                else:
+                    COMMANDS["claw"] = None
 
         with open('data.txt', 'w') as outfile: 
             #print(COMMANDS) 
