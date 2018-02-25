@@ -129,7 +129,7 @@ else :
             print "hello"
         '''
         #heldDownKeys = pygame.key.get_pressed()
-        
+        print keydownEvents
         for event in keydownEvents:
             if event.type == pygame.KEYDOWN:
                 print "CLICKED: ", event.key
