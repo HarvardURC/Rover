@@ -142,4 +142,4 @@ print "Angles", angles, (math.degrees(angles[0]), math.degrees(angles[1]))
 print getActuatorPosFromLength(lengths[0], 1)
 print getActuatorPosFromLength(lengths[1], 2)
 '''
-print "angles", getActuatorPosFromThetas(math.radians(30), math.radians(-20))
+print "angles", getActuatorPosFromThetas(math.radians(45), math.radians(-45))

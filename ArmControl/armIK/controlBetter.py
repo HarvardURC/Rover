@@ -50,7 +50,8 @@ COMMANDS = {
 }
 
 theta1 = math.radians(45)
-theta2 = math.radians(-50)
+theta2 = math.radians(-45)
+
 
 def convertDegreeToPos(servo, newDegree):
     if newDegree > servo["maxDegree"] or newDegree < servo["minDegree"]:
@@ -62,8 +63,8 @@ def convertDegreeToPos(servo, newDegree):
 
     return posDeltaFromMin + servo["minpos"]
 
-#def convertPosToDegree(servo, newPos):
-    
+
+# checks that we can move servo within limits    
 def ifSafe(servo, oldPos, newPos):
     if newPos > servo["maxpos"] or newPos < servo["minpos"]:
         return oldPos
@@ -71,15 +72,12 @@ def ifSafe(servo, oldPos, newPos):
         return newPos
         
 
-
-
 '''
 Gets joystick data and prints it
 '''
 pygame.init()
-#joystick.init()
 x = pygame.joystick.get_count()
-screen = pygame.display.set_mode((400, 300))
+#screen = pygame.display.set_mode((400, 300))
 
 # if game controller is available, use game controller
 if x:
@@ -122,62 +120,55 @@ if x:
 else :
     print "Switched to keyboard arrow keys for control"
     while True:
-        keydownEvents = pygame.event.get()
-        '''
         keys=pygame.key.get_pressed()
-        if keys[K_a]:
-            print "hello"
-        '''
-        #heldDownKeys = pygame.key.get_pressed()
-        
-        for event in keydownEvents:
-            if event.type == pygame.KEYDOWN:
-                print "CLICKED: ", event.key
-                # continuous
-                if event.key == pygame.K_z:
-                    COMMANDS["continuous"] = continuousModes["counterclockwise"]
-                elif event.key == pygame.K_c:
-                    COMMANDS["continuous"] = continuousModes["clockwise"]
 
-                # wrist
-                if event.key == pygame.K_w:
-                    COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] + 40)
-                elif event.key == pygame.K_s:
-                    COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - 40)
-                elif event.key == pygame.K_a:
-                    COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + 40)
-                elif event.key == pygame.K_d:
-                    COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] - 40)
-
-                # actuators
-                if event.key == pygame.K_UP:
-                    theta1 += math.radians(3)
-                elif event.key == pygame.K_UP:
-                    theta1 -= math.radians(3)
-                elif event.key == pygame.K_LEFT:
-                    theta2 += math.radians(3)
-                elif event.key == pygame.K_RIGHT:
-                    theta2 -= math.radians(3)
-                
-                (pos1, pos2) = aH.getActuatorPosFromThetas(theta1, theta2)
-                print "GOALPOSs of actuators", pos1, pos2
-                COMMANDS["l1Theta"] = pos1
-                COMMANDS["l2Theta"] = pos2
-
-                if event.key == pygame.K_o:
-                    COMMANDS["claw"] = "OPEN"
-                elif event.key == pygame.K_p:
-                    COMMANDS["claw"] = "CLOSE"
-                
-        if keydownEvents == []:
-            COMMANDS["claw"] = None
+        # continuous
+        if keys[K_z]:
+            COMMANDS["continuous"] = continuousModes["counterclockwise"]
+        elif keys[K_c]:
+            COMMANDS["continuous"] = continuousModes["clockwise"]
+        else:
             COMMANDS["continuous"] = continuousModes["stop"]
+
+        # wrist
+        if keys[K_w]:
+            COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] + 10)
+        elif keys[K_s]:
+            COMMANDS["wristTilt"] = ifSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - 10)
+        elif keys[K_a]:
+            COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + 10)
+        elif keys[K_d]:
+            COMMANDS["wristPan"] = ifSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] - 10)
+
+        # actuators
+        if keys[K_UP]:
+            theta1 += math.radians(3)
+        elif keys[K_DOWN]:
+            theta1 -= math.radians(3)
+        elif keys[K_LEFT]:
+            theta2 += math.radians(3)
+        elif keys[K_RIGHT]:
+            theta2 -= math.radians(3)
+                
+        (pos1, pos2) = aH.getActuatorPosFromThetas(theta1, theta2)
+        print "GOALPOSs of actuators", pos1, pos2
+        COMMANDS["l1Theta"] = pos1
+        COMMANDS["l2Theta"] = pos2
+
+        if keys[K_o]:
+            COMMANDS["claw"] = 1
+        elif keys[K_p]:
+            COMMANDS["claw"] = 2
+        else:
+            COMMANDS["claw"] = 0
+                
 
         with open('data.txt', 'w') as outfile: 
             print(COMMANDS) 
             json.dump(COMMANDS, outfile)
         
         time.sleep(.2)
+        pygame.event.pump()
         
     
 

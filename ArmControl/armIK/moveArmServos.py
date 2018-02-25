@@ -56,17 +56,19 @@ while True:
         COMMANDS["l2Theta"] = int(COMMANDS["l2Theta"])
     if COMMANDS["continuous"]:
         COMMANDS["continuous"] = int(COMMANDS["continuous"])
+    if COMMANDS["claw"]:
+        COMMANDS["claw"] = int(COMMANDS["claw"])
 
     # MOVE SERVOS
     if COMMANDS["wristTilt"]:
         pwm.set_pwm(WRISTTILTPIN, 0, COMMANDS["wristTilt"])
     if COMMANDS["wristPan"]:
         pwm.set_pwm(WRISTPANPIN, 0, COMMANDS["wristPan"])
-    if COMMANDS["claw"]:
-        if COMMANDS["claw"] == "OPEN":
+    if COMMANDS["claw"] != 0:
+        if COMMANDS["claw"] == 2:
             GPIO.output(19, False)
             GPIO.output(16, True)
-        elif COMMANDS["claw"] == "CLOSE":
+        elif COMMANDS["claw"] == 1:
             GPIO.output(19, True)
             GPIO.output(16, False)
     else:
