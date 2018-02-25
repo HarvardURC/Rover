@@ -54,6 +54,8 @@ public:
 	int legStates[6] = {0,0,0,0,0,0};
 	double legAngles [6];
 
+	long targetPos[6];
+
 
 	const double legAirSpeed = 7.0*350;
 	const double landingAngle = 0.349;
@@ -127,6 +129,9 @@ public:
 	int getGoalPos(int, int, float, bool);
 	void moveLegs(float*, int*, bool*);
 	bool allAreAtTargets();
+
+	bool isCloseEnough(int, int);
+	bool areAllCloseEnough(int);
 
 	//unsigned char getNumFaults(int);
 	//unsigned int getFaultCode(int, unsigned char);
