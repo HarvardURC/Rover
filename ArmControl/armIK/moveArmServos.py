@@ -75,7 +75,7 @@ while True:
         GPIO.output(16, False)
 
     if COMMANDS["l1Theta"]:
-        pwm.set_pwm(L1PIN, 0, COMMANDS["l1Theta"))
+        pwm.set_pwm(L1PIN, 0, COMMANDS["l1Theta"])
     if COMMANDS["l2Theta"]:
         pwm.set_pwm(L2PIN, 0, COMMANDS["l2Theta"])
     if COMMANDS["continuous"]:
