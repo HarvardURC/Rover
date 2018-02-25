@@ -58,15 +58,15 @@ while True:
     # GET SERVO COMMANDS
     COMMANDS = getCommands()
     if COMMANDS["wristTilt"]:
-        COMMANDS["wristTilt"] = float(COMMANDS["wristTilt"])
+        COMMANDS["wristTilt"] = int(COMMANDS["wristTilt"])
     if COMMANDS["wristPan"]:
-        COMMANDS["wristPan"] = float(COMMANDS["wristPan"])
+        COMMANDS["wristPan"] = int(COMMANDS["wristPan"])
     if COMMANDS["l1Theta"]:
-        COMMANDS["l1Theta"] = float(COMMANDS["l1Theta"])
+        COMMANDS["l1Theta"] = int(COMMANDS["l1Theta"])
     if COMMANDS["l2Theta"]:
-        COMMANDS["l2Theta"] = float(COMMANDS["l2Theta"])
+        COMMANDS["l2Theta"] = int(COMMANDS["l2Theta"])
     if COMMANDS["continuous"]:
-        COMMANDS["continuous"] = float(COMMANDS["continuous"])
+        COMMANDS["continuous"] = int(COMMANDS["continuous"])
 
     # MOVE SERVOS
     if COMMANDS["wristTilt"]:
