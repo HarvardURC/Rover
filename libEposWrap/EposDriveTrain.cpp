@@ -367,16 +367,22 @@ bool EposDriveTrain::allAreAtTargets() {
 
 bool EposDriveTrain::isCloseEnough(int node, int tolerance) {
 	int position = this->getPosition(node);
+	long delta = position - targetPos[node];
+
+	cout << "Node " << node << " Position: " << position;
+	cout << " Target: " << targetPos[node];
+	cout << " Delta: " << abs(delta) << " Tolerance: " << tolerance << endl;
 	
-	return ( abs(position - targetPos[node]) < tolerance);
+	return ( abs(delta) < tolerance);
 }
 
 bool EposDriveTrain::areAllCloseEnough(int tolerance) {
 	bool status = true;
 
 	for(int i=1; i<=6; i++) {
-		if (!this->isCloseEnough(i, tolerance))
+		if (!(this->isCloseEnough(i, tolerance))) {
 			status = false;
+		}
 	}
 
 	return status;
