@@ -1,5 +1,6 @@
 import pygame
 import time
+from pygame.locals import *
 
 '''
 Gets joystick data and prints it
