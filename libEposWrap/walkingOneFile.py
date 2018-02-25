@@ -12,7 +12,7 @@ MODVALUE = 175619;
 pi = 3.14159265;
 START_OFFSET_ANGLE = pi/2;
 
-legAirSpeed = int(7.0*200);
+legAirSpeed = int(7.0*400);
 landingAngle = 0.349;
 legGroundSpeed = int(legAirSpeed *(2*landingAngle/(2*pi - 2*landingAngle)));
 PROFILE_POSITION_MODE = 1
@@ -23,8 +23,10 @@ BACKLEFT    = 3;
 FRONTRIGHT  = 4;
 MIDDLERIGHT = 5;  
 BACKRIGHT   = 6;
-accel = 10000;
-deccel = 10000;
+accel = 20000;
+deccel = 20000;
+
+tolerance = 30000
 
 
 def getMoveCommandInfo(curMovement, state):
@@ -180,7 +182,7 @@ while True:
         if moveCommandFlag:
             moveCommandFlag = False
         
-        if driveTrain.allAreAtTargets():
+        if driveTrain.areAllCloseEnough(tolerance):
             state = 1
             moveCommandFlag = True
 
@@ -193,7 +195,7 @@ while True:
         if moveCommandFlag:
             moveCommandFlag = False
                
-        if driveTrain.allAreAtTargets():
+        if driveTrain.areAllCloseEnough(tolerance):
             state = 2
             moveCommandFlag = True
         
@@ -207,7 +209,7 @@ while True:
         if moveCommandFlag:
             moveCommandFlag = False
           
-        if driveTrain.allAreAtTargets():
+        if driveTrain.areAllCloseEnough(tolerance):
             state = 1
             moveCommandFlag = True
 
