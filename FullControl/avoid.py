@@ -5,8 +5,8 @@ from testLidarSweep import testLidarSweep
 
 class main():
 	def __init__(self):
-		self.sweepdegrees = LidarSweep.getData()[0]
-        self.lidarValues = LidarSweep.get_lidarValues()[1]
+		self.sweepdegrees = testLidarSweep.getData()[0]
+        self.lidarValues = testLidarSweep.get_lidarValues()[1]
         self.numVals = len(self.lidarValues)
         self.center = math.ceil(self.numVals/2)
         self.minDist = 1
@@ -17,7 +17,7 @@ class main():
 
 	def turnDirection(self):
 		rl = [0,0]
-		best_index = armgmax([sum(lidarValues[:self.center]), sum(lidarValues[self.center:])])
+		best_index = argmin([sum(lidarValues[:self.center]), sum(lidarValues[self.center:])])
 		rl[best_index] = 1
 		return rl
 
