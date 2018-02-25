@@ -2,25 +2,18 @@
 # This will move channel 0 from min to max position repeatedly.
 # Author: Tony DiCola
 # License: Public Domain
-import armHelpers as aH
 from __future__ import division
+import actuatorHelpers as aH
 import time
 import math
+import RPi.GPIO as GPIO
+import json
 
 # Import the PCA9685 module.
 import Adafruit_PCA9685
 
-
-
-# Uncomment to enable debug output.
-#import logging
-#logging.basicConfig(level=logging.DEBUG)
-
 # Initialise the PCA9685 using the default address (0x40).
 pwm = Adafruit_PCA9685.PCA9685()
-
-# Alternatively specify a different address and/or bus:
-#pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
 
 # Helper function to make setting a servo pulse width simpler.
 def set_servo_pulse(channel, pulse):
@@ -36,18 +29,16 @@ def set_servo_pulse(channel, pulse):
 # Set frequency to 60hz, good for servos.
 pwm.set_pwm_freq(60)
 
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(19, GPIO.OUT)
+GPIO.setup(16, GPIO.OUT)
+
+
+
 # GET PINS
-'''
-L1PIN = int(input("give L1 pin num"))
-L2PIN = int(input("give L2 pin num"))
-WRISTPANPIN = int(input("give WRISTPAN pin num"))
-WRISTTILTPIN = int(input("give WRISTPAN pin num"))
-CONTINUOUSPIN = int(input("give CONTINUOUS pin num"))
-CLAWPIN = int(input("give CLAW pin num"))
-'''
-(L1PIN, L2PIN, CONTINUOUSPIN, WRISTPANPIN, WRISTTILTPIN, CLAWPIN) = (0,1,2,3,4,5)
+(CONTINUOUSPIN, L1PIN, L2PIN, WRISTPANPIN, WRISTTILTPIN) = (0,1,2,3,4)
 
-
+'''
 COMMANDS = {
     "wristTilt" : None,
     "wristPan" : None,
@@ -56,14 +47,16 @@ COMMANDS = {
     "l1Theta" : None,
     "l2Theta" : None
 }
+'''
 
 def getCommands():
-    #TODO
-    return
+    with open('data.txt') as json_file:  
+        data = json.load(json_file)
+    return data
 
 while True:
     # GET SERVO COMMANDS
-    getCommands()
+    COMMANDS = getCommands()
 
     # MOVE SERVOS
     if COMMANDS["wristTilt"]:
@@ -71,19 +64,23 @@ while True:
     if COMMANDS["wristPan"]:
         pwm.set_pwm(WRISTPANPIN, 0, COMMANDS["wristTilt"])
     if COMMANDS["claw"]:
-        print "move claw"
+        if COMMANDS["claw"] == "OPEN":
+            GPIO.output(19, False)
+            GPIO.output(16, True)
+        elif COMMANDS["claw"] == "CLOSE":
+            GPIO.output(19, True)
+            GPIO.output(16, False)
+    else:
+        GPIO.output(19, False)
+        GPIO.output(16, False)
+
     if COMMANDS["l1Theta"]:
-        l1DesPos, l2DesPos = getActuatorPosFromThetas(COMMANDS["l1Theta"], COMMANDS["l1Theta"])
+        l1DesPos, l2DesPos = aH.getActuatorPosFromThetas(COMMANDS["l1Theta"], COMMANDS["l1Theta"])
         pwm.set_pwm(L1PIN, 0, l1DesPos)
     if COMMANDS["l2Theta"]:
-        l1DesPos, l2DesPos = getActuatorPosFromThetas(COMMANDS["l2Theta"], COMMANDS["l2Theta"])
+        l1DesPos, l2DesPos = aH.getActuatorPosFromThetas(COMMANDS["l2Theta"], COMMANDS["l2Theta"])
         pwm.set_pwm(L2PIN, 0, l2DesPos)
     if COMMANDS["continuous"]:
-        pwm.set_pwm(L2PIN, 0, l2DesPos)
-    
-    
-    
+        pwm.set_pwm(CONTINUOUSPIN, 0, COMMANDS["continuous"])
 
-    pwm.set_pwm(L2PIN, 0, l2DesPos)
-
-    time.sleep(1.0)
+    time.sleep(.3)

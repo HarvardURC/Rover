@@ -44,17 +44,7 @@ Actuator2 = {
 "maxpos": 475,
 "minpos": 250}
 
-wristPan = {
-"maxDegree": 9.75,
-"minDegree": 6.125,
-"maxpos": 475,
-"minpos": 250}
 
-wristTilt = {
-"maxDegree": 9.75,
-"minDegree": 6.125,
-"maxpos": 475,
-"minpos": 250}
 
 
 def mag(x,z):
