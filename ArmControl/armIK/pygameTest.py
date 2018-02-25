@@ -49,6 +49,10 @@ if x:
 else :
     print "Switched to keyboard arrow keys for control"
     while True:
+        keys=pygame.key.get_pressed()
+        if keys[K_a]:
+            print "hello"
+        '''
         keydownEvents = pygame.event.get()
         #heldDownKeys = pygame.key.get_pressed()
         for event in keydownEvents:
@@ -59,7 +63,7 @@ else :
                     print "right"
                 if event.key == pygame.K_a:
                     print "hello"
-        
+        '''
         time.sleep(.1)
     
 
