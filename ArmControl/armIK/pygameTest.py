@@ -8,6 +8,7 @@ Gets joystick data and prints it
 pygame.init()
 #joystick.init()
 x = pygame.joystick.get_count()
+screen = pygame.display.set_mode((400, 300))
 
 # if game controller is available, use game controller
 if x:
