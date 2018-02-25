@@ -72,7 +72,7 @@ while True:
     if COMMANDS["wristTilt"]:
         pwm.set_pwm(WRISTTILTPIN, 0, COMMANDS["wristTilt"])
     if COMMANDS["wristPan"]:
-        pwm.set_pwm(WRISTPANPIN, 0, COMMANDS["wristTilt"])
+        pwm.set_pwm(WRISTPANPIN, 0, COMMANDS["wristPan"])
     if COMMANDS["claw"]:
         if COMMANDS["claw"] == "OPEN":
             GPIO.output(19, False)
