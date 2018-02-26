@@ -80,7 +80,7 @@ void loop()
       Serial.println((char*)buf);
       Serial.print("RSSI: ");
 
-//      Wire.write((char*)buf, len);
+      // Wire.write((char*)buf, len);
       
       Serial.println(rf95.lastRssi(), DEC);
       delay(10);
@@ -100,10 +100,22 @@ void loop()
 }
 
 void receiveData(int byteCount){
-  while(Wire.available()) {
-    int number = Wire.read();
-    // Handle data here
-  }
+//  for (int i = 0; i < 4; i++) {
+//    digitalWrite(LED, HIGH);
+//    delay(500);
+//    digitalWrite(LED, LOW);
+//    delay(500);
+//  }
+//
+//  memset(buf, 0, sizeof(buf));
+//  
+//  int byteCounter = 0;
+//  while(Wire.available()) {
+//    buf[byteCounter] = Wire.read();
+//    byteCounter++;
+//  }
+//
+//  rf95.send(buf, sizeof(buf));
 }
 
 void sendData() {

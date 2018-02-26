@@ -62,7 +62,8 @@ void setup()
   rf95.setTxPower(23, false);
 }
 
-int16_t packetnum = 0;  // packet counter, we increment per xmission
+uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
+uint8_t len = sizeof(buf);
 
 void loop()
 {
@@ -87,11 +88,7 @@ void loop()
   }
 
   if (haveDataToSend) {
-    Serial.println("Sending to rf95_server");
-  
     Serial.print("Sending "); Serial.println(inData);    
-    Serial.println("Sending..."); delay(10);
-
     rf95.send((uint8_t *)inData, 20);
     Serial.println("Waiting for packet to complete..."); delay(10);
     rf95.waitPacketSent();
@@ -102,7 +99,6 @@ void loop()
 
     Serial.println("Waiting for reply..."); delay(10);
     if (rf95.waitAvailableTimeout(1000)) { 
-
       if (rf95.recv(buf, &len)) {
         Serial.print("Got reply: ");
         Serial.println((char*)buf);
@@ -120,6 +116,18 @@ void loop()
     }
 
     haveDataToSend = false;
+  }
+
+  if (rf95.available()) {    
+    if (rf95.recv(buf, &len)) {
+      digitalWrite(LED, HIGH);
+      RH_RF95::printBuffer("Received: ", buf, len);
+      Serial.print("Got: ");
+      Serial.println((char*)buf);
+      Serial.print("RSSI: ");
+      Serial.println(rf95.lastRssi(), DEC);
+      delay(10);
+    }
   }
 }
     
