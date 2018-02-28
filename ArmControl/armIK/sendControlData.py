@@ -6,7 +6,7 @@ import actuatorHelpers as aH
 from pygame.locals import *
 import serial
 
-ser = serial.Serial('/dev/ttyUSB0cu.usbmodem14131', 9600)
+ser = serial.Serial('/dev/cu.usbmodem1421', 9600)
 
 wristPan = {
 "maxDegree": 87.0,
@@ -21,7 +21,7 @@ wristTilt = {
 "minDegree": -45.0,
 "homeDegree": 0.0,
 "maxpos": 600.0,
-"homepos": 308.0,
+"homepos": 309.0,
 "minpos": 190.0}
 
 # continuous servo 
@@ -136,13 +136,13 @@ else :
 
         # wrist
         if keys[K_w]:
-            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] + 10)
+            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] + 40)
         elif keys[K_s]:
-            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - 10)
+            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - 40)
         elif keys[K_a]:
-            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + 10)
+            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + 40)
         elif keys[K_d]:
-            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] - 10)
+            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] - 40)
 
         # actuators
         if IKMode:
@@ -153,7 +153,7 @@ else :
             elif keys[K_LEFT]:
                 x -= .5 
             elif keys[K_RIGHT]:
-                x -= .5
+                x += .5
 
             (theta1, theta2) = aH.getIKAnglesFromXZ(x,z)
         else:
@@ -170,7 +170,7 @@ else :
             
                 
         (pos1, pos2) = aH.getActuatorPosFromThetas(theta1, theta2)
-        print "GOALPOSs of actuators", pos1, pos2
+        #print "GOALPOSs of actuators", pos1, pos2
         COMMANDS["l1Theta"] = pos1
         COMMANDS["l2Theta"] = pos2
 
@@ -188,7 +188,7 @@ else :
         elif keys[K_g]:
             newTiltDegrees = math.degrees(theta1 + theta2) + 90
             newTiltPos = int(convertDegreeToPos(wristTilt, newTiltDegrees))
-            print newTiltPos, newTiltDegrees
+            #print newTiltPos, newTiltDegrees
             COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], newTiltPos)
             COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], wristPan["homepos"])
             
@@ -200,16 +200,17 @@ else :
                 
 
         sendString = "" 
-        sendString += str(COMMANDS["wristTilt"]) + " "
-        sendString += str(COMMANDS["wristPan"]) + " "
-        sendString += str(COMMANDS["l1Theta"]) + " "
-        sendString += str(COMMANDS["l2Theta"]) + " "
-        sendString += str(COMMANDS["continuous"]) + " "
-        sendString += str(COMMANDS["claw"]) + " "
+        sendString += str(int(COMMANDS["wristTilt"])) + " "
+        sendString += str(int(COMMANDS["wristPan"])) + " "
+        sendString += str(int(COMMANDS["l1Theta"])) + " "
+        sendString += str(int(COMMANDS["l2Theta"])) + " "
+        sendString += str(int(COMMANDS["continuous"])) + " "
+        sendString += str(int(COMMANDS["claw"])) + " "
 
+        print sendString
         ser.write(sendString.encode())
         
-        time.sleep(.2)
+        time.sleep(.5)
         pygame.event.pump()
         
     
