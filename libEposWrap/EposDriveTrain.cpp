@@ -369,9 +369,11 @@ bool EposDriveTrain::isCloseEnough(int node, int tolerance) {
 	int position = this->getPosition(node);
 	long delta = position - targetPos[node];
 
+	/* Debugging:
 	cout << "Node " << node << " Position: " << position;
 	cout << " Target: " << targetPos[node];
 	cout << " Delta: " << abs(delta) << " Tolerance: " << tolerance << endl;
+	*/
 	
 	return ( abs(delta) < tolerance);
 }
