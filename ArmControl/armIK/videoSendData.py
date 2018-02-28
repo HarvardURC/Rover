@@ -50,6 +50,8 @@ COMMANDS = {
     "l2Theta" : 415
 }
 
+doMovement = 1
+
 theta1 = math.radians(45)
 theta2 = math.radians(-45)
 
@@ -74,6 +76,7 @@ def moveIfSafe(servo, oldPos, newPos):
     else:
         return newPos
         
+
 
 '''
 Gets joystick data and prints it
@@ -123,6 +126,16 @@ else :
     print "Switched to keyboard arrow keys for control"
     while True:
         keys=pygame.key.get_pressed()
+
+        # servo commands
+        if keys[K_1]:
+            doMovement = 1
+        elif keys[K_2]:
+            doMovement = 2
+        elif keys[K_3]:
+            doMovement = 3
+        elif keys[K_4]:
+            doMovement = 4
 
         # continuous
         if keys[K_z]:
@@ -198,6 +211,7 @@ else :
                 
 
         sendString = "" 
+        sendString += str(doMovement) + " "
         sendString += str(int(COMMANDS["wristTilt"])) + " "
         sendString += str(int(COMMANDS["wristPan"])) + " "
         sendString += str(int(COMMANDS["l1Theta"])) + " "

@@ -96,10 +96,11 @@ while True:
     f.close()
     print readStr
     if len(readStr.split(" ")) > 1:
-        intArray = convertReadStringToIntArray(readStr)
+        #intArray = convertReadStringToIntArray(readStr)
         #print intArray
+        intArray = readStr.split(" ")
 
-        # GET SERVO COMMANDS
+        # GET SERVO COMMANDSg
         COMMANDS = getCommands(intArray)
 
 
