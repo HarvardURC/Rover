@@ -80,7 +80,7 @@ Gets joystick data and prints it
 '''
 pygame.init()
 x = pygame.joystick.get_count()
-#screen = pygame.display.set_mode((400, 300))
+screen = pygame.display.set_mode((400, 300))
 
 # if game controller is available, use game controller
 if x:
@@ -134,35 +134,35 @@ else :
 
         # wrist
         if keys[K_w]:
-            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] + 40)
+            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] + 10)
         elif keys[K_s]:
-            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - 40)
+            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - 10)
         elif keys[K_a]:
-            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + 40)
+            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + 10)
         elif keys[K_d]:
-            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] - 40)
+            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] - 10)
 
         # actuators
         if IKMode:
             if keys[K_UP]:
-                z += .5
+                z += .3
             elif keys[K_DOWN]:
-                z -= .5
+                z -= .3
             elif keys[K_LEFT]:
-                x -= .5 
+                x -= .3 
             elif keys[K_RIGHT]:
-                x += .5
+                x += .3
 
             (theta1, theta2) = aH.getIKAnglesFromXZ(x,z)
         else:
             if keys[K_UP]:
-                theta1 += math.radians(3)
+                theta1 += math.radians(2)
             elif keys[K_DOWN]:
-                theta1 -= math.radians(3)
+                theta1 -= math.radians(2)
             elif keys[K_LEFT]:
-                theta2 += math.radians(3)
+                theta2 += math.radians(2)
             elif keys[K_RIGHT]:
-                theta2 -= math.radians(3)
+                theta2 -= math.radians(2)
             
             (x,z) = aH.getXZFromAngles(theta1,theta2)
             
@@ -182,7 +182,7 @@ else :
         # go to wrist home pos. h goes to home, g goes to new tilt sensors
         if keys[K_h]:
             COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], wristTilt["homepos"])
-            COMMANDS["wristPAn"] = moveIfSafe(wristPan, COMMANDS["wristPan"], wristPan["homepos"])
+            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], wristPan["homepos"])
         elif keys[K_g]:
             newTiltDegrees = math.degrees(theta1 + theta2) + 90
             newTiltPos = int(convertDegreeToPos(wristTilt, newTiltDegrees))
@@ -205,9 +205,12 @@ else :
         sendString += str(int(COMMANDS["continuous"])) + " "
         sendString += str(int(COMMANDS["claw"])) + " "
 
+        print sendString
         f = open('controlValues.txt','w')
         f.write(sendString)
         f.close()
+
+        time.sleep(.4)
         
         pygame.event.pump()
         

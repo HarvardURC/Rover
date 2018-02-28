@@ -12,7 +12,7 @@ x = pygame.joystick.get_count()
 
 # if game controller is available, use game controller
 if x:
-    print "Using Gamepad for control"
+    #print "Using Gamepad for control"
 
     j = pygame.joystick.Joystick(0)
     j.init()
@@ -49,11 +49,11 @@ if x:
         file.close()
 
 else :
-    print "Switched to keyboard arrow keys for control"
+    print ("Switched to keyboard arrow keys for control")
     while True:
         keys=pygame.key.get_pressed()
         if keys[K_a]:
-            print "hello"
+            print ("hello")
         '''
         keydownEvents = pygame.event.get()
         #heldDownKeys = pygame.key.get_pressed()
