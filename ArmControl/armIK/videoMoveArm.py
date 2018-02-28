@@ -91,8 +91,9 @@ def convertReadStringToIntArray(myStr):
 clawFlagCount = 0
 
 while True:
-    writeNumber(100)
-    readStr = readString()
+    f = open('controlValues.txt','r')
+    readStr = f.read()
+    f.close()
     print readStr
     if len(readStr.split(" ")) > 1:
         intArray = convertReadStringToIntArray(readStr)
@@ -129,3 +130,4 @@ while True:
             pwm.set_pwm(L2PIN, 0, COMMANDS["l2Theta"])
         if COMMANDS["continuous"]:
             pwm.set_pwm(CONTINUOUSPIN, 0, COMMANDS["continuous"])
+    time.sleep(.1)
