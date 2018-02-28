@@ -5,6 +5,7 @@ import math
 import actuatorHelpers as aH
 from pygame.locals import *
 
+LOOPDELAY = .2
 
 wristPan = {
 "maxDegree": 87.0,
@@ -45,7 +46,7 @@ COMMANDS = {
     "wristTilt" : wristTilt["homepos"],
     "wristPan" : wristPan["homepos"],
     "claw" : None,
-    "continuous" : None,
+    "continuous" : 150,
     "l1Theta" : 332,
     "l2Theta" : 415
 }
@@ -104,19 +105,84 @@ if x:
             for i in range(0, j.get_numaxes()):
                 # make sure toggle is past a certain cutoff angle
                 if abs(j.get_axis(i)) >= 0.07:
-                    print (which_toggle[i], j.get_axis(i), i)
-                    
-                    file.seek(0)
+                    #print which_toggle[i], j.get_axis(i)
+                        
+                    if IKMode:
+                        if which_toggle[i] == "RightToggle_vertical":
+                            z += -j.get_axis(i) * .3
+                        elif which_toggle[i] == "RightToggle_horizontal":
+                            x += j.get_axis(i) * .3 
+
+                        (theta1, theta2) = aH.getIKAnglesFromXZ(x,z)
+                    else:
+                        if which_toggle[i] == "RightToggle_vertical":
+                            theta1 += -j.get_axis(i) * math.radians(2)
+                        elif which_toggle[i] == "RightToggle_horizontal":
+                            theta2 += j.get_axis(i) * math.radians(2)
+                        
+                        (x,z) = aH.getXZFromAngles(theta1,theta2)
+                        
+                            
+                    (pos1, pos2) = aH.getActuatorPosFromThetas(theta1, theta2)
+                    #print "GOALPOSs of actuators", pos1, pos2
+                    COMMANDS["l1Theta"] = pos1
+                    COMMANDS["l2Theta"] = pos2
+
+
+                    # wrist
+                    if which_toggle[i] == "LeftToggle_vertical":
+                        COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - j.get_axis(i) * 10)
+                    elif which_toggle[i] == "LeftToggle_horizontal":
+                        COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + j.get_axis(i) * 10)
             
+            COMMANDS["claw"] = 0
+            COMMANDS["continuous"] = continuousModes["stop"]
             for i in range(0, j.get_numbuttons()):
                 if j.get_button(i) != 0:
-                    print (which_button[i], "button Joystick Num:", i)
+                    #print (which_button[i], "button Joystick Num:", i)
 
-                    # write to controlValues.txt which button I'm pressing
-                    file.seek(0)
-                    file.write(str(i))
+                    if which_button[i] == "button_Y":
+                        doMovement = 1
+                    elif which_button[i] == "button_A":
+                        doMovement = 2
+                    elif which_button[i] == "button_X":
+                        doMovement = 3
+                    elif which_button[i] == "button_B":
+                        doMovement = 4
 
-            time.sleep(.1)
+                    if which_button[i] == "button_RT":
+                        COMMANDS["claw"] = 1
+                    elif which_button[i] == "button_LT":
+                        COMMANDS["claw"] = 2
+                        
+
+                    # continuous
+                    if which_button[i] == "button_LB":
+                        COMMANDS["continuous"] = continuousModes["counterclockwise"]
+                    elif which_button[i] == "button_RB":
+                        COMMANDS["continuous"] = continuousModes["clockwise"]
+
+                    if which_button[i] == "button_back":
+                        IKMode = not IKMode
+
+            sendString = "" 
+            sendString += str(doMovement) + " "
+            sendString += str(int(COMMANDS["wristTilt"])) + " "
+            sendString += str(int(COMMANDS["wristPan"])) + " "
+            sendString += str(int(COMMANDS["l1Theta"])) + " "
+            sendString += str(int(COMMANDS["l2Theta"])) + " "
+            sendString += str(int(COMMANDS["continuous"])) + " "
+            sendString += str(int(COMMANDS["claw"])) + " "
+
+            print sendString
+            f = open('controlValues.txt','w')
+            f.write(sendString)
+            f.close()
+
+            time.sleep(LOOPDELAY)
+            
+            pygame.event.pump()
+
 
     except KeyboardInterrupt:
         j.quit()
@@ -224,7 +290,7 @@ else :
         f.write(sendString)
         f.close()
 
-        time.sleep(.4)
+        time.sleep(LOOPDELAY)
         
         pygame.event.pump()
         
