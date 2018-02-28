@@ -12,7 +12,7 @@ MODVALUE = 175619;
 pi = 3.14159265;
 START_OFFSET_ANGLE = pi/2;
 
-legAirSpeed = int(7.0*400);
+legAirSpeed = int(7.0*600);
 landingAngle = 0.349;
 legGroundSpeed = int(legAirSpeed *(2*landingAngle/(2*pi - 2*landingAngle)));
 PROFILE_POSITION_MODE = 1
@@ -26,7 +26,10 @@ BACKRIGHT   = 6;
 accel = 20000;
 deccel = 20000;
 
-tolerance = 30000
+tolerance = 40000
+
+lastGoalPosArray = [0]*6;
+firstMovement = True
 
 
 def getMoveCommandInfo(curMovement, state):
@@ -118,7 +121,7 @@ def getSetupInfo(curMovement, curPos):
 
 # Move legs function implemented in python
 def moveLegs(goalAngles, vels, goClockwises, driveTrain):
-    global pi, landingAngle, legAirSpeed, legGroundSpeed
+    global pi, landingAngle, legAirSpeed, legGroundSpeed, lastGoalPosArray, firstMovement
     
     # set legs to specified position profile
     for i in range(6):
@@ -129,9 +132,21 @@ def moveLegs(goalAngles, vels, goClockwises, driveTrain):
     # and the goalAngle (radians)
     curPosArray = []
     goalPosArray = []
-    for i in range(6):
-        curPosArray.append(driveTrain.getPosition(i + 1));
-        goalPosArray.append(driveTrain.getGoalPos(i + 1, curPosArray[i], goalAngles[i], goClockwises[i]))
+
+    # If it's the first time the legs have been moved, get their actual positions
+    if firstMovement:
+    	for i in range(6):
+            curPosArray.append(driveTrain.getPosition(i + 1));
+            goalPosArray.append(driveTrain.getGoalPos(i + 1, curPosArray[i], goalAngles[i], goClockwises[i]))
+   	    firstMovement = False
+    else:
+        for i in range(6):
+            curPosArray.append(lastGoalPosArray[i]);
+            goalPosArray.append(driveTrain.getGoalPos(i + 1, curPosArray[i], goalAngles[i], goClockwises[i]))
+
+
+	# Store last goal positions
+    lastGoalPosArray = goalPosArray;
 
     # set the position
     for i in range(6):
