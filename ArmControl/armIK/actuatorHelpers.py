@@ -84,7 +84,7 @@ def getLengthFromTheta_l2(theta2):
 
 
 # takes in the x, z position and returns angles to get there
-def getIKAnglesFromPos(x,z):
+def getIKAnglesFromXZ(x,z):
     
     # these define the new x and new z values used for the 2DOF IK calculation
     new_x = x
@@ -104,7 +104,7 @@ def getIKAnglesFromPos(x,z):
 
 
 def getLengthsFromPos(x,z):
-    angles = getIKAnglesFromPos(x,z)
+    angles = getIKAnglesFromXZ(x,z)
     return (getLengthFromTheta_l1(angles[0]), getLengthFromTheta_l2(angles[1]))
 
 
@@ -128,18 +128,38 @@ def getActuatorPosFromThetas(theta1, theta2):
     l1Desired = getLengthFromTheta_l1(theta1)
     l2Desired = getLengthFromTheta_l2(theta2)
 
-    print "lengths:", l1Desired, l2Desired
+    #print "lengths:", l1Desired, l2Desired
 
     return (getActuatorPosFromLength(l1Desired, 1), getActuatorPosFromLength(l2Desired, 2))
+
+def getActuatorPosFromXZ(x,z):
+    (theta1, theta2) = getIKAnglesFromXZ(16.5,14)
+
+    l1Desired = getLengthFromTheta_l1(theta1)
+    l2Desired = getLengthFromTheta_l2(theta2)
+    #print "lengths:", l1Desired, l2Desired
+
+    return (getActuatorPosFromLength(l1Desired, 1), getActuatorPosFromLength(l2Desired, 2))
+
+def getXZFromAngles(theta1,theta2):
+    x1 = L1_LENGTH * math.cos(theta1)
+    z1 = L1_LENGTH * math.sin(theta1)
+
+    x2 = L2_LENGTH * math.cos(theta1 + theta2)
+    z2 = L2_LENGTH * math.sin(theta1 + theta2)
+
+    return (x1 + x2, z1 + z2)
 
 '''
 lengths = getLengthsFromPos(16.5,14)
 print lengths
-angles = getIKAnglesFromPos(16.5,14)
+angles = getIKAnglesFromXZ(16.5,14)
 
 print "Angles", angles, (math.degrees(angles[0]), math.degrees(angles[1]))
 
 print getActuatorPosFromLength(lengths[0], 1)
 print getActuatorPosFromLength(lengths[1], 2)
 '''
-print "angles", getActuatorPosFromThetas(math.radians(45), math.radians(-45))
+#print "angles", getActuatorPosFromThetas(math.radians(45), math.radians(-45))
+
+#print getXZFromAngles(math.radians(90),math.radians(-90))

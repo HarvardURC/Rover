@@ -58,6 +58,8 @@ while True:
     print "Lidar info: ", lidar.getDistance(), lidar.getVelocity()
 
     print("intArray", intArray)
+
+    
     
     time.sleep(.1)
     
