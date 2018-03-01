@@ -1,5 +1,4 @@
-import json
-import time
+mport time
 import pygame
 import math
 import actuatorHelpers as aH
@@ -13,7 +12,8 @@ wristPan = {
 "homeDegree": 0.0,
 "maxpos": 600.0,
 "homepos": 380.0,
-"minpos": 130.0}
+"minpos": 130.0,
+"constdownpos": 132}
 
 wristTilt = {
 "maxDegree": 111.0,
@@ -82,11 +82,11 @@ theta2 = math.radians(-45)
 (x,z) = aH.getXZFromAngles(theta1,theta2)
 
 IKMode = False
-
+alwaysDownMode = False
 
 def convertDegreeToPos(servo, newDegree):
-    if newDegree > servo["maxDegree"] or newDegree < servo["minDegree"]:
-        raise Exception("Cannot move servo to that value!")
+    #if newDegree > servo["maxDegree"] or newDegree < servo["minDegree"]:
+    #    raise Exception("Cannot move servo to that value!")
     
     posOverDegreeRatio = (servo["maxpos"] - servo["minpos"])/float(servo["maxDegree"] - servo["minDegree"])
 
@@ -212,7 +212,6 @@ if x:
         j.quit()
         file.close()
 
-
 else :
     print "Switched to keyboard arrow keys for control"
     while True:
@@ -255,13 +254,13 @@ else :
 
         # wrist
         if keys[K_w]:
-            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] + 4)
+            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] + 8)
         elif keys[K_s]:
-            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - 4)
+            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - 8)
         elif keys[K_a]:
-            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + 4)
+            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + 8)
         elif keys[K_d]:
-            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] - 4)
+            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] - 8)
 
         # actuators
         theta1save = theta1
@@ -280,24 +279,23 @@ else :
                 x += .3
             try:
                 (theta1, theta2) = aH.getIKAnglesFromXZ(x,z)
-            except D:
+            except:
                 x = xsave
                 z = zsave
                 (theta1, theta2) = aH.getIKAnglesFromXZ(x,z)
         else:
             if keys[K_UP]:
-                theta1 += math.radians(2)
+                theta1 += math.radians(1)
             elif keys[K_DOWN]:
-                theta1 -= math.radians(2)
+                theta1 -= math.radians(1)
             elif keys[K_LEFT]:
-                theta2 -= math.radians(2)
+                theta2 -= math.radians(1)
             elif keys[K_RIGHT]:
-                theta2 += math.radians(2)
+                theta2 += math.radians(1)
             
             try:
                 (x,z) = aH.getXZFromAngles(theta1,theta2)
-            except D:
-                print(D)
+            except:
                 theta1 = theta1save 
                 theta2 = theta2save
                 (x,z) = aH.getXZFromAngles(theta1,theta2)
@@ -315,22 +313,29 @@ else :
         
 
         if keys[K_p]:
-            COMMANDS["claw"] = 1
-        elif keys[K_o]:
             COMMANDS["claw"] = 2
+        elif keys[K_o]:
+            COMMANDS["claw"] = 1
         else:
             COMMANDS["claw"] = 0
         
         # go to wrist home pos. h goes to home, g goes to new tilt sensors
         if keys[K_h]:
+            alwaysDownMode = False
             COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], wristTilt["homepos"])
             COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], wristPan["homepos"])
-        elif keys[K_g]:
-            newTiltDegrees = math.degrees(theta1 + theta2) + 90
+        
+        if keys[K_g]:
+            alwaysDownMode = True
+            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], wristTilt["homepos"])
+            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], wristPan["homepos"])
+
+        if alwaysDownMode:
+            newTiltDegrees = math.degrees(theta1 + theta2) + 90 - 10
             newTiltPos = int(convertDegreeToPos(wristTilt, newTiltDegrees))
             #print newTiltPos, newTiltDegrees
             COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], newTiltPos)
-            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], wristPan["homepos"])
+            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], wristPan["constdownpos"])
             
 
         if keys[K_i]:
@@ -349,7 +354,7 @@ else :
         sendString += str(int(COMMANDS["camera1Pan"])) + " " + str(int(COMMANDS["camera1Tilt"])) + " "
         sendString += "-" + str(walkingDirection) + " " + str(walkingSpeed) + '-'
 
-        print sendString
+        #print sendString
         f = open('controlValues.txt','w')
         f.write(sendString)
         f.close()
@@ -357,3 +362,6 @@ else :
         time.sleep(LOOPDELAY)
         
         pygame.event.pump()
+
+
+

@@ -92,3 +92,10 @@ while True:
             pwm.set_pwm(CONTINUOUSPIN, 0, COMMANDS["continuous"])
     time.sleep(.2)
 
+
+
+
+
+
+
+

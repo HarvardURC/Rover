@@ -15,7 +15,7 @@ START_OFFSET_ANGLE = pi/2.0;
 def getGroundSpeed(airSpeed):
     return int(legAirSpeed *(2*landingAngle/(2*pi - 2*landingAngle)));
 
-legAirSpeed = int(7.0*600);
+legAirSpeed = int(2.0*600);
 landingAngle = 0.349;
 legGroundSpeed = getGroundSpeed(legAirSpeed);
 PROFILE_POSITION_MODE = 1
@@ -29,7 +29,7 @@ BACKRIGHT   = 6;
 accel = 20000;
 deccel = 20000;
 
-tolerance = 40000
+tolerance = 30000
 
 lastGoalPosArray = [0]*6;
 firstMovement = True
@@ -138,17 +138,17 @@ def moveLegs(goalAngles, vels, goClockwises, driveTrain):
 
     # If it's the first time the legs have been moved, get their actual positions
     if firstMovement:
-    	for i in range(6):
+        for i in range(6):
             curPosArray.append(driveTrain.getPosition(i + 1));
             goalPosArray.append(driveTrain.getGoalPos(i + 1, curPosArray[i], goalAngles[i], goClockwises[i]))
-   	    firstMovement = False
+            firstMovement = False
     else:
         for i in range(6):
             curPosArray.append(lastGoalPosArray[i]);
             goalPosArray.append(driveTrain.getGoalPos(i + 1, curPosArray[i], goalAngles[i], goClockwises[i]))
 
 
-	# Store last goal positions
+        # Store last goal positions
     lastGoalPosArray = goalPosArray;
 
     # set the position
@@ -191,19 +191,21 @@ while True:
     f = open('controlValues.txt','r')  
     readStr = f.read()
     f.close()
-    walkingString = readStr.split ("-")[1]
-    walkingCommands = walkingString.split(" ")
-    legAirSpeed = float(walkingCommands[1])
-    legGroundSpeed = getGroundSpeed(legAirSpeed)
-    direction = walkingCommands[0]
-    if direction == "w":
-        doMovement = 'FORWARD' 
-    elif direction == "s":
-        doMovement = 'BACKWARD'
-    elif direction == "a":
-        doMovement = 'ROTATECOUNTERCLOCKWISE'
-    elif direction == "d":
-        doMovement = 'ROTATECLOCKWISE'
+    #print readStr
+    if len(readStr.split("-")) > 1:
+        walkingString = readStr.split("-")[1]
+        walkingCommands = walkingString.split(" ")
+        legAirSpeed = int(float(walkingCommands[1]))
+        legGroundSpeed = getGroundSpeed(legAirSpeed)
+        direction = walkingCommands[0]
+        if direction == "w":
+                doMovement = 'FORWARD' 
+        elif direction == "s":
+                doMovement = 'BACKWARD'
+        elif direction == "a":
+                doMovement = 'ROTATECOUNTERCLOCKWISE'
+        elif direction == "d":
+                doMovement = 'ROTATECLOCKWISE'
     
     # state 0 setups rover to new doMovement command depending on current configuration
     if state == 0:
@@ -246,4 +248,8 @@ while True:
         if driveTrain.areAllCloseEnough(tolerance):
             state = 1
             moveCommandFlag = True
+
+
+
+
 
