@@ -35,7 +35,7 @@ GPIO.setup(16, GPIO.OUT)
 
 
 # GET PINS
-(CONTINUOUSPIN, L1PIN, L2PIN, WRISTPANPIN, WRISTTILTPIN) = (0,1,2,3,4)
+(CONTINUOUSPIN, L1PIN, L2PIN, WRISTPANPIN, WRISTTILTPIN, CAMERA1PANPIN, CAMERA1TILTPIN) = (0,1,2,3,4,5,6)
 
 COMMANDS = {}
 
@@ -47,6 +47,8 @@ def getCommands(intArray):
     COMMANDS["l2Theta"] = intArray[3]
     COMMANDS["continuous"] = intArray[4]
     COMMANDS["claw"] = intArray[5]
+    COMMANDS["camera1Pan"] = intArray[6]
+    COMMANDS["camera1Tilt"] = intArray[7]
     return COMMANDS
 
 
@@ -56,7 +58,7 @@ while True:
     f.close()
 
     if len(readStr.split(" ")) > 1:
-        intArray = [int(x) for x in readStr.split(" ")[:6]]
+        intArray = [int(x) for x in readStr.split(" ")[:8]]
         #print intArray
 
         # GET SERVO COMMANDS
@@ -68,6 +70,10 @@ while True:
             pwm.set_pwm(WRISTTILTPIN, 0, COMMANDS["wristTilt"])
         if COMMANDS["wristPan"]:
             pwm.set_pwm(WRISTPANPIN, 0, COMMANDS["wristPan"])
+        if COMMANDS["camera1Pan"]:
+            pwm.set_pwm(CAMERA1PANPIN, 0, COMMANDS["camera1Pan"])
+        if COMMANDS["camera1Tilt"]:
+            pwm.set_pwm(CAMERA1TILTPIN, 0, COMMANDS["camera1Tilt"]) 
         if COMMANDS["claw"]:
             if COMMANDS["claw"] == 2:
                 GPIO.output(19, False)
@@ -78,12 +84,11 @@ while True:
         else:
             GPIO.output(19, False)
             GPIO.output(16, False)
-
         if COMMANDS["l1Theta"]:
             pwm.set_pwm(L1PIN, 0, COMMANDS["l1Theta"])
         if COMMANDS["l2Theta"]:
             pwm.set_pwm(L2PIN, 0, COMMANDS["l2Theta"])
         if COMMANDS["continuous"]:
             pwm.set_pwm(CONTINUOUSPIN, 0, COMMANDS["continuous"])
-    time.sleep(.3)
+    time.sleep(.2)
 

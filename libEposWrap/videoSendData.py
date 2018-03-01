@@ -23,6 +23,24 @@ wristTilt = {
 "homepos": 309.0,
 "minpos": 190.0}
 
+# TODO: set these to their actual values
+camera1Pan = {
+"maxDegree": 111.0,
+"minDegree": -45.0,
+"homeDegree": 0.0,
+"maxpos": 600.0,
+"homepos": 300.0,
+"minpos": 140.0}
+
+camera1Tilt = {
+"maxDegree": 111.0,
+"minDegree": -45.0,
+"homeDegree": 0.0,
+"maxpos": 400.0,
+"homepos": 300.0,
+"minpos": 250.0}
+
+
 # continuous servo 
 continuousModes = {
     "clockwise": 300,
@@ -48,7 +66,9 @@ COMMANDS = {
     "claw" : None,
     "continuous" : 150,
     "l1Theta" : 332,
-    "l2Theta" : 415
+    "l2Theta" : 415,
+    "camera1Pan": camera1Pan["homepos"],
+    "camera1Tilt": camera1Tilt["homepos"]
 }
 
 walkingDirection = "w"
@@ -56,8 +76,10 @@ walkingSpeed = 4000
 MAXWALKINGSPEED = 5000
 MINWALKINGSPEED = 500
 
+
 theta1 = math.radians(45)
 theta2 = math.radians(-45)
+(x,z) = aH.getXZFromAngles(theta1,theta2)
 
 IKMode = False
 
@@ -212,6 +234,17 @@ else :
             if walkingSpeed * 1.02 < MAXWALKINGSPEED:
                 walkingSpeed *= 1.015
 
+        # camera
+        if keys[K_PERIOD]:
+            COMMANDS["camera1Pan"] = moveIfSafe(camera1Pan, COMMANDS["camera1Pan"], COMMANDS["camera1Pan"] + 4)
+        elif keys[K_COMMA]:
+            COMMANDS["camera1Pan"] = moveIfSafe(camera1Pan, COMMANDS["camera1Pan"], COMMANDS["camera1Pan"] - 4)
+        elif keys[K_SEMICOLON]:
+            COMMANDS["camera1Tilt"] = moveIfSafe(camera1Tilt, COMMANDS["camera1Tilt"], COMMANDS["camera1Tilt"] + 4)
+        elif keys[K_SLASH]:
+            COMMANDS["camera1Tilt"] = moveIfSafe(camera1Tilt, COMMANDS["camera1Tilt"], COMMANDS["camera1Tilt"] - 4)
+            
+
         # continuous
         if keys[K_z]:
             COMMANDS["continuous"] = continuousModes["counterclockwise"]
@@ -222,15 +255,20 @@ else :
 
         # wrist
         if keys[K_w]:
-            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] + 10)
+            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] + 4)
         elif keys[K_s]:
-            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - 10)
+            COMMANDS["wristTilt"] = moveIfSafe(wristTilt, COMMANDS["wristTilt"], COMMANDS["wristTilt"] - 4)
         elif keys[K_a]:
-            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + 10)
+            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] + 4)
         elif keys[K_d]:
-            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] - 10)
+            COMMANDS["wristPan"] = moveIfSafe(wristPan, COMMANDS["wristPan"], COMMANDS["wristPan"] - 4)
 
         # actuators
+        theta1save = theta1
+        theta2save = theta2
+        xsave = x
+        zsave = z
+
         if IKMode:
             if keys[K_UP]:
                 z += .3
@@ -240,29 +278,45 @@ else :
                 x -= .3 
             elif keys[K_RIGHT]:
                 x += .3
-
-            (theta1, theta2) = aH.getIKAnglesFromXZ(x,z)
+            try:
+                (theta1, theta2) = aH.getIKAnglesFromXZ(x,z)
+            except D:
+                x = xsave
+                z = zsave
+                (theta1, theta2) = aH.getIKAnglesFromXZ(x,z)
         else:
             if keys[K_UP]:
                 theta1 += math.radians(2)
             elif keys[K_DOWN]:
                 theta1 -= math.radians(2)
             elif keys[K_LEFT]:
-                theta2 += math.radians(2)
-            elif keys[K_RIGHT]:
                 theta2 -= math.radians(2)
+            elif keys[K_RIGHT]:
+                theta2 += math.radians(2)
             
-            (x,z) = aH.getXZFromAngles(theta1,theta2)
-            
-                
-        (pos1, pos2) = aH.getActuatorPosFromThetas(theta1, theta2)
-        #print "GOALPOSs of actuators", pos1, pos2
-        COMMANDS["l1Theta"] = pos1
-        COMMANDS["l2Theta"] = pos2
+            try:
+                (x,z) = aH.getXZFromAngles(theta1,theta2)
+            except D:
+                print(D)
+                theta1 = theta1save 
+                theta2 = theta2save
+                (x,z) = aH.getXZFromAngles(theta1,theta2)
+   
+        try:
+            (pos1, pos2) = aH.getActuatorPosFromThetas(theta1, theta2)
+            COMMANDS["l1Theta"] = pos1
+            COMMANDS["l2Theta"] = pos2
+        except:
+            x = xsave
+            z = zsave
+            theta1 = theta1save
+            theta2 = theta2save
+        
+        
 
-        if keys[K_o]:
+        if keys[K_p]:
             COMMANDS["claw"] = 1
-        elif keys[K_p]:
+        elif keys[K_o]:
             COMMANDS["claw"] = 2
         else:
             COMMANDS["claw"] = 0
@@ -292,6 +346,7 @@ else :
         sendString += str(int(COMMANDS["l2Theta"])) + " "
         sendString += str(int(COMMANDS["continuous"])) + " "
         sendString += str(int(COMMANDS["claw"])) + " "
+        sendString += str(int(COMMANDS["camera1Pan"])) + " " + str(int(COMMANDS["camera1Tilt"])) + " "
         sendString += "-" + str(walkingDirection) + " " + str(walkingSpeed) + '-'
 
         print sendString
@@ -302,7 +357,3 @@ else :
         time.sleep(LOOPDELAY)
         
         pygame.event.pump()
-
-
-
-
