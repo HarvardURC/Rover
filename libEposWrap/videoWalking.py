@@ -2,6 +2,12 @@ import ctypes
 import constants
 import DriveTrain
 import helperFunctions as hF
+import serial
+
+
+
+ser = serial.Serial('/dev/ttyACM0',9600)
+s = [0]
 
 state = 0
 doMovement = 'FORWARD'
@@ -80,7 +86,14 @@ def getMoveCommandInfo(curMovement, state):
         elif (state == 2):
             legAngles = [b, a, b, b, a, b]
             legSpeeds = [air, ground, air, ground, air, ground]
-
+    elif curMovement == 'STOP':
+        goClockwises = [False, False, False, True, True, True]
+        if (state == 1):
+            legAngles = [a, b, a, a, b, a]
+            legSpeeds = [0, 0, 0, 0, 0, 0]
+        elif (state == 2):
+            legAngles = [b, a, b, b, a, b]
+            legSpeeds = [0, 0, 0, 0, 0, 0]       
     # setup object
     m = {}
     m["legAngles"] = legAngles
@@ -113,7 +126,10 @@ def getSetupInfo(curMovement, curPos):
         goClockwises = [False, False, False, True, True, True]
         legAngles = [b, a, b, b, a, b]
         legSpeeds = [air, ground, air, ground, air, ground]
-    
+    elif curMovement == 'STOP':
+        goClockwises = [False, False, False, True, True, True]
+        legAngles = [b, a, b, b, a, b]
+        legSpeeds = [0, 0, 0, 0, 0, 0]
     # setup object
     m = {}
     m["legAngles"] = legAngles
@@ -188,16 +204,20 @@ moveCommandFlag = True
 
 # --------- STATE MACHINE ------------
 while True:
-    f = open('controlValues.txt','r')  
-    readStr = f.read()
-    f.close()
+    #f = open('controlValues.txt','r')  
+    #readStr = f.read()
+    #f.close()
+    read_serial=ser.readline()
+    s[0] = str(int (ser.readline(),16))
+    print('s0' +s[0] )
+    print('read_serial' +read_serial+ '/n')
     #print readStr
-    if len(readStr.split("-")) > 1:
-        walkingString = readStr.split("-")[1]
-        walkingCommands = walkingString.split(" ")
-        legAirSpeed = int(float(walkingCommands[1]))
-        legGroundSpeed = getGroundSpeed(legAirSpeed)
-        direction = walkingCommands[0]
+    # if len(readStr.split("-")) > 1:
+    #     walkingString = readStr.split("-")[1]
+    #     walkingCommands = walkingString.split(" ")
+    #     legAirSpeed = int(float(walkingCommands[1]))
+    #     legGroundSpeed = getGroundSpeed(legAirSpeed)
+    #     direction = walkingCommands[0]
         if direction == "w":
                 doMovement = 'FORWARD' 
         elif direction == "s":
@@ -206,6 +226,8 @@ while True:
                 doMovement = 'ROTATECOUNTERCLOCKWISE'
         elif direction == "d":
                 doMovement = 'ROTATECLOCKWISE'
+        elif direction == "x":
+                doMovement = 'STOP'
     
     # state 0 setups rover to new doMovement command depending on current configuration
     if state == 0:
@@ -213,7 +235,8 @@ while True:
         if moveCommandFlag:
             curPos = [driveTrain.getPosition(legID) for legID in range(1,7)]
             m = getSetupInfo(doMovement, curPos)
-            moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
+            if doMovement != 'STOP':
+                moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
 
         if moveCommandFlag:
             moveCommandFlag = False
@@ -226,7 +249,8 @@ while True:
     elif state == 1:
         if moveCommandFlag:
             m = getMoveCommandInfo(doMovement, 1)
-            moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
+            if doMovement != 'STOP':
+                moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
         
         if moveCommandFlag:
             moveCommandFlag = False
@@ -240,7 +264,8 @@ while True:
     elif state == 2:
         if moveCommandFlag:
             m = getMoveCommandInfo(doMovement, 2)
-            moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
+            if doMovement != 'STOP':
+                moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
 
         if moveCommandFlag:
             moveCommandFlag = False
