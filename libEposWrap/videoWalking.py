@@ -5,7 +5,6 @@ import helperFunctions as hF
 import serial
 
 
-
 ser = serial.Serial('/dev/ttyACM0',9600)
 s = [0]
 
@@ -208,9 +207,11 @@ while True:
     #readStr = f.read()
     #f.close()
     read_serial=ser.readline()
-    s[0] = str(int (ser.readline(),16))
-    print('s0' +s[0] )
-    print('read_serial' +read_serial+ '/n')
+    direction = read_serial.strip('\t\n\r')
+    #s[0] = str(int (ser.readline(),16))
+    #print('s0' +s[0] )
+    print(read_serial)
+    print(doMovement)
     #print readStr
     # if len(readStr.split("-")) > 1:
     #     walkingString = readStr.split("-")[1]
@@ -218,16 +219,16 @@ while True:
     #     legAirSpeed = int(float(walkingCommands[1]))
     #     legGroundSpeed = getGroundSpeed(legAirSpeed)
     #     direction = walkingCommands[0]
-        if direction == "w":
-                doMovement = 'FORWARD' 
-        elif direction == "s":
-                doMovement = 'BACKWARD'
-        elif direction == "a":
-                doMovement = 'ROTATECOUNTERCLOCKWISE'
-        elif direction == "d":
-                doMovement = 'ROTATECLOCKWISE'
-        elif direction == "x":
-                doMovement = 'STOP'
+    if direction == "w":
+            doMovement = 'FORWARD' 
+    elif direction == "s":
+            doMovement = 'BACKWARD'
+    elif direction == "a":
+            doMovement = 'ROTATECOUNTERCLOCKWISE'
+    elif direction == "d":
+            doMovement = 'ROTATECLOCKWISE'
+    elif direction == "x":
+            doMovement = 'STOP'
     
     # state 0 setups rover to new doMovement command depending on current configuration
     if state == 0:
