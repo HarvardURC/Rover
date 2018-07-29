@@ -206,12 +206,17 @@ while True:
     #f = open('controlValues.txt','r')  
     #readStr = f.read()
     #f.close()
+    commands=[]
     read_serial=ser.readline()
-    direction = read_serial.strip('\t\n\r')
+    if len(read_serial.split("-")) > 1:
+        commands = read_serial.split("-")
+        legAirSpeed = int(float(commands[1].strip('\t\n\r')))
+        legGroundSpeed = getGroundSpeed(legAirSpeed)
+        direction = commands[0].strip('\t\n\r')
     #s[0] = str(int (ser.readline(),16))
     #print('s0' +s[0] )
-    print(read_serial)
-    print(doMovement)
+    print(direction)
+    print(legAirSpeed)
     #print readStr
     # if len(readStr.split("-")) > 1:
     #     walkingString = readStr.split("-")[1]
