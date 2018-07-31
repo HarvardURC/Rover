@@ -30,7 +30,7 @@ void loop() {
   ch2 = pulseIn(3, HIGH); // channel 2  left and right on right joystick
   ch3 = pulseIn(4, HIGH); // channel 3 up and down on right joystick 
   ch5 = pulseIn(5, HIGH);  //swtich to forward 
-  chswitch = pulseIn(6, HIGH); // three way swtich for grabber
+  chswitch = pulseIn(6, HIGH); // three way swtich for grabber  979-1480ish-1991-
   int speed = map(ch1, 980, 2000, 1000, 3000);
   int servo1 = map(ch1, 980, 2000, 0, 180);
   int servo2 = map(ch2, 980, 2000, 0, 180); 
@@ -40,8 +40,8 @@ void loop() {
   // Serial.print(ch2);
   // Serial.print("Channel 3 ");
   // Serial.print(ch3);
-  Serial.print("chswitch ");
-  Serial.println(chswitch);
+  //Serial.print("chswitch ");
+  //Serial.println(chswitch);
   if(chswitch >= 1900){
   		Serial.print("x-");   
 		Serial.println(servo1);
