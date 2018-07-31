@@ -60,6 +60,7 @@ def getCommands(intArray):
 while True:
     commands=[]
     read_serial=ser.readline()
+    print('test')
     if len(read_serial.split("-")) > 1:
         commands = read_serial.split("-")
         direction = commands[0].strip('\t\n\r')
