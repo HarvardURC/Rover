@@ -37,8 +37,8 @@ void loop() {
   // Serial.print(ch2);
   // Serial.print("Channel 3 ");
   // Serial.print(ch3);
-  Serial.print("chswtich ");
-  Serial.println(chswtich);
+  Serial.print("chswitch ");
+  Serial.println(chswitch);
   if(chswitch >= 1900){
   		Serial.print("x-");   
 		Serial.println(servo1);
