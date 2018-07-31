@@ -12,6 +12,11 @@ import json
 # Import the PCA9685 module.
 import Adafruit_PCA9685
 
+import serial
+
+
+ser = serial.Serial('/dev/ttyACM0',9600)
+
 # Initialise the PCA9685 using the default address (0x40).
 pwm = Adafruit_PCA9685.PCA9685()
 
@@ -53,43 +58,55 @@ def getCommands(intArray):
 
 
 while True:
-    f = open('controlValues.txt','r')
-    readStr = f.read()
-    f.close()
-
-    if len(readStr.split(" ")) > 1:
-        intArray = [int(x) for x in readStr.split(" ")[:8]]
-        #print intArray
-
-        # GET SERVO COMMANDS
-        COMMANDS = getCommands(intArray)
-        print COMMANDS
-
+    commands=[]
+    read_serial=ser.readline()
+    if len(read_serial.split("-")) > 1:
+        commands = read_serial.split("-")
+        legAirSpeed = int(float(commands[1].strip('\t\n\r')))
+        legGroundSpeed = getGroundSpeed(legAirSpeed)
+        direction = commands[0].strip('\t\n\r')
+        angle = int(float(commands[1].strip('\t\n\r')))
+    # if len(readStr.split(" ")) > 1:
+    #     intArray = [int(x) for x in readStr.split(" ")[:8]]
+    #     #print intArray
+    #     # GET SERVO COMMANDS
+    #     COMMANDS = getCommands(intArray)
+    #     print COMMANDS
+    if direction == "x":
+        pwm.set_pwm(L1PIN, 0, angle)
+        pwm.set_pwm(CONTINUOUSPIN, 0, 0)
+    elif direction == "c":
+        pwm.set_pwm(L2PIN, 0, angle)
+        pwm.set_pwm(CONTINUOUSPIN, 0, 0)
+    elif direction == "z":
+        pwm.set_pwm(CONTINUOUSPIN, 0, angle)
+    else:
+        pwm.set_pwm(CONTINUOUSPIN, 0, 0)
         # MOVE SERVOS
-        if COMMANDS["wristTilt"]:
-            pwm.set_pwm(WRISTTILTPIN, 0, COMMANDS["wristTilt"])
-        if COMMANDS["wristPan"]:
-            pwm.set_pwm(WRISTPANPIN, 0, COMMANDS["wristPan"])
-        if COMMANDS["camera1Pan"]:
-            pwm.set_pwm(CAMERA1PANPIN, 0, COMMANDS["camera1Pan"])
-        if COMMANDS["camera1Tilt"]:
-            pwm.set_pwm(CAMERA1TILTPIN, 0, COMMANDS["camera1Tilt"]) 
-        if COMMANDS["claw"]:
-            if COMMANDS["claw"] == 2:
-                GPIO.output(19, False)
-                GPIO.output(16, True)
-            elif COMMANDS["claw"] == 1:
-                GPIO.output(19, True)
-                GPIO.output(16, False)
-        else:
-            GPIO.output(19, False)
-            GPIO.output(16, False)
-        if COMMANDS["l1Theta"]:
-            pwm.set_pwm(L1PIN, 0, COMMANDS["l1Theta"])
-        if COMMANDS["l2Theta"]:
-            pwm.set_pwm(L2PIN, 0, COMMANDS["l2Theta"])
-        if COMMANDS["continuous"]:
-            pwm.set_pwm(CONTINUOUSPIN, 0, COMMANDS["continuous"])
+        # if COMMANDS["wristTilt"]:
+        #     pwm.set_pwm(WRISTTILTPIN, 0, COMMANDS["wristTilt"])
+        # if COMMANDS["wristPan"]:
+        #     pwm.set_pwm(WRISTPANPIN, 0, COMMANDS["wristPan"])
+        # if COMMANDS["camera1Pan"]:
+        #     pwm.set_pwm(CAMERA1PANPIN, 0, COMMANDS["camera1Pan"])
+        # if COMMANDS["camera1Tilt"]:
+        #     pwm.set_pwm(CAMERA1TILTPIN, 0, COMMANDS["camera1Tilt"]) 
+        # if COMMANDS["claw"]:
+        #     if COMMANDS["claw"] == 2:
+        #         GPIO.output(19, False)
+        #         GPIO.output(16, True)
+        #     elif COMMANDS["claw"] == 1:
+        #         GPIO.output(19, True)
+        #         GPIO.output(16, False)
+        # else:
+        #     GPIO.output(19, False)
+        #     GPIO.output(16, False)
+        # if COMMANDS["l1Theta"]:
+        #     pwm.set_pwm(L1PIN, 0, COMMANDS["l1Theta"])
+        # if COMMANDS["l2Theta"]:
+        #     pwm.set_pwm(L2PIN, 0, COMMANDS["l2Theta"])
+        # if COMMANDS["continuous"]:
+        #     pwm.set_pwm(CONTINUOUSPIN, 0, COMMANDS["continuous"])
     time.sleep(.2)
 
 
