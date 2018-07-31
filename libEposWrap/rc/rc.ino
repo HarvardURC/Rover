@@ -2,6 +2,7 @@
 int ch1; // Here's where we'll keep our channel values
 int ch2;
 int ch3;
+int ch5;
 int chswitch;
 int forwardCutoff = 1400;
 int backwardCutoff = 1000;
@@ -14,8 +15,10 @@ int rightCutoff = 1530;
 void setup() {
 
   pinMode(2, INPUT); // Set our input pins as such
-  pinMode(4, INPUT);
   pinMode(3, INPUT);
+  pinMode(4, INPUT);
+  pinMode(5, INPUT);
+  pinMode(6, INPUT);
 
   Serial.begin(9600); // Pour a bowl of Serial
 
