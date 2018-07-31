@@ -62,8 +62,6 @@ while True:
     read_serial=ser.readline()
     if len(read_serial.split("-")) > 1:
         commands = read_serial.split("-")
-        legAirSpeed = int(float(commands[1].strip('\t\n\r')))
-        legGroundSpeed = getGroundSpeed(legAirSpeed)
         direction = commands[0].strip('\t\n\r')
         angle = int(float(commands[1].strip('\t\n\r')))
     # if len(readStr.split(" ")) > 1:
