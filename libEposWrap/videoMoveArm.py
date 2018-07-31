@@ -60,7 +60,7 @@ def getCommands(intArray):
 while True:
     commands=[]
     read_serial=ser.readline()
-    print('test')
+
     if len(read_serial.split("-")) > 1:
         commands = read_serial.split("-")
         direction = commands[0].strip('\t\n\r')
@@ -71,6 +71,8 @@ while True:
     #     # GET SERVO COMMANDS
     #     COMMANDS = getCommands(intArray)
     #     print COMMANDS
+    print('dir' + direction )
+    print(' angle: S' + angle)
     if direction == "x":
         pwm.set_pwm(L1PIN, 0, angle)
         pwm.set_pwm(CONTINUOUSPIN, 0, 0)
