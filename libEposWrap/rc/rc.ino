@@ -28,12 +28,12 @@ void loop() {
 
   ch1 = pulseIn(2, HIGH); // throttle
   ch2 = pulseIn(3, HIGH); // channel 2  left and right on right joystick
-  ch3 = pulseIn(4, HIGH); // channel 3 up and down on right joystick 
+  //ch3 = pulseIn(4, HIGH); // channel 3 up and down on right joystick 
   ch5 = pulseIn(5, HIGH);  //swtich to forward 
   chswitch = pulseIn(6, HIGH); // three way swtich for grabber  979-1480ish-1991-
   int speed = map(ch1, 980, 2000, 1000, 3000);
-  int servo1 = map(ch1, 980, 2000, 0, 180);
-  int servo2 = map(ch2, 980, 2000, 0, 180); 
+  int servo1 = map(ch1, 980, 2000, 275, 365);
+  //int servo2 = map(ch2, 980, 2000, 0, 180); 
   // Serial.print("Channel 1 ");
   // Serial.print(ch1);
   // Serial.print("Channel 2 ");
