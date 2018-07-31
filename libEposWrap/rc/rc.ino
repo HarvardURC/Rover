@@ -26,7 +26,7 @@ void loop() {
   ch1 = pulseIn(2, HIGH); // Read the pulse width of 
   ch2 = pulseIn(4, HIGH); // each channel
   ch3 = pulseIn(3, HIGH);
-  chswitch = pulseIn(5, HIGH);
+  chswitch = pulseIn(6, HIGH);
   int speed = map(ch1, 980, 2000, 1000, 3000);
   int servo1 = map(ch1, 980, 2000, 0, 180);
   int servo2 = map(ch2, 980, 2000, 0, 180); 
@@ -34,8 +34,8 @@ void loop() {
 // Serial.print(ch1);
 // Serial.print("Channel 2 ");
 // Serial.print(ch2);
-  Serial.print("Channel 3 ");
-  Serial.println(ch3);
+  Serial.print("chswtich ");
+  Serial.println(chswtich);
   if(chswitch >= 1900){
   		Serial.print("x-");   
 		Serial.println(servo1);
