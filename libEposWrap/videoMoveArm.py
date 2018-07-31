@@ -72,7 +72,7 @@ while True:
     #     COMMANDS = getCommands(intArray)
     #     print COMMANDS
     print('dir' + direction )
-    print(' angle: S' + angle)
+    print(' angle: S' + str(angle))
     if direction == "x":
         pwm.set_pwm(L1PIN, 0, angle)
         pwm.set_pwm(CONTINUOUSPIN, 0, 0)
