@@ -277,7 +277,8 @@ while True:
     read_serial=ser.readline()
     if len(read_serial.split("-")) > 1:
         commands = read_serial.split("-")
-        legAirSpeed, angle = int(float(commands[1].strip('\t\n\r')))
+        legAirSpeed = int(float(commands[1].strip('\t\n\r')))
+        angle = legAirSpeed
         legGroundSpeed = getGroundSpeed(legAirSpeed)
         direction = commands[0].strip('\t\n\r')
     
@@ -294,7 +295,7 @@ while True:
     # else:
     #     pwm.set_pwm(CONTINUOUSPIN, 0, 0)
 
-    CONTINUOUSSERVOSTOPVALUE = 140
+    CONTINUOUSSERVOSTOPVALUE = 150
     if direction == "w":
             doMovement = 'FORWARD'
             pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE) 
@@ -312,8 +313,8 @@ while True:
             pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
     if direction == "c": # arm control mode (next 5 cases) case 1-4 servos in arm, 5 is gripper 
             doMovement = 'STOP' #(linear acuator 1 (bigger one))
-            if(angle > 475): # hard check to make sure it doesn't break stuff
-                angle = 475
+            if(angle > 365): # hard check to make sure it doesn't break stuff
+                angle = 365
             elif(angle < 275):
                 angle = 275
             pwm.set_pwm(L1PIN, 0, angle)
@@ -321,8 +322,8 @@ while True:
             doMovement = 'STOP'
             if(angle > 475):  
                 angle = 475
-            elif(angle < 275):
-                angle = 275
+            elif(angle < 250):
+                angle = 250
             pwm.set_pwm(L2PIN, 0, angle)
     if direction == "b": #rotate base motor
             doMovement = 'STOP'
@@ -333,18 +334,21 @@ while True:
             pwm.set_pwm(CONTINUOUSPIN, 0, angle)
     if direction == "n": #wrist tilt
             doMovement = 'STOP'
-            if(angle > 520):  
-                angle = 520
-            elif(angle < 150):
-                angle = 100
+            if(angle > 600):  
+                angle = 600
+            elif(angle < 190):
+                angle = 190
             pwm.set_pwm(wristTilt, 0, angle)
+            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
+
     if direction == "m": #wrist pan
             doMovement = 'STOP'
-            if(angle > 520):  
-                angle = 520
-            elif(angle < 150):
-                angle = 100
+            if(angle > 600):  
+                angle = 600
+            elif(angle < 130):
+                angle = 130
             pwm.set_pwm(wristPan, 0, angle)
+            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
     if direction == "j":
         GPIO.output(16, True)
         GPIO.output(19, False)
