@@ -338,8 +338,8 @@ while True:
                 angle = 600
             elif(angle < 190):
                 angle = 190
-            pwm.set_pwm(wristTilt, 0, angle)
-            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
+            pwm.set_pwm(WRISTTILTPIN, 0, angle)
+            #pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
 
     if direction == "m": #wrist pan
             doMovement = 'STOP'
@@ -347,17 +347,15 @@ while True:
                 angle = 600
             elif(angle < 130):
                 angle = 130
-            pwm.set_pwm(wristPan, 0, angle)
-            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
-    if direction == "j":
-        GPIO.output(16, True)
-        GPIO.output(19, False)
-    elif direction == "k":
-        GPIO.output(19, True)
-        GPIO.output(16, False)
-    elif direction == "l":
-        GPIO.output(16, False)
-        GPIO.output(19, False)
+            pwm.set_pwm(WRISTPANPIN, 0, angle)
+            #pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
+    if direction == "l":
+            doMovement = 'STOP'
+            if(angle > 400):  
+                angle = 400
+            elif(angle < 200):
+                angle = 200
+            pwm.set_pwm(7, 0, angle)
     # -----STATE MACHINE--------
     # state 0 setups rover to new doMovement command depending on current configuration
     if state == 0:

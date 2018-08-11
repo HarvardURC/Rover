@@ -55,7 +55,7 @@ void loop() {
   int servoWristPan = map(ch2, 980, 2000, servoWristPanMin, servoWristPanMax); //again need to CHANGE last two (min max args)
   int servoWristTilt = map(ch3, 980, 2000, servoWristTiltMin, servoWristTiltMax); 
   int servoContinous = map(ch4, 980, 2000, servoContinousMin, servoContinousMax); // increase last 2 args to decrease dead zone
-  int gripper = map(ch1, 980, 2000, 0, 100);
+  int gripper = map(ch1, 980, 2000, 400, 200);
   // debugging stuff below
   //int servo2 = map(ch2, 980, 2000, 0, 180); 
   // Serial.print("Channel 1 ");
@@ -127,17 +127,9 @@ void loop() {
   } 
   else if(chswitch >= 1900) // in arm mode 2. (gripper and wrist pan/ wrist tilt)
   { // basically higher precision mode
-  if(gripper <= 60 && gripper >=40){
+  if(gripper < 380){
     Serial.print("l-");
-    Serial.println(0);
-  }
-  else if(gripper > 60 ){
-    Serial.print("k-");
-    Serial.println(0);
-  }
-  else if(gripper < 40){
-    Serial.print("j-");
-    Serial.println(0);
+    Serial.println(gripper);
   }
    Serial.print("n-");   
    Serial.println(servoWristTilt);
