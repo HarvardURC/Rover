@@ -273,135 +273,140 @@ moveCommandFlag = True
 
 
 while True:
-    commands=[]
-    read_serial=ser.readline()
-    if len(read_serial.split("-")) > 1:
-        commands = read_serial.split("-")
-        legAirSpeed = int(float(commands[1].strip('\t\n\r')))
-        angle = legAirSpeed
-        legGroundSpeed = getGroundSpeed(legAirSpeed)
-        direction = commands[0].strip('\t\n\r')
+    try:
+        commands=[]
+        read_serial=ser.readline()
+        if len(read_serial.split("-")) > 1:
+            commands = read_serial.split("-")
+            legAirSpeed = int(float(commands[1].strip('\t\n\r')))
+            angle = legAirSpeed
+            legGroundSpeed = getGroundSpeed(legAirSpeed)
+            direction = commands[0].strip('\t\n\r')
+        
+        # print('dir' + direction )
+        # print(' angle: S' + str(angle))
+        # if direction == "x":
+        #     pwm.set_pwm(L1PIN, 0, angle)
+        #     pwm.set_pwm(CONTINUOUSPIN, 0, 0)
+        # elif direction == "c":
+        #     pwm.set_pwm(L2PIN, 0, angle)
+        #     pwm.set_pwm(CONTINUOUSPIN, 0, 0)
+        # elif direction == "z":
+        #     pwm.set_pwm(CONTINUOUSPIN, 0, angle)
+        # else:
+        #     pwm.set_pwm(CONTINUOUSPIN, 0, 0)
+
+        CONTINUOUSSERVOSTOPVALUE = 150
+        if direction == "w":
+                doMovement = 'FORWARD'
+                pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE) 
+        elif direction == "s":
+                doMovement = 'BACKWARD'
+                pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
+        elif direction == "a":
+                doMovement = 'ROTATECOUNTERCLOCKWISE'
+                pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
+        elif direction == "d":
+                doMovement = 'ROTATECLOCKWISE'
+                pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
+        elif direction == "x":
+                doMovement = 'STOP'
+                pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
+        if direction == "c": # arm control mode (next 5 cases) case 1-4 servos in arm, 5 is gripper 
+                doMovement = 'STOP' #(linear acuator 1 (bigger one))
+                if(angle > 365): # hard check to make sure it doesn't break stuff
+                    angle = 365
+                elif(angle < 275):
+                    angle = 275
+                pwm.set_pwm(L1PIN, 0, angle)
+        if direction == "v": #linear actuator 2 (smaller one)
+                doMovement = 'STOP'
+                if(angle > 475):  
+                    angle = 475
+                elif(angle < 250):
+                    angle = 250
+                pwm.set_pwm(L2PIN, 0, angle)
+        if direction == "b": #rotate base motor
+                doMovement = 'STOP'
+                if(angle > 225):  
+                    angle = 225
+                elif(angle < 100):
+                    angle = 100
+                pwm.set_pwm(CONTINUOUSPIN, 0, angle)
+        if direction == "n": #wrist tilt
+                doMovement = 'STOP'
+                if(angle > 600):  
+                    angle = 600
+                elif(angle < 190):
+                    angle = 190
+                pwm.set_pwm(WRISTTILTPIN, 0, angle)
+                #pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
+
+        if direction == "m": #wrist pan
+                doMovement = 'STOP'
+                if(angle > 600):  
+                    angle = 600
+                elif(angle < 130):
+                    angle = 130
+                pwm.set_pwm(WRISTPANPIN, 0, angle)
+                #pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
+        if direction == "l":
+                doMovement = 'STOP'
+                if(angle > 400):  
+                    angle = 400
+                elif(angle < 200):
+                    angle = 200
+                pwm.set_pwm(7, 0, angle)
+        # -----STATE MACHINE--------
+        # state 0 setups rover to new doMovement command depending on current configuration
+        if state == 0:
+            # stateCommandCalled is meant so that moveRightLegs and moveLeftLegs are only called once per state
+            if moveCommandFlag:
+                curPos = [driveTrain.getPosition(legID) for legID in range(1,7)]
+                m = getSetupInfo(doMovement, curPos)
+                if doMovement != 'STOP':
+                    moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
+
+            if moveCommandFlag:
+                moveCommandFlag = False
+            
+            if driveTrain.areAllCloseEnough(tolerance):
+                state = 1
+                moveCommandFlag = True
+
+        # move right feet through air and move left feet on ground
+        elif state == 1:
+            if moveCommandFlag:
+                m = getMoveCommandInfo(doMovement, 1)
+                if doMovement != 'STOP':
+                    moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
+            
+            if moveCommandFlag:
+                moveCommandFlag = False
+                   
+            if driveTrain.areAllCloseEnough(tolerance):
+                state = 2
+                moveCommandFlag = True
+            
+
+        # move left feet through air and move left feet on ground
+        elif state == 2:
+            if moveCommandFlag:
+                m = getMoveCommandInfo(doMovement, 2)
+                if doMovement != 'STOP':
+                    moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
+
+            if moveCommandFlag:
+                moveCommandFlag = False
+              
+            if driveTrain.areAllCloseEnough(tolerance):
+                state = 1
+                moveCommandFlag = True
+
+    except Exception as error:
+        print('Caught this error: ' + repr(error))
+        # CHANGE, put reset code here MATTHEW, (call reset)
     
-    # print('dir' + direction )
-    # print(' angle: S' + str(angle))
-    # if direction == "x":
-    #     pwm.set_pwm(L1PIN, 0, angle)
-    #     pwm.set_pwm(CONTINUOUSPIN, 0, 0)
-    # elif direction == "c":
-    #     pwm.set_pwm(L2PIN, 0, angle)
-    #     pwm.set_pwm(CONTINUOUSPIN, 0, 0)
-    # elif direction == "z":
-    #     pwm.set_pwm(CONTINUOUSPIN, 0, angle)
-    # else:
-    #     pwm.set_pwm(CONTINUOUSPIN, 0, 0)
-
-    CONTINUOUSSERVOSTOPVALUE = 150
-    if direction == "w":
-            doMovement = 'FORWARD'
-            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE) 
-    elif direction == "s":
-            doMovement = 'BACKWARD'
-            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
-    elif direction == "a":
-            doMovement = 'ROTATECOUNTERCLOCKWISE'
-            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
-    elif direction == "d":
-            doMovement = 'ROTATECLOCKWISE'
-            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
-    elif direction == "x":
-            doMovement = 'STOP'
-            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
-    if direction == "c": # arm control mode (next 5 cases) case 1-4 servos in arm, 5 is gripper 
-            doMovement = 'STOP' #(linear acuator 1 (bigger one))
-            if(angle > 365): # hard check to make sure it doesn't break stuff
-                angle = 365
-            elif(angle < 275):
-                angle = 275
-            pwm.set_pwm(L1PIN, 0, angle)
-    if direction == "v": #linear actuator 2 (smaller one)
-            doMovement = 'STOP'
-            if(angle > 475):  
-                angle = 475
-            elif(angle < 250):
-                angle = 250
-            pwm.set_pwm(L2PIN, 0, angle)
-    if direction == "b": #rotate base motor
-            doMovement = 'STOP'
-            if(angle > 225):  
-                angle = 225
-            elif(angle < 100):
-                angle = 100
-            pwm.set_pwm(CONTINUOUSPIN, 0, angle)
-    if direction == "n": #wrist tilt
-            doMovement = 'STOP'
-            if(angle > 600):  
-                angle = 600
-            elif(angle < 190):
-                angle = 190
-            pwm.set_pwm(WRISTTILTPIN, 0, angle)
-            #pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
-
-    if direction == "m": #wrist pan
-            doMovement = 'STOP'
-            if(angle > 600):  
-                angle = 600
-            elif(angle < 130):
-                angle = 130
-            pwm.set_pwm(WRISTPANPIN, 0, angle)
-            #pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
-    if direction == "l":
-            doMovement = 'STOP'
-            if(angle > 400):  
-                angle = 400
-            elif(angle < 200):
-                angle = 200
-            pwm.set_pwm(7, 0, angle)
-    # -----STATE MACHINE--------
-    # state 0 setups rover to new doMovement command depending on current configuration
-    if state == 0:
-        # stateCommandCalled is meant so that moveRightLegs and moveLeftLegs are only called once per state
-        if moveCommandFlag:
-            curPos = [driveTrain.getPosition(legID) for legID in range(1,7)]
-            m = getSetupInfo(doMovement, curPos)
-            if doMovement != 'STOP':
-                moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
-
-        if moveCommandFlag:
-            moveCommandFlag = False
-        
-        if driveTrain.areAllCloseEnough(tolerance):
-            state = 1
-            moveCommandFlag = True
-
-    # move right feet through air and move left feet on ground
-    elif state == 1:
-        if moveCommandFlag:
-            m = getMoveCommandInfo(doMovement, 1)
-            if doMovement != 'STOP':
-                moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
-        
-        if moveCommandFlag:
-            moveCommandFlag = False
-               
-        if driveTrain.areAllCloseEnough(tolerance):
-            state = 2
-            moveCommandFlag = True
-        
-
-    # move left feet through air and move left feet on ground
-    elif state == 2:
-        if moveCommandFlag:
-            m = getMoveCommandInfo(doMovement, 2)
-            if doMovement != 'STOP':
-                moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
-
-        if moveCommandFlag:
-            moveCommandFlag = False
-          
-        if driveTrain.areAllCloseEnough(tolerance):
-            state = 1
-            moveCommandFlag = True
-
 
 
 
