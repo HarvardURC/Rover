@@ -50,7 +50,7 @@ void loop() {
   int ch4 = pulseIn(8, HIGH); //CHANGE missing ch4(idk what pin it is) gonna say its 7 for now
   int forwardBackwardSwitch = pulseIn(10, HIGH);  //swtich to forward  (SFswitch ch5 on reciever)
   int chswitch = pulseIn(6, HIGH); // three way swtich for grabber  979-1480ish-1991 (three states) ch6 on reciever
-  int speed_servo = map(ch1, 980, 2000, 1000, 3000); //this is the speed mapping CHANGE last argument to increase speed
+  int speed_servo = map(ch1, 980, 2000, 1000, 8000); //this is the speed mapping CHANGE last argument to increase speed
   int servolinear1= map(ch1, 980, 2000, servolinear1Min, servolinear1Max); 
   int servolinear2= map(ch3, 980, 2000, servolinear2Min, servolinear2Max);  
   int servoWristPan = map(ch2, 980, 2000, servoWristPanMin, servoWristPanMax); 
@@ -78,9 +78,9 @@ void loop() {
   }
   if(chswitch < 1000) // if in "walking mode"
   {
-    if(ch1 >= 1900){  // if the throttle is (near fully down send stop)
+    if(ch1 <= 1000){  // if the throttle is (near fully down send stop)
         Serial.print("x-");   
-      Serial.println(speed_servo);
+        Serial.println(speed_servo);
     }
     else{
       if(forwardBackwardSwitch> 1900 && ch2 <= 1530 && ch2 >= 1450){
