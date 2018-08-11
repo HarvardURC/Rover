@@ -13,14 +13,15 @@ int deadSpaceval = 20; //CHANGE increase to increase deadspace on arm
 
 int servolinear1Min = 275; //CHANGE based on test
 int servolinear1Max = 365;
-int servolinear2Min = 275; 
-int servolinear2Max = 365;
-int servoWristPanMin = 245;
-int servoWristPanMax = 275;
-int servoWristTiltMin = 150;
-int servoWristTiltMax = 520;
-int servoContinousMin = 60;
-int servoContinousMax = 260;
+int servolinear2Min = 250; 
+int servolinear2Max = 475;
+int servoWristPanMin = 130;
+int servoWristPanMax = 600;
+int servoWristTiltMin = 190;
+int servoWristTiltMax = 600;
+int servoContinousMin = 100;
+int servoContinousMax = 300;
+int servoContinousStop =150;
 int servolinear1MiddleVal = (servolinear1Max+servolinear1Min)/2;
 int servolinear2MiddleVal = (servolinear2Max+servolinear2Min)/2;
 int servoWristTiltMiddleVal = (servoWristTiltMin+servoWristTiltMax)/2;
@@ -35,7 +36,7 @@ void setup() {
   pinMode(4, INPUT);
   pinMode(5, INPUT);
   pinMode(6, INPUT);
-
+  pinMode(8, INPUT);
   Serial.begin(9600); // Pour a bowl of Serial ha get it?
 
 }
@@ -119,7 +120,7 @@ void loop() {
       Serial.println(servoContinous);
   }
    Serial.print("c-");   
-   Serial.println(servolinear1);
+   Serial.println(s);
    Serial.print("v-");   
    Serial.println(servolinear2); 
 
