@@ -161,7 +161,8 @@ bool EposDriveTrain::disableNode(int node) {
 }
 
 bool EposDriveTrain::clearFault(int node) {
-	bool status = VCS_ClearFault(portHandle, node, &errorCode);
+	bool status = VCS_ResetDevice(portHandle, node, &errorCode) && \
+	              VCS_ClearFault(portHandle, node, &errorCode);
 
 	if (!status) {
 		logError("VCS_ClearFault", node, errorCode);

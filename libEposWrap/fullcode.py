@@ -192,6 +192,7 @@ def moveLegs(goalAngles, vels, goClockwises, driveTrain):
 
 # Function to clear drive train faults and re-enable all motors
 def resetDriveTrain(driveTrain):
+    print("Resetting drive train...")
     driveTrain.clearAllFaults()
     driveTrain.enableAll()
     for i in range(6):
