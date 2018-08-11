@@ -188,6 +188,10 @@ def moveLegs(goalAngles, vels, goClockwises, driveTrain):
     for i in range(6):
         driveTrain.setPosition(i + 1, goalPosArray[i], True);
 
+# Function to clear drive train faults and re-enable all motors
+def resetDriveTrain(driveTrain):
+    driveTrain.clearAllFaults()
+    driveTrain.enableAll()
 
 # Helper function to make setting a servo pulse width simpler.
 def set_servo_pulse(channel, pulse):
