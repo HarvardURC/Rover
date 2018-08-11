@@ -25,7 +25,6 @@ ser = serial.Serial('/dev/ttyACM0',9600)
 # Initialise the PCA9685 using the default address (0x40).
 pwm = Adafruit_PCA9685.PCA9685()
 
-ser = serial.Serial('/dev/ttyACM0',9600)
 s = [0]
 
 state = 0
@@ -311,41 +310,50 @@ while True:
     elif direction == "x":
             doMovement = 'STOP'
             pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
-    elif direction == "c": # arm control mode (next 5 cases) case 1-4 servos in arm, 5 is gripper 
+    if direction == "c": # arm control mode (next 5 cases) case 1-4 servos in arm, 5 is gripper 
             doMovement = 'STOP' #(linear acuator 1 (bigger one))
             if(angle > 475): # hard check to make sure it doesn't break stuff
                 angle = 475
             elif(angle < 275):
                 angle = 275
             pwm.set_pwm(L1PIN, 0, angle)
-    elif direction == "v": #linear actuator 2 (smaller one)
+    if direction == "v": #linear actuator 2 (smaller one)
             doMovement = 'STOP'
             if(angle > 475):  
                 angle = 475
             elif(angle < 275):
                 angle = 275
             pwm.set_pwm(L2PIN, 0, angle)
-    elif direction == "b": #rotate base motor
+    if direction == "b": #rotate base motor
             doMovement = 'STOP'
             if(angle > 225):  
                 angle = 225
             elif(angle < 100):
                 angle = 100
             pwm.set_pwm(CONTINUOUSPIN, 0, angle)
-    elif direction == "n": #wrist tilt
+    if direction == "n": #wrist tilt
             doMovement = 'STOP'
             if(angle > 520):  
                 angle = 520
             elif(angle < 150):
                 angle = 100
             pwm.set_pwm(wristTilt, 0, angle)
-    elif direction == "m": #wrist pan
+    if direction == "m": #wrist pan
             doMovement = 'STOP'
             if(angle > 520):  
                 angle = 520
             elif(angle < 150):
                 angle = 100
-            pwm.set_pwm(wristPan, 0, angle) 
+            pwm.set_pwm(wristPan, 0, angle)
+    if direction == "j":
+        GPIO.output(16, True)
+        GPIO.output(19, False)
+    elif direction == "k":
+        GPIO.output(19, True)
+        GPIO.output(16, False)
+    elif direction == "l":
+        GPIO.output(16, False)
+        GPIO.output(19, False)
     # -----STATE MACHINE--------
     # state 0 setups rover to new doMovement command depending on current configuration
     if state == 0:
