@@ -194,6 +194,8 @@ def moveLegs(goalAngles, vels, goClockwises, driveTrain):
 def resetDriveTrain(driveTrain):
     driveTrain.clearAllFaults()
     driveTrain.enableAll()
+    for i in range(6):
+	driveTrain.setMode(i + 1, PROFILE_POSITION_MODE)
 
 # Helper function to make setting a servo pulse width simpler.
 def set_servo_pulse(channel, pulse):
