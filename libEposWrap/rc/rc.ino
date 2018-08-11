@@ -120,7 +120,7 @@ void loop() {
       Serial.println(servoContinous);
   }
    Serial.print("c-");   
-   Serial.println(servoLinear1);
+   Serial.println(servolinear1);
    Serial.print("v-");   
    Serial.println(servolinear2); 
 
