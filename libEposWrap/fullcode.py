@@ -254,6 +254,7 @@ driveTrain.init()
 
 #Enable all nodes, and clear any faults
 #Note: before a motor can be moved, it must be enabled!
+driveTrain.clearAllFaults()
 driveTrain.enableAll()
 driveTrain.clearAllFaults()
 
@@ -302,7 +303,7 @@ while True:
                 doMovement = 'FORWARD'
                 pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE) 
         elif direction == "s":
-                # call reset code here MATTHEW, CHANGE
+                resetDriveTrain(driveTrain)
                 doMovement = 'STOP'
                 pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
         elif direction == "a":
@@ -407,7 +408,8 @@ while True:
 
     except Exception as error:
         print('Caught this error: ' + repr(error))
-        # CHANGE, put reset code here MATTHEW, (call reset)
+        # Reset drive train on error
+        resetDriveTrain(driveTrain)
     
 
 
