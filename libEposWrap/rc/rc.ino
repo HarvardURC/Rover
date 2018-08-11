@@ -127,7 +127,7 @@ void loop() {
   } 
   else if(chswitch >= 1900) // in arm mode 2. (gripper and wrist pan/ wrist tilt)
   { // basically higher precision mode
-    if(gripper <= 60 && servoContinous >=40){
+  if(gripper <= 60 && gripper >=40){
     Serial.print("l-");
     Serial.println(0);
   }
