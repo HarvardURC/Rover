@@ -359,6 +359,12 @@ while True:
                 elif(angle < 200):
                     angle = 200
                 pwm.set_pwm(7, 0, angle)
+        if direction == "u":
+            doMovement = 'STOP'
+            pwm.set_pwm(10, 0, angle)
+        if direction == "i":
+            doMovement = 'STOP'
+            pwm.set_pwm(11, 0, angle)
         # -----STATE MACHINE--------
         # state 0 setups rover to new doMovement command depending on current configuration
         if state == 0:

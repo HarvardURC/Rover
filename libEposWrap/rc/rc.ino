@@ -50,12 +50,15 @@ void loop() {
   int forwardBackwardSwitch = pulseIn(5, HIGH);  //swtich to forward  (SFswitch ch5 on reciever)
   int chswitch = pulseIn(6, HIGH); // three way swtich for grabber  979-1480ish-1991 (three states) ch6 on reciever
   int speed_servo = map(ch1, 980, 2000, 1000, 3000); //this is the speed mapping CHANGE last argument to increase speed
-  int servolinear1= map(ch1, 980, 2000, servolinear1Min, servolinear1Max); // need to CHANGE min max values here (thrid and forth args)
-  int servolinear2= map(ch3, 980, 2000, servolinear2Min, servolinear2Max);  // again need to CHANGE last two (min max args)
-  int servoWristPan = map(ch2, 980, 2000, servoWristPanMin, servoWristPanMax); //again need to CHANGE last two (min max args)
+  int servolinear1= map(ch1, 980, 2000, servolinear1Min, servolinear1Max); 
+  int servolinear2= map(ch3, 980, 2000, servolinear2Min, servolinear2Max);  
+  int servoWristPan = map(ch2, 980, 2000, servoWristPanMin, servoWristPanMax); 
   int servoWristTilt = map(ch3, 980, 2000, servoWristTiltMin, servoWristTiltMax); 
   int servoContinous = map(ch4, 980, 2000, servoContinousMin, servoContinousMax); // increase last 2 args to decrease dead zone
   int gripper = map(ch1, 980, 2000, 400, 200);
+  int servoCamPan = map(ch4, 980, 2000, 130, 600);
+  int servoCamTilt = map(ch2, 980, 2000, 130, 600);
+
   // debugging stuff below
   //int servo2 = map(ch2, 980, 2000, 0, 180); 
   // Serial.print("Channel 1 ");
@@ -74,7 +77,7 @@ void loop() {
       Serial.println(speed_servo);
     }
     else{
-      if(forwardBackwardSwitch> 1900 && ch2 <= 1530 && ch2 >= 1450){
+      if(forwardBackwardSwitch> 1900){ //&& ch2 <= 1530 && ch2 >= 1450){
       if(speed_servo > 1200){
         
         Serial.print("s-");   
@@ -85,7 +88,14 @@ void loop() {
         Serial.println(speed_servo);
       }  
       }
-      else if(forwardBackwardSwitch < 1500  && ch2 <= 1530 && ch2 >= 1450){
+      else if(forwardBackwardSwitch >= 1000 && forwardBackwardSwitch =< 1900)
+      {
+      	Serial.print("u-");
+        Serial.println(servoCamTilt);
+      	Serial.print("i-");
+        Serial.println(servoCamPan);
+      }
+      else if(forwardBackwardSwitch < 1000  && ch2 <= 1530 && ch2 >= 1450){
         if(speed_servo > 1200){
            Serial.print("w-");   
         Serial.println(speed_servo);   
@@ -116,7 +126,7 @@ void loop() {
   else if(chswitch>1000 && chswitch < 1900) // in arm mode 1, 
   {
     if(servoContinous > 180 || servoContinous < 140){
-    Serial.print("b-");   
+    Serial.print("b-");   	
       Serial.println(servoContinous);
   }
    Serial.print("c-");   
