@@ -1,7 +1,6 @@
-# Simple demo of of the PCA9685 PWM servo/LED controller library.
-# This will move channel 0 from min to max position repeatedly.
-# Author: Tony DiCola
-# License: Public Domain
+# fullCode.py
+# This is the full Python script running all rover subsystems
+# To start the rover, run this script as root
 from __future__ import division
 import time
 import math
@@ -37,7 +36,10 @@ pi = 3.14159265;
 START_OFFSET_ANGLE = pi/2.0;
 
 def getGroundSpeed(airSpeed):
-    return int(legAirSpeed *(2*landingAngle/(2*pi - 2*landingAngle)));
+    #return int(legAirSpeed *(2*landingAngle/(2*pi - 2*landingAngle)));
+    # Modified version: motors go at same speed regardless of state
+    # This prevents the motors from accidentally going slow when they need to go fast
+    return int(airSpeed)
 
 legAirSpeed = int(2.0*600);
 landingAngle = 0.349;
@@ -254,6 +256,7 @@ driveTrain.init()
 
 #Enable all nodes, and clear any faults
 #Note: before a motor can be moved, it must be enabled!
+driveTrain.clearAllFaults()
 driveTrain.enableAll()
 driveTrain.clearAllFaults()
 
@@ -302,7 +305,7 @@ while True:
                 doMovement = 'FORWARD'
                 pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE) 
         elif direction == "s":
-                # call reset code here MATTHEW, CHANGE
+                resetDriveTrain(driveTrain)
                 doMovement = 'STOP'
                 pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
         elif direction == "a":
@@ -416,6 +419,9 @@ while True:
         if(resetGlobalCheck == 0):
             resetGlobalCheck = 1
             # CHANGE, put reset code here MATTHEW, (call reset)
+            # Reset drive train on error
+            resetDriveTrain(driveTrain)
+
     
 
 
