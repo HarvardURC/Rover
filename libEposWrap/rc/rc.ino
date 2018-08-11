@@ -37,6 +37,7 @@ void setup() {
   pinMode(5, INPUT);
   pinMode(6, INPUT);
   pinMode(8, INPUT);
+  pinMode(9, INPUT);
   Serial.begin(9600); // Pour a bowl of Serial ha get it?
 
 }
@@ -47,7 +48,7 @@ void loop() {
   ch2 = pulseIn(3, HIGH); // channel 2  left and right on right joystick (channel 4 on reciever)
   ch3 = pulseIn(4, HIGH); // channel 3 up and down on right joystick   
   int ch4 = pulseIn(8, HIGH); //CHANGE missing ch4(idk what pin it is) gonna say its 7 for now
-  int forwardBackwardSwitch = pulseIn(5, HIGH);  //swtich to forward  (SFswitch ch5 on reciever)
+  int forwardBackwardSwitch = pulseIn(10, HIGH);  //swtich to forward  (SFswitch ch5 on reciever)
   int chswitch = pulseIn(6, HIGH); // three way swtich for grabber  979-1480ish-1991 (three states) ch6 on reciever
   int speed_servo = map(ch1, 980, 2000, 1000, 3000); //this is the speed mapping CHANGE last argument to increase speed
   int servolinear1= map(ch1, 980, 2000, servolinear1Min, servolinear1Max); 
@@ -58,7 +59,8 @@ void loop() {
   int gripper = map(ch1, 980, 2000, 400, 200);
   int servoCamPan = map(ch4, 980, 2000, 130, 600);
   int servoCamTilt = map(ch2, 980, 2000, 130, 600);
-
+  int resetmotor = pulseIn(9,HIGH);
+  
   // debugging stuff below
   //int servo2 = map(ch2, 980, 2000, 0, 180); 
   // Serial.print("Channel 1 ");
@@ -69,7 +71,11 @@ void loop() {
   // Serial.print(ch3);
   //Serial.print("chswitch ");
   //Serial.println(chswitch);
-
+  if(resetmotor > 1500)
+  {
+  	 Serial.print("p-");   
+     Serial.println(0);
+  }
   if(chswitch < 1000) // if in "walking mode"
   {
     if(ch1 >= 1900){  // if the throttle is (near fully down send stop)
@@ -77,7 +83,7 @@ void loop() {
       Serial.println(speed_servo);
     }
     else{
-      if(forwardBackwardSwitch> 1900){ //&& ch2 <= 1530 && ch2 >= 1450){
+      if(forwardBackwardSwitch> 1900 && ch2 <= 1530 && ch2 >= 1450){
       if(speed_servo > 1200){
         
         Serial.print("s-");   
@@ -88,7 +94,7 @@ void loop() {
         Serial.println(speed_servo);
       }  
       }
-      else if(forwardBackwardSwitch >= 1000 && forwardBackwardSwitch =< 1900)
+      else if(forwardBackwardSwitch >= 1000 && forwardBackwardSwitch <= 1900)
       {
       	Serial.print("u-");
         Serial.println(servoCamTilt);
