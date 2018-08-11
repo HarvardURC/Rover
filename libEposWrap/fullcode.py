@@ -308,13 +308,12 @@ while True:
             doMovement = 'STOP'
             pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
     elif direction == "c": # arm control mode (next 5 cases) case 1-4 servos in arm, 5 is gripper 
-            doMovement = 'STOP' #(linear a)
+            doMovement = 'STOP' #(linear acuator 1 (bigger one))
             if(angle > 475): # hard check to make sure it doesn't break stuff
                 angle = 475
             elif(angle < 275):
                 angle = 275
             pwm.set_pwm(L1PIN, 0, angle)
-            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
     elif direction == "v": #linear actuator 2 (smaller one)
             doMovement = 'STOP'
             if(angle > 475):  
@@ -322,7 +321,6 @@ while True:
             elif(angle < 275):
                 angle = 275
             pwm.set_pwm(L2PIN, 0, angle)
-            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
     elif direction == "b": #rotate base motor
             doMovement = 'STOP'
             if(angle > 225):  
@@ -330,7 +328,6 @@ while True:
             elif(angle < 100):
                 angle = 100
             pwm.set_pwm(CONTINUOUSPIN, 0, angle)
-            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
     elif direction == "n": #wrist tilt
             doMovement = 'STOP'
             if(angle > 520):  
@@ -338,15 +335,13 @@ while True:
             elif(angle < 150):
                 angle = 100
             pwm.set_pwm(wristTilt, 0, angle)
-            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE) 
-    elif direction == "m": #wrist tilt
+    elif direction == "m": #wrist pan
             doMovement = 'STOP'
             if(angle > 520):  
                 angle = 520
             elif(angle < 150):
                 angle = 100
             pwm.set_pwm(wristPan, 0, angle) 
-            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)                        
     # -----STATE MACHINE--------
     # state 0 setups rover to new doMovement command depending on current configuration
     if state == 0:
