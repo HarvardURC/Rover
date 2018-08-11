@@ -161,14 +161,18 @@ bool EposDriveTrain::disableNode(int node) {
 }
 
 bool EposDriveTrain::clearFault(int node) {
-	bool status = VCS_ResetDevice(portHandle, node, &errorCode) && \
-	              VCS_ClearFault(portHandle, node, &errorCode);
+	bool resetStatus = VCS_ResetDevice(portHandle, node, &errorCode);
+	bool faultStatus = VCS_ClearFault(portHandle, node, &errorCode);
 
-	if (!status) {
+	if(!resetStatus) {
+		logError("VCS_ResetDevice", node, errorCode);
+	}
+
+	if (!faultStatus) {
 		logError("VCS_ClearFault", node, errorCode);
 	}
 
-	return status;
+	return resetStatus && faultStatus;
 }
 bool EposDriveTrain::enableAll() {
 	//If everything succeeds, return 1. Otherwise return 0
