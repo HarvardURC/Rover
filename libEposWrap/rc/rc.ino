@@ -115,12 +115,12 @@ void loop() {
   }
   else if(chswitch>1000 && chswitch < 1900) // in arm mode 1, 
   {
-    if(servoContinous > 180 && servoContinous < 140){
+    if(servoContinous > 180 || servoContinous < 140){
     Serial.print("b-");   
       Serial.println(servoContinous);
   }
    Serial.print("c-");   
-   Serial.println(s);
+   Serial.println(servoLinear1);
    Serial.print("v-");   
    Serial.println(servolinear2); 
 
