@@ -274,6 +274,7 @@ moveCommandFlag = True
 
 while True:
     try:
+
         commands=[]
         read_serial=ser.readline()
         if len(read_serial.split("-")) > 1:
@@ -301,7 +302,8 @@ while True:
                 doMovement = 'FORWARD'
                 pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE) 
         elif direction == "s":
-                doMovement = 'BACKWARD'
+                # call reset code here MATTHEW, CHANGE
+                doMovement = 'STOP'
                 pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
         elif direction == "a":
                 doMovement = 'ROTATECOUNTERCLOCKWISE'
