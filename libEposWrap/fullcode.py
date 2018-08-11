@@ -270,11 +270,11 @@ moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
 
 # flag for making sure state is only called once
 moveCommandFlag = True
-
+resetGlobalCheck = 0
 
 while True:
     try:
-
+        resetGlobalCheck = 0
         commands=[]
         read_serial=ser.readline()
         if len(read_serial.split("-")) > 1:
@@ -407,7 +407,9 @@ while True:
 
     except Exception as error:
         print('Caught this error: ' + repr(error))
-        # CHANGE, put reset code here MATTHEW, (call reset)
+        if(resetGlobalCheck == 0):
+            resetGlobalCheck = 1
+            # CHANGE, put reset code here MATTHEW, (call reset)
     
 
 
