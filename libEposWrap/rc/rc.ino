@@ -19,14 +19,14 @@ int servoWristPanMin = 130;
 int servoWristPanMax = 600;
 int servoWristTiltMin = 190;
 int servoWristTiltMax = 600;
-int servoContinousMin = 0;
-int servoContinousMax = 300;
-int servoContinousStop =150;
+int servoContinuousMin = 0;
+int servoContinuousMax = 300;
+int servoContinuousStop =150;
 int servolinear1MiddleVal = (servolinear1Max+servolinear1Min)/2;
 int servolinear2MiddleVal = (servolinear2Max+servolinear2Min)/2;
 int servoWristTiltMiddleVal = (servoWristTiltMin+servoWristTiltMax)/2;
 int servoWristPanMiddleVal = (servoWristPanMin+servoWristPanMax)/2;
-int servoContinousMiddleVal = (servoContinousMin+servoContinousMax)/2;
+int servoContinuousMiddleVal = (servoContinuousMin+servoContinuousMax)/2;
 
 
 void setup() {
@@ -55,7 +55,7 @@ void loop() {
   int servolinear2= map(ch3, 980, 2000, servolinear2Min, servolinear2Max);  
   int servoWristPan = map(ch2, 980, 2000, servoWristPanMin, servoWristPanMax); 
   int servoWristTilt = map(ch3, 980, 2000, servoWristTiltMin, servoWristTiltMax); 
-  int servoContinous = map(ch4, 980, 2000, servoContinousMin, servoContinousMax); // increase last 2 args to decrease dead zone
+  int servoContinuous = map(ch4, 980, 2000, servoContinuousMin, servoContinuousMax); // increase last 2 args to decrease dead zone
   int gripper = map(ch1, 980, 2000, 400, 200); // change 3rd and 4th var to change limits of gripper, 200 is closed 400 is open
   int servoCamPan = map(ch4, 980, 2000, 130, 600);// change 3rd and 4th var to change limits 
   int servoCamTilt = map(ch2, 980, 2000, 130, 600);
@@ -133,10 +133,12 @@ void loop() {
 	  }
 	  else if(chswitch>1000 && chswitch < 1900) // in arm mode 1, 
 	  {
-	    if(servoContinous > 180 || servoContinous < 140){
-	    Serial.print("b-");   	
-	      Serial.println(servoContinous);
-	  }
+      Serial.print("b-");
+	    if(servoContinuous > 180 || servoContinuous < 140){   	
+	      Serial.println(servoContinuous);
+	    } else {
+        Serial.println(servoContinuousMiddleVal);
+	    }
 	   Serial.print("c-");   
 	   Serial.println(servolinear1);
 	   Serial.print("v-");   
