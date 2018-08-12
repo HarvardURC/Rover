@@ -25,7 +25,7 @@ ser = serial.Serial('/dev/ttyACM0',9600)
 pwm = Adafruit_PCA9685.PCA9685()
 
 s = [0]
-
+debug = False
 state = 0
 doMovement = 'FORWARD'
 
@@ -234,6 +234,10 @@ def translate(value, leftMin, leftMax, rightMin, rightMax):
     return rightMin + (valueScaled * rightSpan)
 
 
+def print_debug(value):
+    if debug:
+        print(value)
+
 # Set frequency to 60hz, good for servos.
 pwm.set_pwm_freq(60)
 
@@ -307,18 +311,23 @@ while True:
         if direction == "p":
                 resetDriveTrain(driveTrain)
         elif direction == "w":
+                print_debug("Forward")
                 doMovement = 'FORWARD'
                 pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE) 
         elif direction == "s":
+                print_debug("Backward")
                 doMovement = 'BACKWARD'
                 pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
         elif direction == "a":
+                print_debug("CCW")
                 doMovement = 'ROTATECOUNTERCLOCKWISE'
                 pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
         elif direction == "d":
+                print_debug("CW")
                 doMovement = 'ROTATECLOCKWISE'
                 pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
         elif direction == "x":
+                print_debug("Stop")
                 doMovement = 'STOP'
                 pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
         if direction == "c": # arm control mode (next 5 cases) case 1-4 servos in arm, 5 is gripper 
@@ -372,6 +381,7 @@ while True:
         if direction == "i":
                 doMovement = 'STOP'
                 pwm.set_pwm(11, 0, angle)
+                
         # -----STATE MACHINE--------
         # state 0 setups rover to new doMovement command depending on current configuration
         if state == 0:
