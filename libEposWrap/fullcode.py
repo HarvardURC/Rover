@@ -58,9 +58,10 @@ tolerance = 30000
 
 lastGoalPosArray = [0]*6;
 firstMovement = True
+lastLegAngles = [0]*6;
 
 def getMoveCommandInfo(curMovement, state):
-    global pi, landingAngle, legAirSpeed, legGroundSpeed
+    global pi, landingAngle, legAirSpeed, legGroundSpeed, lastLegAngles
     a = 2*pi - landingAngle
     b = landingAngle
     air = legAirSpeed
@@ -79,37 +80,61 @@ def getMoveCommandInfo(curMovement, state):
     elif curMovement == 'FORWARD':
         goClockwises = [True, True, True, True, True, True]
         if state == 1:
-            legAngles = [b, a, b, a, b, a]
+            if lastLegAngles != [a, b, a, b, a, b]:
+                legAngles = [a, b, a, b, a, b]
+            else:
+                legAngles = [b, a, b, a, b, a]
             legSpeeds = [ground, air, ground, air, ground, air]
         elif state == 2:
-            legAngles = [a, b, a, b, a, b]
+            if lastLegAngles != [b, a, b, a, b, a]:
+                legAngles = [b, a, b, a, b, a]
+            else:
+                legAngles = [a, b, a, b, a, b]
             legSpeeds = [air, ground, air, ground, air, ground]
 
     elif curMovement == 'BACKWARD':
         goClockwises = [False, False, False, False, False, False]
         if state == 1:
-            legAngles = [a, b, a, b, a, b]
+            if lastLegAngles != [b, a, b, a, b, a]:
+                legAngles = [b, a, b, a, b, a]
+            else:
+                legAngles = [a, b, a, b, a, b]
             legSpeeds = [ground, air, ground, air, ground, air]
         elif state == 2:
-            legAngles = [b, a, b, a, b, a]
+            if lastLegAngles != [a, b, a, b, a, b]:
+                legAngles = [a, b, a, b, a, b]
+            else:
+                legAngles = [b, a, b, a, b, a]
             legSpeeds = [air, ground, air, ground, air, ground]
 
     elif curMovement == 'ROTATECLOCKWISE': 
         goClockwises = [True, True, True, False, False, False]
-        if (state == 2):
-            legAngles = [b, a, b, b, a, b]
+        if (state == 1):
+            if lastLegAngles != [a, b, a, a, b, a]:
+                legAngles = [a, b, a, a, b, a]
+            else:
+                legAngles = [b, a, b, b, a, b]
             legSpeeds = [ground, air, ground, air, ground, air]
-        elif (state == 1):
-            legAngles = [a, b, a, a, b, a]
+        elif (state == 2):
+            if lastLegAngles != [b, a, b, b, a, b]:
+                legAngles = [b, a, b, b, a, b]
+            else:
+                legAngles = [a, b, a, a, b, a]
             legSpeeds = [air, ground, air, ground, air, ground]
 
     elif curMovement == 'ROTATECOUNTERCLOCKWISE': 
         goClockwises = [False, False, False, True, True, True]
         if (state == 1):
-            legAngles = [a, b, a, a, b, a]
+            if lastLegAngles != [b, a, b, b, a, b]:
+                legAngles = [b, a, b, b, a, b]
+            else:
+                legAngles = [a, b, a, a, b, a]
             legSpeeds = [ground, air, ground, air, ground, air]
         elif (state == 2):
-            legAngles = [b, a, b, b, a, b]
+            if lastLegAngles != [a, b, a, a, b, a]:
+                legAngles = [a, b, a, a, b, a]
+            else:
+                legAngles = [b, a, b, b, a, b]
             legSpeeds = [air, ground, air, ground, air, ground]
 
     elif curMovement == 'STOP':
@@ -126,7 +151,7 @@ def getMoveCommandInfo(curMovement, state):
     m["legAngles"] = legAngles
     m["legSpeeds"] = legSpeeds
     m["goClockwises"] = goClockwises
-
+    lastLegAngles = legAngles
     return m
 
 
@@ -162,7 +187,7 @@ def getSetupInfo(curMovement, curPos):
     m["legAngles"] = legAngles
     m["legSpeeds"] = legSpeeds
     m["goClockwises"] = goClockwises
-
+    lastLegAngles = legAngles
     return m
 
 # Move legs function implemented in python
