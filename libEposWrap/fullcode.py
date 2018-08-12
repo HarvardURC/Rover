@@ -191,12 +191,8 @@ def moveLegs(goalAngles, vels, goClockwises, driveTrain):
 
 # Function to clear drive train faults and re-enable all motors
 def resetDriveTrain(driveTrain):
-    print("Resetting drive train...")
-    driveTrain = DriveTrain.EposDriveTrain()
-    driveTrain.init()
     driveTrain.clearAllFaults()
     driveTrain.enableAll()
-    driveTrain.clearAllFaults()
     for i in range(6):
 	   driveTrain.setMode(i + 1, PROFILE_POSITION_MODE)
 
