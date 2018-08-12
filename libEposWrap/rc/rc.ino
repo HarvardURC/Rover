@@ -27,7 +27,9 @@ int servolinear2MiddleVal = (servolinear2Max+servolinear2Min)/2;
 int servoWristTiltMiddleVal = (servoWristTiltMin+servoWristTiltMax)/2;
 int servoWristPanMiddleVal = (servoWristPanMin+servoWristPanMax)/2;
 int servoContinuousMiddleVal = (servoContinuousMin+servoContinuousMax)/2;
-
+int gripperMaxValue = 400;
+int gripperMinValue = 200;
+int gripperMiddleValue = (gripperMaxValue+gripperMinValue)/2;
 
 void setup() {
 
@@ -39,7 +41,9 @@ void setup() {
   pinMode(8, INPUT);
   pinMode(9, INPUT);
   Serial.begin(9600); // Pour a bowl of Serial ha get it?
-
+  int servoWristPanWriteValue = servoWristPanMiddleVal;
+  int servoWristTiltWriteValue = servoWristTiltMiddleVal;
+  int gripperWriteValue = gripperMiddleValue; 
 }
 
 void loop() {
@@ -53,7 +57,7 @@ void loop() {
   int speed_servo = map(ch1, 980, 2000, 1000, 8000); //this is the speed mapping CHANGE last argument to increase speed
   int servolinear1= map(ch1, 980, 2000, servolinear1Min, servolinear1Max); 
   int servolinear2= map(ch3, 980, 2000, servolinear2Min, servolinear2Max);  
-  int servoWristPan = map(ch2, 980, 2000, servoWristPanMin, servoWristPanMax); 
+  int servoWristPan = map(ch2, 980, 2000, servoWristPanMin, servoWristPanMax);
   int servoWristTilt = map(ch3, 980, 2000, servoWristTiltMin, servoWristTiltMax); 
   int servoContinuous = map(ch4, 980, 2000, servoContinuousMin, servoContinuousMax); // increase last 2 args to decrease dead zone
   int gripper = map(ch1, 980, 2000, 400, 200); // change 3rd and 4th var to change limits of gripper, 200 is closed 400 is open
@@ -98,8 +102,10 @@ void loop() {
 	      }
 	      else if(forwardBackwardSwitch >= 1000 && forwardBackwardSwitch <= 1900) // camera control pan and tile mode
 	      {
-	      	Serial.print("u-");
-	        Serial.println(servoCamTilt);
+
+	      		Serial.print("u-");
+	        	Serial.println(servoCamTilt);
+
 	      	Serial.print("i-");
 	        Serial.println(servoCamPan);
 	      }
@@ -147,14 +153,35 @@ void loop() {
 	  } 
 	  else if(chswitch >= 1900) // in arm mode 2. (gripper and wrist pan/ wrist tilt)
 	  { // basically higher precision mode
-	  if(gripper < 380){
-	    Serial.print("l-");
-	    Serial.println(gripper);
-	  }
-	   Serial.print("n-");   
-	   Serial.println(servoWristTilt);
-	   Serial.print("m-");   
-	   Serial.println(servoWristPan); 
+		  if(gripper < 380){
+		    Serial.print("l-");
+		    Serial.println(gripper);
+		  }
+		  if (servoWristPanMiddleVal + 15 < servoWristPan)
+		   {
+		   		servoWristPanWriteValue++;
+		   		Serial.print("m-");   
+		   		Serial.println(servoWristPanWriteValue); 
+		   }
+		   else if (servoWristPanMiddleVal - 15 > servoWristPan)
+		   {
+		   		servoWristPanWriteValue--;
+		   		Serial.print("m-");   
+		   		Serial.println(servoWristPanWriteValue); 
+		   }
+
+		   if (servoWristTiltMiddleVal + 15 < servoWristTilt)
+		   {
+		   		servoWristTiltWriteValue++;
+		   		Serial.print("n-");   
+		   		Serial.println(servoWristTiltWriteValue); 
+		   }
+		   else if (servoWristTiltMiddleVal - 15 > servoWristTilt)
+		   {
+		   		servoWristTiltWriteValue--;
+		   		Serial.print("n-");   
+		   		Serial.println(servoWristTiltWriteValue); 
+		   }			   			   
 
 	  }
   } 
