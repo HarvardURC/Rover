@@ -59,7 +59,7 @@ tolerance = 30000
 lastGoalPosArray = [0]*6;
 firstMovement = True
 lastLegAngles = [0]*6;
-turnToForwardFlag = False
+turnToForwardFlag = 'none'
 
 def getMoveCommandInfo(curMovement, state):
     global pi, landingAngle, legAirSpeed, legGroundSpeed, lastLegAngles
@@ -72,13 +72,13 @@ def getMoveCommandInfo(curMovement, state):
         goClockwises = [True, True, True, True, True, True]
         legAngles = [0, 0, 0, 0, 0, 0]
         legSpeeds = [air, air, air, air, air, air]
-        turnToForwardFlag = False
+        turnToForwardFlag = 'none'
 
     if curMovement == 'STANDUP_RESET':
         goClockwises = [True, True, True, True, True, True]
         legAngles = [b, b, b, b, b, b]
         legSpeeds = [air, air, air, air, air, air]
-        turnToForwardFlag = False
+        turnToForwardFlag = 'none'
 
     elif curMovement == 'FORWARD':
         
@@ -96,14 +96,18 @@ def getMoveCommandInfo(curMovement, state):
                 else:
                     legAngles = [a, b, a, b, a, b]
                 legSpeeds = [air, ground, air, ground, air, ground]
-        else:
+        elif(turnToForwardFlag == 'cw'):
             goClockwises = [True, True, True, False, False, False]
             legAngles = [0, 0, 0, 0, 0, 0]
             legSpeeds = [air, air, air, air, air, air]
-        turnToForwardFlag = False
+        elif(turnToForwardFlag == 'ccw'):
+            goClockwises = [False, False, False, True, True, True]
+            legAngles = [0, 0, 0, 0, 0, 0]
+            legSpeeds = [air, air, air, air, air, air]
+        turnToForwardFlag = 'none'
 
     elif curMovement == 'BACKWARD':
-        if(turnToForwardFlag == False):
+        if(turnToForwardFlag == 'none'):
             goClockwises = [False, False, False, False, False, False]
             if state == 1:
                 if lastLegAngles != [b, a, b, a, b, a]:
@@ -117,11 +121,15 @@ def getMoveCommandInfo(curMovement, state):
                 else:
                     legAngles = [b, a, b, a, b, a]
                 legSpeeds = [air, ground, air, ground, air, ground]
-        else:
+        elif(turnToForwardFlag == 'cw'):
             goClockwises = [True, True, True, False, False, False]
             legAngles = [0, 0, 0, 0, 0, 0]
             legSpeeds = [air, air, air, air, air, air]
-        turnToForwardFlag = False
+        elif(turnToForwardFlag == 'ccw'):
+            goClockwises = [False, False, False, True, True, True]
+            legAngles = [0, 0, 0, 0, 0, 0]
+            legSpeeds = [air, air, air, air, air, air]
+        turnToForwardFlag = 'none'
 
     elif curMovement == 'ROTATECLOCKWISE': 
         goClockwises = [True, True, True, False, False, False]
@@ -137,7 +145,7 @@ def getMoveCommandInfo(curMovement, state):
             else:
                 legAngles = [a, b, a, a, b, a]
             legSpeeds = [air, ground, air, ground, air, ground]
-        turnToForwardFlag = True
+        turnToForwardFlag = 'cw'
 
     elif curMovement == 'ROTATECOUNTERCLOCKWISE': 
         goClockwises = [False, False, False, True, True, True]
@@ -153,7 +161,7 @@ def getMoveCommandInfo(curMovement, state):
             else:
                 legAngles = [b, a, b, b, a, b]
             legSpeeds = [air, ground, air, ground, air, ground]
-        turnToForwardFlag = True
+        turnToForwardFlag = 'ccw'
 
     elif curMovement == 'STOP':
         goClockwises = [False, False, False, True, True, True]
@@ -163,7 +171,7 @@ def getMoveCommandInfo(curMovement, state):
         elif (state == 2):
             legAngles = [b, a, b, b, a, b]
             legSpeeds = [0, 0, 0, 0, 0, 0]  
-        turnToForwardFlag = False     
+        turnToForwardFlag = 'none'     
 
     # setup object
     m = {}
