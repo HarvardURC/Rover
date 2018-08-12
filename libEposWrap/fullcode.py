@@ -97,7 +97,7 @@ def getMoveCommandInfo(curMovement, state):
                     legAngles = [a, b, a, b, a, b]
                 legSpeeds = [air, ground, air, ground, air, ground]
         else:
-            goClockwises = [True, True, True, True, True, True]
+            goClockwises = [True, True, True, False, False, False]
             legAngles = [0, 0, 0, 0, 0, 0]
             legSpeeds = [air, air, air, air, air, air]
         turnToForwardFlag = False
@@ -118,7 +118,7 @@ def getMoveCommandInfo(curMovement, state):
                     legAngles = [b, a, b, a, b, a]
                 legSpeeds = [air, ground, air, ground, air, ground]
         else:
-            goClockwises = [True, True, True, True, True, True]
+            goClockwises = [True, True, True, False, False, False]
             legAngles = [0, 0, 0, 0, 0, 0]
             legSpeeds = [air, air, air, air, air, air]
         turnToForwardFlag = False
