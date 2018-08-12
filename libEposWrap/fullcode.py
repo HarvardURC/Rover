@@ -12,7 +12,6 @@ import constants
 import DriveTrain
 import helperFunctions as hF
 
-
 # Import the PCA9685 module.
 import Adafruit_PCA9685
 
@@ -196,7 +195,7 @@ def resetDriveTrain(driveTrain):
     driveTrain.clearAllFaults()
     driveTrain.enableAll()
     for i in range(6):
-	driveTrain.setMode(i + 1, PROFILE_POSITION_MODE)
+	   driveTrain.setMode(i + 1, PROFILE_POSITION_MODE)
 
 # Helper function to make setting a servo pulse width simpler.
 def set_servo_pulse(channel, pulse):
@@ -381,7 +380,7 @@ while True:
         if direction == "i":
                 doMovement = 'STOP'
                 pwm.set_pwm(11, 0, angle)
-                
+
         # -----STATE MACHINE--------
         # state 0 setups rover to new doMovement command depending on current configuration
         if state == 0:
