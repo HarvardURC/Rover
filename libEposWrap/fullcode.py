@@ -66,10 +66,16 @@ def getMoveCommandInfo(curMovement, state):
     air = legAirSpeed
     ground = legGroundSpeed
 
-    if curMovement == 'STANDUP':
+    if curMovement == 'STANDUP_INIT':
         goClockwises = [True, True, True, True, True, True]
         legAngles = [0, 0, 0, 0, 0, 0]
         legSpeeds = [air, air, air, air, air, air]
+
+    if curMovement == 'STANDUP_RESET':
+        goClockwises = [True, True, True, True, True, True]
+        legAngles = [b, b, b, b, b, b]
+        legSpeeds = [air, air, air, air, air, air]
+
     elif curMovement == 'FORWARD':
         goClockwises = [True, True, True, True, True, True]
         if state == 1:
@@ -78,6 +84,7 @@ def getMoveCommandInfo(curMovement, state):
         elif state == 2:
             legAngles = [a, b, a, b, a, b]
             legSpeeds = [air, ground, air, ground, air, ground]
+
     elif curMovement == 'BACKWARD':
         goClockwises = [False, False, False, False, False, False]
         if state == 1:
@@ -104,6 +111,7 @@ def getMoveCommandInfo(curMovement, state):
         elif (state == 2):
             legAngles = [b, a, b, b, a, b]
             legSpeeds = [air, ground, air, ground, air, ground]
+
     elif curMovement == 'STOP':
         goClockwises = [False, False, False, True, True, True]
         if (state == 1):
@@ -112,6 +120,7 @@ def getMoveCommandInfo(curMovement, state):
         elif (state == 2):
             legAngles = [b, a, b, b, a, b]
             legSpeeds = [0, 0, 0, 0, 0, 0]       
+
     # setup object
     m = {}
     m["legAngles"] = legAngles
@@ -189,12 +198,18 @@ def moveLegs(goalAngles, vels, goClockwises, driveTrain):
     for i in range(6):
         driveTrain.setPosition(i + 1, goalPosArray[i], True);
 
+
 # Function to clear drive train faults and re-enable all motors
 def resetDriveTrain(driveTrain):
     driveTrain.clearAllFaults()
     driveTrain.enableAll()
     for i in range(6):
 	   driveTrain.setMode(i + 1, PROFILE_POSITION_MODE)
+
+    # Make the rover to stand up again (should fix state machine?)
+    m = getMoveCommandInfo('STANDUP_RESET', 1)
+    moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
+	    
 
 # Helper function to make setting a servo pulse width simpler.
 def set_servo_pulse(channel, pulse):
@@ -271,8 +286,8 @@ for i in range(6):
 # ----------------------------------
 
 
-# STANDUP ROVER
-m = getMoveCommandInfo('STANDUP', 1)
+# STANDUP ROVER (STANDUP_INIT because this is the first time)
+m = getMoveCommandInfo('STANDUP_INIT', 1)
 moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
 
 
