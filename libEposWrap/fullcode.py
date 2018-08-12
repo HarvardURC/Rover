@@ -96,10 +96,10 @@ def getMoveCommandInfo(curMovement, state):
 
     elif curMovement == 'ROTATECLOCKWISE': 
         goClockwises = [True, True, True, False, False, False]
-        if (state == 1):
+        if (state == 2):
             legAngles = [b, a, b, b, a, b]
             legSpeeds = [ground, air, ground, air, ground, air]
-        elif (state == 2):
+        elif (state == 1):
             legAngles = [a, b, a, a, b, a]
             legSpeeds = [air, ground, air, ground, air, ground]
 
