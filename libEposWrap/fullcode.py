@@ -1,6 +1,7 @@
 # fullCode.py
 # This is the full Python script running all rover subsystems
 # To start the rover, run this script as root
+# All legs must be in start position when turning on drivetrain power
 from __future__ import division
 import time
 import math
@@ -57,7 +58,7 @@ deccel = 20000;
 tolerance = 30000
 
 lastGoalPosArray = [0]*6;
-firstMovement = True
+getActualPosition = True
 lastLegAngles = [0]*6;
 turnToForwardFlag = 'none'
 
@@ -219,7 +220,7 @@ def getSetupInfo(curMovement, curPos):
 
 # Move legs function implemented in python
 def moveLegs(goalAngles, vels, goClockwises, driveTrain):
-    global pi, landingAngle, legAirSpeed, legGroundSpeed, lastGoalPosArray, firstMovement
+    global pi, landingAngle, legAirSpeed, legGroundSpeed, lastGoalPosArray, getActualPosition
     
     # set legs to specified position profile
     for i in range(6):
@@ -232,16 +233,16 @@ def moveLegs(goalAngles, vels, goClockwises, driveTrain):
     goalPosArray = []
 
     # If it's the first time the legs have been moved, get their actual positions
-    if firstMovement:
+    if getActualPosition:
         for i in range(6):
             curPosArray.append(driveTrain.getPosition(i + 1));
             goalPosArray.append(driveTrain.getGoalPos(i + 1, curPosArray[i], goalAngles[i], goClockwises[i]))
-            firstMovement = False
+            getActualPosition = False
     else:
         for i in range(6):
+	    # When walking normally, get target positions relative to previous targets to prevent drift
             curPosArray.append(lastGoalPosArray[i]);
             goalPosArray.append(driveTrain.getGoalPos(i + 1, curPosArray[i], goalAngles[i], goClockwises[i]))
-
 
         # Store last goal positions
     lastGoalPosArray = goalPosArray;
@@ -258,8 +259,11 @@ def resetDriveTrain(driveTrain):
     for i in range(6):
 	   driveTrain.setMode(i + 1, PROFILE_POSITION_MODE)
 
-    # Make the rover to stand up again (should fix state machine?)
-    m = getMoveCommandInfo('STANDUP_RESET', 1)
+    # Make the rover to stand up again (fixes state machine so walking can resume normally)
+    # Go backwards because whatever we got stuck in is in front of us
+    # Also, we don't want to ram into something in front of the rover
+    getActualPosition = True
+    m = getMoveCommandInfo('BACKWARD', 1)
     moveLegs(m["legAngles"], m["legSpeeds"], m["goClockwises"], driveTrain)
 	    
 
@@ -275,7 +279,6 @@ def set_servo_pulse(channel, pulse):
     pwm.set_pwm(channel, 0, pulse)
 
 
-
 def getCommands(intArray): # this is not used
     COMMANDS["wristTilt"] = intArray[0]
     COMMANDS["wristPan"] = intArray[1]
@@ -286,6 +289,7 @@ def getCommands(intArray): # this is not used
     COMMANDS["camera1Pan"] = intArray[6]
     COMMANDS["camera1Tilt"] = intArray[7]
     return COMMANDS
+ 
 
 def translate(value, leftMin, leftMax, rightMin, rightMax):
     # Figure out how 'wide' each range is
