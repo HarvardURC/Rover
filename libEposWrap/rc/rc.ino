@@ -31,6 +31,10 @@ int gripperMaxValue = 400;
 int gripperMinValue = 200;
 int gripperMiddleValue = (gripperMaxValue+gripperMinValue)/2;
 
+int servoWristPanWriteValue = servoWristPanMiddleVal;
+int servoWristTiltWriteValue = servoWristTiltMiddleVal;
+int gripperWriteValue = gripperMiddleValue; 
+
 void setup() {
 
   pinMode(2, INPUT); // Set our input pins as such need to CHANGE add ch4 on reciever here
@@ -41,9 +45,6 @@ void setup() {
   pinMode(8, INPUT);
   pinMode(9, INPUT);
   Serial.begin(9600); // Pour a bowl of Serial ha get it?
-  int servoWristPanWriteValue = servoWristPanMiddleVal;
-  int servoWristTiltWriteValue = servoWristTiltMiddleVal;
-  int gripperWriteValue = gripperMiddleValue; 
 }
 
 void loop() {
