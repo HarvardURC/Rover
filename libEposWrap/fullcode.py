@@ -504,15 +504,3 @@ while True:
             # CHANGE, put reset code here MATTHEW, (call reset)
             # Reset drive train on error
             resetDriveTrain(driveTrain)
-
-    
-
-
-
-
-
-
-
-
-
-
