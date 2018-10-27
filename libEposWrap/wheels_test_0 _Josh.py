@@ -343,8 +343,8 @@ moveCommandFlag = True
 resetGlobalCheck = 0
 
 
-# for i in range(6):
-#     driveTrain.setVelocityProfile(i+1, speed, accel, dedccel)
+for i in range(6):
+    driveTrain.setVelocityProfile(i+1, speed, accel, dedccel)
 
 for i in range(6):
     driveTrain.setVelocity(i + 1, speed);
