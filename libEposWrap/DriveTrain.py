@@ -4,6 +4,10 @@
 # Do not make changes to this file unless you know what you are doing--modify
 # the SWIG interface file instead.
 
+
+
+
+
 from sys import version_info
 if version_info >= (2, 6, 0):
     def swig_import_helper():
@@ -87,12 +91,6 @@ except AttributeError:
 
 
 
-_DriveTrain.RELATIVE_swigconstant(_DriveTrain)
-RELATIVE = _DriveTrain.RELATIVE
-
-_DriveTrain.ABSOLUTE_swigconstant(_DriveTrain)
-ABSOLUTE = _DriveTrain.ABSOLUTE
-
 _DriveTrain.PROFILE_POSITION_MODE_swigconstant(_DriveTrain)
 PROFILE_POSITION_MODE = _DriveTrain.PROFILE_POSITION_MODE
 
@@ -104,6 +102,12 @@ POSITION_MODE = _DriveTrain.POSITION_MODE
 
 _DriveTrain.VELOCITY_MODE_swigconstant(_DriveTrain)
 VELOCITY_MODE = _DriveTrain.VELOCITY_MODE
+
+_DriveTrain.RELATIVE_swigconstant(_DriveTrain)
+RELATIVE = _DriveTrain.RELATIVE
+
+_DriveTrain.ABSOLUTE_swigconstant(_DriveTrain)
+ABSOLUTE = _DriveTrain.ABSOLUTE
 class EposDriveTrain(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, EposDriveTrain, name, value)
@@ -120,61 +124,6 @@ class EposDriveTrain(_object):
             self.this.append(this)
         except Exception:
             self.this = this
-    __swig_getmethods__["pi"] = _DriveTrain.EposDriveTrain_pi_get
-    if _newclass:
-        pi = _swig_property(_DriveTrain.EposDriveTrain_pi_get)
-    __swig_getmethods__["START_OFFSET_ANGLE"] = _DriveTrain.EposDriveTrain_START_OFFSET_ANGLE_get
-    if _newclass:
-        START_OFFSET_ANGLE = _swig_property(_DriveTrain.EposDriveTrain_START_OFFSET_ANGLE_get)
-    __swig_setmethods__["state"] = _DriveTrain.EposDriveTrain_state_set
-    __swig_getmethods__["state"] = _DriveTrain.EposDriveTrain_state_get
-    if _newclass:
-        state = _swig_property(_DriveTrain.EposDriveTrain_state_get, _DriveTrain.EposDriveTrain_state_set)
-    __swig_setmethods__["legStates"] = _DriveTrain.EposDriveTrain_legStates_set
-    __swig_getmethods__["legStates"] = _DriveTrain.EposDriveTrain_legStates_get
-    if _newclass:
-        legStates = _swig_property(_DriveTrain.EposDriveTrain_legStates_get, _DriveTrain.EposDriveTrain_legStates_set)
-    __swig_setmethods__["legAngles"] = _DriveTrain.EposDriveTrain_legAngles_set
-    __swig_getmethods__["legAngles"] = _DriveTrain.EposDriveTrain_legAngles_get
-    if _newclass:
-        legAngles = _swig_property(_DriveTrain.EposDriveTrain_legAngles_get, _DriveTrain.EposDriveTrain_legAngles_set)
-    __swig_setmethods__["targetPos"] = _DriveTrain.EposDriveTrain_targetPos_set
-    __swig_getmethods__["targetPos"] = _DriveTrain.EposDriveTrain_targetPos_get
-    if _newclass:
-        targetPos = _swig_property(_DriveTrain.EposDriveTrain_targetPos_get, _DriveTrain.EposDriveTrain_targetPos_set)
-    __swig_getmethods__["legAirSpeed"] = _DriveTrain.EposDriveTrain_legAirSpeed_get
-    if _newclass:
-        legAirSpeed = _swig_property(_DriveTrain.EposDriveTrain_legAirSpeed_get)
-    __swig_getmethods__["landingAngle"] = _DriveTrain.EposDriveTrain_landingAngle_get
-    if _newclass:
-        landingAngle = _swig_property(_DriveTrain.EposDriveTrain_landingAngle_get)
-    __swig_getmethods__["legGroundSpeed"] = _DriveTrain.EposDriveTrain_legGroundSpeed_get
-    if _newclass:
-        legGroundSpeed = _swig_property(_DriveTrain.EposDriveTrain_legGroundSpeed_get)
-    __swig_getmethods__["FRONTLEFT"] = _DriveTrain.EposDriveTrain_FRONTLEFT_get
-    if _newclass:
-        FRONTLEFT = _swig_property(_DriveTrain.EposDriveTrain_FRONTLEFT_get)
-    __swig_getmethods__["MIDDLELEFT"] = _DriveTrain.EposDriveTrain_MIDDLELEFT_get
-    if _newclass:
-        MIDDLELEFT = _swig_property(_DriveTrain.EposDriveTrain_MIDDLELEFT_get)
-    __swig_getmethods__["BACKLEFT"] = _DriveTrain.EposDriveTrain_BACKLEFT_get
-    if _newclass:
-        BACKLEFT = _swig_property(_DriveTrain.EposDriveTrain_BACKLEFT_get)
-    __swig_getmethods__["FRONTRIGHT"] = _DriveTrain.EposDriveTrain_FRONTRIGHT_get
-    if _newclass:
-        FRONTRIGHT = _swig_property(_DriveTrain.EposDriveTrain_FRONTRIGHT_get)
-    __swig_getmethods__["MIDDLERIGHT"] = _DriveTrain.EposDriveTrain_MIDDLERIGHT_get
-    if _newclass:
-        MIDDLERIGHT = _swig_property(_DriveTrain.EposDriveTrain_MIDDLERIGHT_get)
-    __swig_getmethods__["BACKRIGHT"] = _DriveTrain.EposDriveTrain_BACKRIGHT_get
-    if _newclass:
-        BACKRIGHT = _swig_property(_DriveTrain.EposDriveTrain_BACKRIGHT_get)
-    __swig_getmethods__["accel"] = _DriveTrain.EposDriveTrain_accel_get
-    if _newclass:
-        accel = _swig_property(_DriveTrain.EposDriveTrain_accel_get)
-    __swig_getmethods__["deccel"] = _DriveTrain.EposDriveTrain_deccel_get
-    if _newclass:
-        deccel = _swig_property(_DriveTrain.EposDriveTrain_deccel_get)
     __swig_destroy__ = _DriveTrain.delete_EposDriveTrain
     __del__ = lambda self: None
 
@@ -208,14 +157,14 @@ class EposDriveTrain(_object):
     def disableNode(self, arg2):
         return _DriveTrain.EposDriveTrain_disableNode(self, arg2)
 
-    def clearFault(self, arg2):
-        return _DriveTrain.EposDriveTrain_clearFault(self, arg2)
-
     def enableAll(self):
         return _DriveTrain.EposDriveTrain_enableAll(self)
 
     def disableAll(self):
         return _DriveTrain.EposDriveTrain_disableAll(self)
+
+    def clearFault(self, arg2):
+        return _DriveTrain.EposDriveTrain_clearFault(self, arg2)
 
     def clearAllFaults(self):
         return _DriveTrain.EposDriveTrain_clearAllFaults(self)
@@ -226,26 +175,11 @@ class EposDriveTrain(_object):
     def getVelocity(self, arg2):
         return _DriveTrain.EposDriveTrain_getVelocity(self, arg2)
 
-    def isAtTarget(self, arg2):
-        return _DriveTrain.EposDriveTrain_isAtTarget(self, arg2)
-
     def getCurrent(self, arg2):
         return _DriveTrain.EposDriveTrain_getCurrent(self, arg2)
 
-    def getGoalPos(self, arg2, arg3, arg4, arg5):
-        return _DriveTrain.EposDriveTrain_getGoalPos(self, arg2, arg3, arg4, arg5)
-
-    def moveLegs(self, arg2, arg3, arg4):
-        return _DriveTrain.EposDriveTrain_moveLegs(self, arg2, arg3, arg4)
-
-    def allAreAtTargets(self):
-        return _DriveTrain.EposDriveTrain_allAreAtTargets(self)
-
-    def isCloseEnough(self, arg2, arg3):
-        return _DriveTrain.EposDriveTrain_isCloseEnough(self, arg2, arg3)
-
-    def areAllCloseEnough(self, arg2):
-        return _DriveTrain.EposDriveTrain_areAllCloseEnough(self, arg2)
+    def isAtTarget(self, arg2):
+        return _DriveTrain.EposDriveTrain_isAtTarget(self, arg2)
 EposDriveTrain_swigregister = _DriveTrain.EposDriveTrain_swigregister
 EposDriveTrain_swigregister(EposDriveTrain)
 
