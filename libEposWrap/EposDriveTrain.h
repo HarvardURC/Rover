@@ -86,7 +86,7 @@ public:
 	int getPosition(int);
 	int getVelocity(int);
 	short getCurrent(int);
-
+ 
 	// Check if a motor has reached its target
 	bool isAtTarget(int);
 

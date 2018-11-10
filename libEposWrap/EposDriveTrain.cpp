@@ -75,25 +75,13 @@ unsigned int EposDriveTrain::setVelocity(int node, long velocity) {
 
 unsigned int EposDriveTrain::setVelocityProfile(int node, long accel, long decel) {
  	VCS_SetVelocityProfile(portHandle, node, accel, decel, &errorCode);
- 
+
  	if(errorCode != 0) {
  		logError("VCS_SetVelocityProfile", errorCode);
- 
+
  	}
- 
+
  	return errorCode;
-}
-
-// Set the target position at the given node
-// absolute=1 is an absolute movement, absolute=0 is relative
-unsigned int EposDriveTrain::setPosition(int node, long position, bool absolute) {
-	VCS_MoveToPosition(portHandle, node, position, absolute, 1, &errorCode);
-
-	if(errorCode != 0) {
-		logError("VCS_MoveToPosition", errorCode);
-	}
-
-	return errorCode;
 }
 
 unsigned int EposDriveTrain::setPositionProfile(int node, long vel, long accel, long decel) {
@@ -254,6 +242,7 @@ bool EposDriveTrain::isAtTarget(int node) {
 
 	return (bool) targetReached;
 }
+
 
 void EposDriveTrain::logError(string functName, unsigned int errorCode) {
 	cerr << functName << " failed. Error code: 0x" << std::hex << errorCode << endl;

@@ -180,6 +180,7 @@ class EposDriveTrain(_object):
 
     def isAtTarget(self, arg2):
         return _DriveTrain.EposDriveTrain_isAtTarget(self, arg2)
+
 EposDriveTrain_swigregister = _DriveTrain.EposDriveTrain_swigregister
 EposDriveTrain_swigregister(EposDriveTrain)
 
