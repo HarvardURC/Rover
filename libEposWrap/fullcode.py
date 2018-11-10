@@ -224,7 +224,7 @@ def moveLegs(goalAngles, vels, goClockwises, driveTrain):
     
     # set legs to specified position profile
     for i in range(6):
-        driveTrain.setPositionProfile(i + 1, vels[i], accel,deccel);
+        driveTrain.setPositionProfile(i + 1, vels[i], accel, deccel);
 
     # Need to get current positions in order to calculate goal position in maxon coordinates.
     # Convert to goal position in maxon coordinates using current position (maxon coordinates)
@@ -257,7 +257,7 @@ def resetDriveTrain(driveTrain):
     driveTrain.clearAllFaults()
     driveTrain.enableAll()
     for i in range(6):
-	   driveTrain.setMode(i + 1, PROFILE_POSITION_MODE)
+        driveTrain.setMode(i + 1, PROFILE_POSITION_MODE)
 
     # Make the rover to stand up again (fixes state machine so walking can resume normally)
     # Go backwards because whatever we got stuck in is in front of us
@@ -378,78 +378,78 @@ while True:
 
         CONTINUOUSSERVOSTOPVALUE = 150
         if direction == "p":
-                resetDriveTrain(driveTrain)
+            resetDriveTrain(driveTrain)
         elif direction == "w":
-                print_debug("Forward")
-                doMovement = 'FORWARD'
-                pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE) 
+            print_debug("Forward")
+            doMovement = 'FORWARD'
+            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE) 
         elif direction == "s":
-                print_debug("Backward")
-                doMovement = 'BACKWARD'
-                pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
+            print_debug("Backward")
+            doMovement = 'BACKWARD'
+            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
         elif direction == "a":
-                print_debug("CCW")
-                doMovement = 'ROTATECOUNTERCLOCKWISE'
-                pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
+            print_debug("CCW")
+            doMovement = 'ROTATECOUNTERCLOCKWISE'
+            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
         elif direction == "d":
-                print_debug("CW")
-                doMovement = 'ROTATECLOCKWISE'
-                pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
+            print_debug("CW")
+            doMovement = 'ROTATECLOCKWISE'
+            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
         elif direction == "x":
-                print_debug("Stop")
-                doMovement = 'STOP'
-                pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
+            print_debug("Stop")
+            doMovement = 'STOP'
+            pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
         if direction == "c": # arm control mode (next 5 cases) case 1-4 servos in arm, 5 is gripper 
-                doMovement = 'STOP' #(linear acuator 1 (bigger one))
-                if(angle > 365): # hard check to make sure it doesn't break stuff
-                    angle = 365
-                elif(angle < 275):
-                    angle = 275
-                pwm.set_pwm(L1PIN, 0, angle)
+            doMovement = 'STOP' #(linear acuator 1 (bigger one))
+            if(angle > 365): # hard check to make sure it doesn't break stuff
+                angle = 365
+            elif(angle < 275):
+                angle = 275
+            pwm.set_pwm(L1PIN, 0, angle)
         if direction == "v": #linear actuator 2 (smaller one)
-                doMovement = 'STOP'
-                if(angle > 475):  
-                    angle = 475
-                elif(angle < 250):
-                    angle = 250
-                pwm.set_pwm(L2PIN, 0, angle)
+            doMovement = 'STOP'
+            if(angle > 475):  
+                angle = 475
+            elif(angle < 250):
+                angle = 250
+            pwm.set_pwm(L2PIN, 0, angle)
         if direction == "b": #rotate base motor
-                doMovement = 'STOP'
-                if(angle > 225):  
-                    angle = 225
-                elif(angle < 100):
-                    angle = 100
-                pwm.set_pwm(CONTINUOUSPIN, 0, angle)
+            doMovement = 'STOP'
+            if(angle > 225):  
+                angle = 225
+            elif(angle < 100):
+                angle = 100
+            pwm.set_pwm(CONTINUOUSPIN, 0, angle)
         if direction == "n": #wrist tilt
-                doMovement = 'STOP'
-                if(angle > 600):  
-                    angle = 600
-                elif(angle < 190):
-                    angle = 190
-                pwm.set_pwm(WRISTTILTPIN, 0, angle)
-                #pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
+            doMovement = 'STOP'
+            if(angle > 600):  
+                angle = 600
+            elif(angle < 190):
+                angle = 190
+            pwm.set_pwm(WRISTTILTPIN, 0, angle)
+            #pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
 
         if direction == "m": #wrist pan
-                doMovement = 'STOP'
-                if(angle > 600):  
-                    angle = 600
-                elif(angle < 130):
-                    angle = 130
-                pwm.set_pwm(WRISTPANPIN, 0, angle)
-                #pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
+            doMovement = 'STOP'
+            if(angle > 600):  
+                angle = 600
+            elif(angle < 130):
+                angle = 130
+            pwm.set_pwm(WRISTPANPIN, 0, angle)
+            #pwm.set_pwm(CONTINUOUSPIN, 0, CONTINUOUSSERVOSTOPVALUE)
         if direction == "l":
-                doMovement = 'STOP'
-                if(angle > 400):  
-                    angle = 400
-                elif(angle < 200):
-                    angle = 200
-                pwm.set_pwm(7, 0, angle)
+            doMovement = 'STOP'
+            if(angle > 400):  
+                angle = 400
+            elif(angle < 200):
+                angle = 200
+            pwm.set_pwm(7, 0, angle)
         if direction == "u":
-                doMovement = 'STOP'
-                pwm.set_pwm(10, 0, angle)
+            doMovement = 'STOP'
+            pwm.set_pwm(10, 0, angle)
         if direction == "i":
-                doMovement = 'STOP'
-                pwm.set_pwm(11, 0, angle)
+            doMovement = 'STOP'
+            pwm.set_pwm(11, 0, angle)
 
         # -----STATE MACHINE--------
         # state 0 setups rover to new doMovement command depending on current configuration

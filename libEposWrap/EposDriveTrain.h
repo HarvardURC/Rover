@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "Definitions.h"
+
 using namespace std;
 
 //Constants for position mode
@@ -41,7 +42,7 @@ class EposDriveTrain {
 	unsigned int errorCode;
 
 public:
-	
+
 	const int MODVALUE = 175619; //ALL HAIL THE MAGIC NUMBER
 
 	//Default constructor
@@ -65,7 +66,7 @@ public:
 	const int MIDDLELEFT  = 2;
 	const int BACKLEFT    = 3;
 	const int FRONTRIGHT  = 4;
-	const int MIDDLERIGHT = 5;  
+	const int MIDDLERIGHT = 5;
 	const int BACKRIGHT   = 6;
 	const int accel = 6000;
 	const int deccel = 6000;
@@ -124,6 +125,9 @@ public:
 
 	//Get motor current
 	short getCurrent(int);
+
+	unsigned int goForward(long);
+	unsigned int turn(long, bool);
 
 	//Walking algorithm functions
 	int getGoalPos(int, int, float, bool);

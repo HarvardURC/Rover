@@ -246,6 +246,13 @@ class EposDriveTrain(_object):
 
     def areAllCloseEnough(self, arg2):
         return _DriveTrain.EposDriveTrain_areAllCloseEnough(self, arg2)
+
+    def goForward(self, arg2):
+        return _DriveTrain.EposDriveTrain_goForward(self, arg2)
+    
+    def turn(self, arg2, arg3):
+        return _DriveTrain.EposDriveTrain_turn(self, arg2, arg3)
+    
 EposDriveTrain_swigregister = _DriveTrain.EposDriveTrain_swigregister
 EposDriveTrain_swigregister(EposDriveTrain)
 

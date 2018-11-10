@@ -75,24 +75,24 @@ unsigned int EposDriveTrain::setVelocity(int node, long velocity) {
 unsigned int EposDriveTrain::setVelocityProfile(int node, long accel, long decel) {
  	//Set the velocity at the given controller node
  	VCS_SetVelocityProfile(portHandle, node, accel, decel, &errorCode);
- 
+
  	if(errorCode != 0) {
  		logError("VCS_SetVelocityProfile", errorCode);
- 
+
  	}
- 
+
  	return errorCode;
  }
 unsigned int EposDriveTrain::setPositionProfile(int node, long velocity, long accel, long decel) {
- 	
+
  	VCS_SetPositionProfile(portHandle, node, velocity, accel, decel, &errorCode);
-  
+
   	if(errorCode != 0) {
  		//logError("VCS_SetPositionProfile", errorCode);
  		//cout << "VCS_SetPositionProfile" << errorCode << endl;
  		//logError("VCS_MoveToPosition", errorCode);
   	}
-  
+
   	return errorCode;
  }
 
@@ -266,12 +266,34 @@ short EposDriveTrain::getCurrent(int node) {
 }
 
 
+unsigned int EposDriveTrain::goForward(long velocity){
+    return (
+    this->setVelocity(FRONTLEFT, velocity) and
+    this->setVelocity(FRONTRIGHT, velocity) and
+    this->setVelocity(BACKLEFT, velocity) and
+    this->setVelocity(BACKRIGHT, velocity));
+}
+
+unsigned int EposDriveTrain::turn(long velocity, bool lr){
+    // If left True, if right False
+    int left = -1;
+    if (lr){
+        left = 1;
+    }
+    // If left 1; if right -1
+    return (
+    this->setVelocity(FRONTLEFT, left*velocity) and
+    this->setVelocity(FRONTRIGHT, -left*velocity) and
+    this-> setVelocity(BACKLEFT, left*velocity) and
+    this-> setVelocity(BACKRIGHT, -left*velocity));
+}
+
   // converts curPos (absolute maxon coordinates) and goalAngle (radians) into goalPos (maxon coordinates)
   // goalAngle for all legs is defined to be zero if pointed down and pi/2 if pointing toward back of rover
 int EposDriveTrain::getGoalPos(int legID, int curPos, float goalAngle, bool rotClockwise) {
 	// get whether the leg is one of the legs on the right side of the rover
     bool isRightSideLeg = ((legID == FRONTRIGHT) or (legID == MIDDLERIGHT) or (legID == BACKRIGHT));
-      
+
     // goalAngleMaxonCoord is the goal angle in maxon coordinates where 0 is pointing down and MODVALUE/4 is pointing
     // toward the back of the rover
     int goalAngleMaxonCoord = (int) (MODVALUE * goalAngle / (2*pi));
@@ -279,7 +301,7 @@ int EposDriveTrain::getGoalPos(int legID, int curPos, float goalAngle, bool rotC
 
     // adjust curPos to account for the offset angle from zero that all motors started at
     // its different for right and left legs because of opposite orientation of the right side motors
-    // and the left side motors. Left side motors rotate clockwise toward the front when the maxon coordinates 
+    // and the left side motors. Left side motors rotate clockwise toward the front when the maxon coordinates
     // are increasing
     int originalCurPos = curPos;
 
@@ -290,7 +312,7 @@ int EposDriveTrain::getGoalPos(int legID, int curPos, float goalAngle, bool rotC
     }
 
     // get the current angle of the leg in terms of maxon coordinates modded to between 0 and MODVALUE
-    // this depends on whether the 
+    // this depends on whether the
     if ((curPos >= 0) and (!isRightSideLeg)){
       curAngleMaxonCoord = (curPos % MODVALUE);
     }
@@ -310,7 +332,7 @@ int EposDriveTrain::getGoalPos(int legID, int curPos, float goalAngle, bool rotC
 
     int delta;
     // Calculate delta (maxon coordinates) that we want to add to the current position
-    // Note that if a leg is told to go clockwise to its current position, it 
+    // Note that if a leg is told to go clockwise to its current position, it
     if (rotClockwise) {
       if (diff > 0) {
         delta = diff;
@@ -361,10 +383,10 @@ void EposDriveTrain::moveLegs(float * goalAngles, int * vels, bool * goClockwise
 }
 
 bool EposDriveTrain::allAreAtTargets() {
-    return 
+    return
     (this->isAtTarget(FRONTRIGHT) and
     this->isAtTarget(MIDDLELEFT) and
-    this->isAtTarget(BACKRIGHT) and 
+    this->isAtTarget(BACKRIGHT) and
     this->isAtTarget(FRONTLEFT) and
     this->isAtTarget(MIDDLERIGHT) and
     this->isAtTarget(BACKLEFT));
@@ -379,7 +401,7 @@ bool EposDriveTrain::isCloseEnough(int node, int tolerance) {
 	cout << " Target: " << targetPos[node];
 	cout << " Delta: " << abs(delta) << " Tolerance: " << tolerance << endl;
 	*/
-	
+
 	return ( abs(delta) < tolerance);
 }
 
@@ -394,6 +416,7 @@ bool EposDriveTrain::areAllCloseEnough(int tolerance) {
 
 	return status;
 }
+
 
 void EposDriveTrain::logError(string functName, unsigned int errorCode) {
 	cerr << functName << " failed. Error code: 0x" << std::hex << errorCode << endl;
