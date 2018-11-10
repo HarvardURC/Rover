@@ -298,9 +298,6 @@ def print_debug(value):
 # Set frequency to 60hz, good for servos.
 pwm.set_pwm_freq(60)
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(19, GPIO.OUT)
-GPIO.setup(16, GPIO.OUT)
 
 
 # GET PINS
