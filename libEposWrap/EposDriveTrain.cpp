@@ -83,7 +83,6 @@ unsigned int EposDriveTrain::setPositionProfile(int node, long velocity, long ac
   	}
 
   	return errorCode;
- }
 }
  // Set the target position at the given node
 // absolute=1 is an absolute movement, absolute=0 is relative
