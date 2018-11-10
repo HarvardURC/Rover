@@ -3,7 +3,7 @@
  #
 # Do not make changes to this file unless you know what you are doing--modify
 # the SWIG interface file instead.
- from sys import version_info
+from sys import version_info
 if version_info >= (2, 6, 0):
     def swig_import_helper():
          from os.path import dirname
@@ -222,6 +222,10 @@ class EposDriveTrain(_object):
         return _DriveTrain.EposDriveTrain_isAtTarget(self, arg2)
      def getCurrent(self, arg2):
         return _DriveTrain.EposDriveTrain_getCurrent(self, arg2)
+     def goForward(self, arg2):
+        return _DriveTrain.EposDriveTrain_goForward(self, arg2)
+    def turn(self, arg2, arg3):
+        return _DriveTrain.EposDriveTrain_turn(self, arg2, arg3)
      def getGoalPos(self, arg2, arg3, arg4, arg5):
         return _DriveTrain.EposDriveTrain_getGoalPos(self, arg2, arg3, arg4, arg5)
      def moveLegs(self, arg2, arg3, arg4):

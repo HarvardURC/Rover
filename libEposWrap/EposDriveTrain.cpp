@@ -227,6 +227,26 @@ bool EposDriveTrain::clearAllFaults() {
 	return current;
 }
 
+unsigned int EposDriveTrain::goForward(long velocity){
+    return (
+    this->setVelocity(FRONTLEFT, velocity) and
+    this->setVelocity(FRONTRIGHT, velocity) and
+    this->setVelocity(BACKLEFT, velocity) and
+    this->setVelocity(BACKRIGHT, velocity));
+}
+ unsigned int EposDriveTrain::turn(long velocity, bool lr){
+    // If left True, if right False
+    int left = -1;
+    if (lr){
+        left = 1;
+    }
+    // If left 1; if right -1
+    return (
+    this->setVelocity(FRONTLEFT, left*velocity) and
+    this->setVelocity(FRONTRIGHT, -left*velocity) and
+    this-> setVelocity(BACKLEFT, left*velocity) and
+    this-> setVelocity(BACKRIGHT, -left*velocity));
+}
    // converts curPos (absolute maxon coordinates) and goalAngle (radians) into goalPos (maxon coordinates)
   // goalAngle for all legs is defined to be zero if pointed down and pi/2 if pointing toward back of rover
 int EposDriveTrain::getGoalPos(int legID, int curPos, float goalAngle, bool rotClockwise) {
@@ -336,6 +356,8 @@ int EposDriveTrain::getGoalPos(int legID, int curPos, float goalAngle, bool rotC
 	}
  	return status;
 }
+
+
  void EposDriveTrain::logError(string functName, unsigned int errorCode) {
  	cerr << functName << " failed. Error code: 0x" << std::hex << errorCode << endl;
  }

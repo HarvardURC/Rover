@@ -109,6 +109,8 @@ using namespace std;
 	bool isAtTarget(int);
  	//Get motor current
 	short getCurrent(int);
+	unsigned int goForward(long);
+	unsigned int turn(long, bool);
  	//Walking algorithm functions
 	int getGoalPos(int, int, float, bool);
 	void moveLegs(float*, int*, bool*);
