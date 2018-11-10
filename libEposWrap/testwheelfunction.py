@@ -1,7 +1,6 @@
 import ctypes
 import constants
 import DriveTrain
-import fullcode_wheel
 import helperFunctions as hF
 
 # GLOBAL VARIABLES
