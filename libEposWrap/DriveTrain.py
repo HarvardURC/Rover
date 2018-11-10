@@ -99,7 +99,8 @@ VELOCITY_MODE = _DriveTrain.VELOCITY_MODE
 
 class EposDriveTrain(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, EposDriveTrain, name, value)     __swig_getmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, EposDriveTrain, name, value)
+    __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, EposDriveTrain, name)
     __repr__ = _swig_repr
     __swig_getmethods__["MODVALUE"] = _DriveTrain.EposDriveTrain_MODVALUE_get
