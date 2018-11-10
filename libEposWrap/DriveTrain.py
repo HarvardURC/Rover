@@ -184,5 +184,3 @@ EposDriveTrain_swigregister = _DriveTrain.EposDriveTrain_swigregister
 EposDriveTrain_swigregister(EposDriveTrain)
 
 # This file is compatible with both classic and new-style classes.
-
-
