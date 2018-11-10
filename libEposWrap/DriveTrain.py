@@ -96,10 +96,7 @@ PROFILE_POSITION_MODE = _DriveTrain.PROFILE_POSITION_MODE
  POSITION_MODE = _DriveTrain.POSITION_MODE
  _DriveTrain.VELOCITY_MODE_swigconstant(_DriveTrain)
 VELOCITY_MODE = _DriveTrain.VELOCITY_MODE
- _DriveTrain.RELATIVE_swigconstant(_DriveTrain)
-RELATIVE = _DriveTrain.RELATIVE
- _DriveTrain.ABSOLUTE_swigconstant(_DriveTrain)
-ABSOLUTE = _DriveTrain.ABSOLUTE
+
 class EposDriveTrain(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, EposDriveTrain, name, value)
