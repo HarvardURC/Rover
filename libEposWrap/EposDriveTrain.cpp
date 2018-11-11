@@ -229,9 +229,9 @@ bool EposDriveTrain::clearAllFaults() {
 
 unsigned int EposDriveTrain::goForward(long velocity){
     return (
-    this->setVelocity(FRONTLEFT, velocity) and
-    this->setVelocity(FRONTRIGHT, velocity) and
-    this->setVelocity(BACKLEFT, velocity) and
+    this->setVelocity(FRONTLEFT, velocity) &
+    this->setVelocity(FRONTRIGHT, velocity) &
+    this->setVelocity(BACKLEFT, velocity) &
     this->setVelocity(BACKRIGHT, velocity));
 }
  unsigned int EposDriveTrain::turn(long velocity, bool lr){
@@ -242,9 +242,9 @@ unsigned int EposDriveTrain::goForward(long velocity){
     }
     // If left 1; if right -1
     return (
-    this->setVelocity(FRONTLEFT, left*velocity) and
-    this->setVelocity(FRONTRIGHT, -left*velocity) and
-    this-> setVelocity(BACKLEFT, left*velocity) and
+    this->setVelocity(FRONTLEFT, left*velocity) &
+    this->setVelocity(FRONTRIGHT, -left*velocity) &
+    this-> setVelocity(BACKLEFT, left*velocity) &
     this-> setVelocity(BACKRIGHT, -left*velocity));
 }
    // converts curPos (absolute maxon coordinates) and goalAngle (radians) into goalPos (maxon coordinates)
