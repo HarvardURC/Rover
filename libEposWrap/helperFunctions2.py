@@ -13,7 +13,7 @@ driveTrain = DriveTrain.EposDriveTrain()
 driveTrain.init()
 driveTrain.enableAll()
 driveTrain.clearAllFaults()
-VELOCITY_POSITION_MODE = 1
+VELOCITY_POSITION_MODE = 3
 for i in range(6):
     driveTrain.setMode(i + 1, VELOCITY_POSITION_MODE)
     driveTrain.setVelocityProfile(i + 1, 0, 0);
@@ -35,4 +35,4 @@ def moveTo(location):
     return "TODO"
 
 while True:
-    move(speed, speed)
+    move(speed, -speed)
