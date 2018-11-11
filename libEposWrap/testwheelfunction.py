@@ -57,7 +57,7 @@ for i in range(6):
 while True:
     
     try:
-        velocity = 1
+        velocity = 1000
         resetGlobalCheck = 0
         driveTrain.goForward(velocity)
         
