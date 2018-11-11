@@ -1,3 +1,0 @@
-/Users/mabasta/Rover/gazeboCode/leggedBySettingVelocity/build/CMakeFiles/rebuild_cache.dir
-/Users/mabasta/Rover/gazeboCode/leggedBySettingVelocity/build/CMakeFiles/edit_cache.dir
-/Users/mabasta/Rover/gazeboCode/leggedBySettingVelocity/build/CMakeFiles/legged.dir
