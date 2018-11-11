@@ -21,4 +21,4 @@ def stop():
         driveTrain.setVelocity(i+1, 0) 
 
 
-move(speed, speed)
+driveTrain.goForward(velocity)
