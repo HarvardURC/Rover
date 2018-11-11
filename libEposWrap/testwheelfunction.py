@@ -9,24 +9,6 @@ accel = 20000
 deccel = 20000
 air = int(2.0*600)
 
-# Move legs function implemented in python
-def moveLegs(goalAngles, vels, goClockwises, driveTrain):
-    # set legs to specified position profile
-    for i in range(6):
-        driveTrain.setPositionProfile(i + 1, vels[i], accel,deccel);
-
-    # Need to get current positions in order to calculate goal position in maxon coordinates.
-    # Convert to goal position in maxon coordinates using current position (maxon coordinates)
-    # and the goalAngle (radians)
-    curPosArray = []
-    goalPosArray = []
-    for i in range(6):
-        curPosArray.append(driveTrain.getPosition(i + 1));
-        goalPosArray.append(driveTrain.getGoalPos(i + 1, curPosArray[i], goalAngles[i], goClockwises[i]))
-
-    # set the position
-    for i in range(6):
-        driveTrain.setPosition(i + 1, goalPosArray[i], True);
 
 # test change here
 # --------- MOTOR SETUP ------------
@@ -67,4 +49,3 @@ while True:
             resetGlobalCheck = 1
             # CHANGE, put reset code here MATTHEW, (call reset)
             # Reset drive train on error
-            fullcode_wheel.resetDriveTrain(driveTrain)
