@@ -4,7 +4,9 @@ Created on Sat Nov 10 15:09:07 2018
 
 @author: Jenny Gu
 """
-
+"""
+I edited
+"""
 import DriveTrain
 
 speed = 1200 
