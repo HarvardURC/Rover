@@ -1,7 +1,6 @@
 import ctypes
 import constants
 import DriveTrain
-import fullcode_wheel
 import helperFunctions as hF
 
 # GLOBAL VARIABLES
@@ -44,7 +43,7 @@ driveTrain.init()
 #Note: before a motor can be moved, it must be enabled!
 driveTrain.enableAll()
 driveTrain.clearAllFaults()
-VELOCITY_MODE = 3
+VELOCITY_MODE = -2
 #Set the i-th node to appropriate mode
 for i in range(6):
     driveTrain.setMode(i + 1, VELOCITY_MODE)
