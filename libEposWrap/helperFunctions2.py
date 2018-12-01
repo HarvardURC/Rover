@@ -8,6 +8,7 @@ Created on Sat Nov 10 15:09:07 2018
 import DriveTrain
 
 speed = 1200 
+roverAngle; # absolute angle of the rover
 
 driveTrain = DriveTrain.EposDriveTrain()
 driveTrain.init()
@@ -34,10 +35,15 @@ def getLocation():
 def moveTo(location):
     return "TODO"
 
-def turn(degree):
+def turn(degree, speed):
     # positive degree - turn right
     # negative degree - turn left
-    return "TODO"
+    if roverAngle - degree > 0:
+        while (roverAngle > degree):
+            turnLeft90(speed)
+    else:
+        while (roverAngle < degree):
+            turnRight90(speed)
 
 def turnRight45(speed):
     # 45 degree turn
