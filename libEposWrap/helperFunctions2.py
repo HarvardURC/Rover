@@ -4,10 +4,12 @@ Created on Sat Nov 10 15:09:07 2018
 
 @author: Jenny Gu
 """
-
+"""
+I edited
+"""
 import DriveTrain
 
-speed = 1200 
+speed = 1200
 roverAngle; # absolute angle of the rover
 
 driveTrain = DriveTrain.EposDriveTrain()
@@ -24,7 +26,7 @@ def move(leftSpeed, rightSpeed):
     for i in range(3):
         driveTrain.setVelocity(i+1, leftSpeed)
         driveTrain.setVelocity(i+4, rightSpeed)
-        
+
 def stop():
     for i in range(6):
         driveTrain.setVelocity(i+1, 0)
@@ -43,26 +45,26 @@ def turn(degree, speed):
         while (roverAngle > degree):
             turnLeft90(speed)
     else:
-        # turns right until desired angle is reached 
+        # turns right until desired angle is reached
         while (roverAngle < degree):
             turnRight90(speed)
 
 def turnRight45(speed):
     # 45 degree turn
     move(speed, 0)
-    
+
 def turnRight90(speed):
     # 90 degree turn
     move(speed, -speed)
-    
+
 def turnLeft45(speed):
     # 45 degree turn
     move(0, speed)
-    
+
 def turnLeft90(speed):
     # 90 degree turn
     move(-speed, speed)
-    
+
 def goStraight(speed):
     move(speed, speed)
 
