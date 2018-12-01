@@ -34,5 +34,32 @@ def getLocation():
 def moveTo(location):
     return "TODO"
 
+def turn(degree):
+    # positive degree - turn right
+    # negative degree - turn left
+    return "TODO"
+
+def turnRight45(speed):
+    # 45 degree turn
+    move(speed, 0)
+    
+def turnRight90(speed):
+    # 90 degree turn
+    move(speed, -speed)
+    
+def turnLeft45(speed):
+    # 45 degree turn
+    move(0, speed)
+    
+def turnLeft90(speed):
+    # 90 degree turn
+    move(-speed, speed)
+    
+def goStraight(speed):
+    move(speed, speed)
+
+def goBackwards(speed):
+    move(-speed, speed)
+
 while True:
     move(speed, -speed)
