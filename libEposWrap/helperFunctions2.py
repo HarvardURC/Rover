@@ -39,9 +39,11 @@ def turn(degree, speed):
     # positive degree - turn right
     # negative degree - turn left
     if roverAngle - degree > 0:
+        # turns left until desired angle is reached
         while (roverAngle > degree):
             turnLeft90(speed)
     else:
+        # turns right until desired angle is reached 
         while (roverAngle < degree):
             turnRight90(speed)
 
