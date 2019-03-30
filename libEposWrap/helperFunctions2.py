@@ -9,7 +9,9 @@ I edited
 """
 import DriveTrain
 
+wheelDist = 51 # 51 centimeters
 speed = 1200
+wheelRad # radius of wheel
 roverAngle; # absolute angle of the rover
 
 driveTrain = DriveTrain.EposDriveTrain()
@@ -51,25 +53,25 @@ def turn(degree, speed):
 
 def turnRight45(speed):
     # 45 degree turn
-    move(speed, 0)
+    move(speed + wheelDist * math.pi / (4 * wheelRad), speed)
 
 def turnRight90(speed):
     # 90 degree turn
-    move(speed, -speed)
+    move(speed + wheelDist * math.pi / (2 * wheelRad), speed)
 
 def turnLeft45(speed):
     # 45 degree turn
-    move(0, speed)
+    move(speed, speed + wheelDist * math.pi / (4 * wheelRad))
 
 def turnLeft90(speed):
     # 90 degree turn
-    move(-speed, speed)
+    move(speed, speed + wheelDist * math.pi / (2 * wheelRad))
 
 def goStraight(speed):
     move(speed, speed)
 
 def goBackwards(speed):
-    move(-speed, speed)
+    move(-speed, -speed)
 
 while True:
     move(speed, -speed)
