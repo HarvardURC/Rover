@@ -83,6 +83,7 @@ def goStraight(speed):
 
 def goBackwards(speed):
         move(-speed, -speed)
+
 while 1:
         print("input:")
         mv = raw_input()
@@ -97,5 +98,3 @@ while 1:
         elif mv == 'r':
                 move(-speed,-speed)       
 
-
-stop()
